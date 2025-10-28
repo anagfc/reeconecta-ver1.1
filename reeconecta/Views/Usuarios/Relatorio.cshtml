@@ -1,0 +1,67 @@
+﻿@model IEnumerable<reeconecta.Models.Produto>
+
+@{
+    ViewData["Title"] = "Relatório";
+}
+
+<h1>Anúncios Realizados</h1>
+<h5>O usuário @ViewBag.Usuario.Nome já vendeu @(ViewBag.ItensVendidos?? 0) itens e arrecadou um total de R$ @(ViewBag.TotalVendido ?? 0.00m) com a ajuda do ReeConecta</h5>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Preco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Condicao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusAnuncio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CriacaoAnuncio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnuncioAtivo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                R$ @Html.DisplayFor(modelItem => item.Preco)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Condicao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusAnuncio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CriacaoAnuncio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnuncioAtivo)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

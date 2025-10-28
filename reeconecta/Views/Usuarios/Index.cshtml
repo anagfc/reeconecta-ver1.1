@@ -1,0 +1,78 @@
+﻿@model IEnumerable<reeconecta.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Usuários";
+}
+
+<h1>Usuários Cadastrados</h1>
+<p>@User.Identity.Name, como um administrador, você pode ter acesso a todos os usuários cadastrados na ReeConecta nesta página</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoPerfil)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefone01)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefone02)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContaAtiva)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoPerfil)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefone01)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefone02)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            @if(item.ContaAtiva == true)
+                {
+                    <td>
+                        Ativa
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        Inativa
+                    </td>
+                }
+            <td>
+                <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.Id" style="padding: 2px 5px; margin-right: 5px">
+                    <i class="bi bi-eye-fill"></i> Ver mais
+                </a>
+                <a class="btn btn-outline-warning" asp-action="Relatorio" asp-route-id="@item.Id" style="padding: 2px 5px; margin-right: 5px">
+                    <i class="bi bi-bar-chart-fill"></i> Desempenho
+                </a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" style="padding: 2px 5px; margin-right: 5px">
+                    <i class="bi bi-trash-fill"></i> Excluir
+                </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

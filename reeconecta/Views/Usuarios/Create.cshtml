@@ -1,0 +1,78 @@
+﻿@model reeconecta.Models.Usuario
+
+@{
+    ViewData["Title"] = "Cadastro";
+}
+
+<h1>Cadastrar</h1>
+
+<h4>Usuário</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="Documento" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <input asp-for="Documento" class="form-control" />
+                <span asp-validation-for="Documento" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="Nome" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="TipoPerfil" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <select asp-for="TipoPerfil" class="form-control" asp-items="Html.GetEnumSelectList<Tipo>()"></select>
+                <span asp-validation-for="TipoPerfil" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="Cep" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <input asp-for="Cep" class="form-control" />
+                <span asp-validation-for="Cep" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="Endereco" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <input asp-for="Endereco" class="form-control" />
+                <span asp-validation-for="Endereco" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="Telefone01" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <input asp-for="Telefone01" class="form-control" />
+                <span asp-validation-for="Telefone01" class="text-danger"></span>
+            </>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="Telefone02" class="control-label"></label>
+                <input asp-for="Telefone02" class="form-control" />
+                <span asp-validation-for="Telefone02" class="text-danger"></span>
+            </>
+            <div class="form-group" style="padding-bottom: 15px">
+                <label asp-for="Email" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="padding-bottom: 15px">
+                        <label asp-for="Senha" class="control-label"></label> <i class="bi bi-asterisk" style="font-size: 7px; position: relative; top: -3px; color: red;"></i>
+                <input asp-for="Senha" class="form-control" />
+                <span asp-validation-for="Senha" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="ContaAtiva" /> @Html.DisplayNameFor(model => model.ContaAtiva)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
