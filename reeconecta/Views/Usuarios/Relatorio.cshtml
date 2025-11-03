@@ -5,7 +5,7 @@
 }
 
 <h1>Anúncios Realizados</h1>
-<h5>O usuário @ViewBag.Usuario.Nome já vendeu @(ViewBag.ItensVendidos?? 0) itens e arrecadou um total de R$ @(ViewBag.TotalVendido ?? 0.00m) com a ajuda do ReeConecta</h5>
+<h5>O usuário @(ViewBag.Usuario.Nome ?? ViewBag.Usuario.NomeFantasia) já vendeu @(ViewBag.ItensVendidos?? 0) itens e arrecadou um total de R$ @(ViewBag.TotalVendido ?? 0.00m) com a ajuda do ReeConecta</h5>
 
 <table class="table">
     <thead>

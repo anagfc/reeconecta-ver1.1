@@ -1,0 +1,88 @@
+﻿body {
+    overflow:hidden;
+}
+
+.border-bottom {
+    margin-bottom: 0 !important;
+}
+
+.container {
+    background-color: #5aaf5f;
+    margin: 0;
+    min-width: 100%;
+    padding: 0, 10px;
+}
+
+main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 !important;
+}
+
+.espaco-login{
+    margin: 125px;
+}
+
+.img-banner {
+    height: 80%
+}
+
+h3 {
+    color: #5aaf5f;
+}
+
+.campo-login {
+    border: none;
+    background-color: #d6f7d8;
+    border-bottom: solid 1px #408544;
+}
+
+.msg-erro-login {
+    padding-top: 10px;
+    color: red;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-entrar {
+    background-color: #5aaf5f;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-entrar:hover {
+    background-color: #408544;
+    color: white;
+    font-weight: bolder;
+}
+
+.link-esqueci-senha {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+    font-size: 13px;
+    color: #5aaf5f;
+    font-weight: 550;
+}
+
+.link-esqueci-senha:hover {
+    font-weight: 700;
+    text-decoration: none;
+    color: #408544;
+    cursor: pointer;
+}
+
+.link-criar-conta {
+    padding-top: 5px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    color: #3789f2;
+    font-weight: 500;
+}
+
+.link-criar-conta:hover {
+    font-weight: bolder;
+}
