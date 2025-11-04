@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using reeconecta.Models;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
