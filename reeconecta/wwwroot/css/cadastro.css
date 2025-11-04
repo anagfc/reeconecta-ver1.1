@@ -1,0 +1,114 @@
+﻿body {
+    background-color: #d6f7d8;
+}
+
+footer {
+    background-color: white;
+}
+
+h1 {
+    padding: 25px 0;
+    text-align: center;
+    color: #408544;
+}
+
+.espaco-formulario {
+    background-color: white;
+    border: solid 1px #408544;
+    border-radius: 20px;
+    margin-bottom: 50px;
+}
+
+.formatacao-conteudo {
+    margin: 0 25px;
+}
+
+.selecionar-tipo-form {
+    padding: 25px 0 0 0;
+    text-align: center;
+}
+
+.espaco-separador-secao {
+    border-bottom: 2px solid #93db97;
+    margin: 25px 0 0 0;
+    padding: 0;
+}
+
+.separador-secao {
+    display: inline;
+    background-color: #93db97;
+    border: solid 1px #93db97;
+    border-radius: 5px 5px 0 0;
+    padding: 2px 10px;
+    font-weight: bold;
+}
+
+.bi-asterisk {
+    font-size: 7px;
+    position: relative;
+    top: -3px;
+    color: red;
+}
+
+.dados-identificacao {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 15px;
+}
+
+.dados-cadastro {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 5px;
+}
+
+.dados-contato {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 15px;
+}
+
+.dados-endereco {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: 15px;
+}
+
+.campo-formulario {
+    padding: 25px 0 0 0;
+}
+
+form > .campo-formulario:last-of-type {
+    padding-bottom: 25px;
+    text-align: center;
+}
+
+.dados-endereco > .campo-formulario:nth-of-type(2) {
+    grid-column: span 4;
+}
+
+.dados-endereco > .campo-formulario:nth-of-type(5) {
+    grid-column: span 2
+}
+
+.dados-endereco > .campo-formulario:nth-of-type(6) {
+    grid-column: span 2
+}
+
+#especifico-pf, #especifico-pj {
+    display: none;
+}
+
+.btn-enviar-formulario {
+    background-color: #5aaf5f;
+    color: white;
+    font-weight: bold;
+    padding: 10px 100px;
+    border-radius: 10px;
+}
+
+.btn-enviar-formulario:hover {
+    background-color: #408544;
+    color: white;
+    font-weight: bolder;
+}

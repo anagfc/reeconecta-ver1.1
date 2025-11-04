@@ -60,10 +60,10 @@ namespace reeconecta.Controllers
             {
                 var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, dados.Nome),
+            new Claim(ClaimTypes.Name, dados.Nome ?? dados.NomeFantasia ?? "Usuário"),
             new Claim(ClaimTypes.NameIdentifier, dados.Id.ToString()),
             new Claim(ClaimTypes.Email, dados.Email),
-            new Claim(ClaimTypes.Role, dados.TipoPerfil.ToString())
+            new Claim(ClaimTypes.Role, dados.TipoUsuario.ToString())
         };
 
                 var usuarioIdentity = new ClaimsIdentity(claims, "login");
@@ -125,11 +125,15 @@ namespace reeconecta.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([Bind("Id,Documento,Nome,TipoPerfil,Cep,Endereco,Telefone01,Telefone02,Email,Senha,ContaAtiva")] Usuario usuario)
+        public async Task<IActionResult> Create(Usuario usuario)
         {
+
             if (ModelState.IsValid)
             {
                 usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+                //usuario.TipoUsuario = TipoUsuario.User;
+                usuario.ContaAtiva = true;
+                usuario.CriacaoConta = DateTime.Now;
 
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
@@ -159,7 +163,7 @@ namespace reeconecta.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Documento,Nome,TipoPerfil,Cep,Endereco,Telefone01,Telefone02,Email,Senha,ContaAtiva")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TipodePerfil,Documento,Nome,RazaoSocial,NomeFantasia,RepresentanteLegal, EmailRepresentante,TipoUsuario,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email,Senha,ContaAtiva,CriacaoConta")] Usuario usuario)
         {
             if (id != usuario.Id)
             {
