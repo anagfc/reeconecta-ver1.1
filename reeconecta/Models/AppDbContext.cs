@@ -9,5 +9,12 @@ namespace reeconecta.Models
         public DbSet<Usuario> Usuarios { get; set; }
 
         public DbSet<Produto> Produtos { get; set; }
+
+        public DbSet<ProdutoInteressado> ProdutoInteressados { get; set; }
+
+        public DbSet<ReservaProduto> ReservaProdutos { get; set; }
+
+        public DbSet<VisualizacaoProduto> VisualizacaoProdutos { get; set; }
+
     }
 }

@@ -245,15 +245,15 @@ namespace reeconecta.Controllers
 
             var anuncios = await _context.Produtos
                 .Where(c => c.AnuncianteId == id)
-                .OrderByDescending(c => c.CriacaoAnuncio)
+                .OrderByDescending(c => c.CriacaoProduto)
                 .ToListAsync();
 
             decimal totalVendido = anuncios?
-                .Where(c => c.StatusAnuncio == StatusAnuncio.Vendido)
+                .Where(c => c.StatusProduto == StatusProduto.Vendido)
                 .Sum(c => c.Preco) ?? 0;
 
             int itensVendidos = anuncios?
-                .Count(c => c.StatusAnuncio == StatusAnuncio.Vendido) ?? 0;
+                .Count(c => c.StatusProduto == StatusProduto.Vendido) ?? 0;
 
             ViewBag.Usuario = usuario;
             ViewBag.TotalVendido = totalVendido.ToString("C");
