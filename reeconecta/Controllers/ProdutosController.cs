@@ -191,5 +191,26 @@ namespace reeconecta.Controllers
         {
             return _context.Produtos.Any(e => e.Id == id);
         }
+
+        // GET: Produtos/MeusProdutos
+        public async Task<IActionResult> MeusProdutos()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userIdClaim))
+                return RedirectToAction("Login", "Usuarios");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                return BadRequest("ID do usuário logado inválido.");
+
+            var meusProdutos = await _context.Produtos
+                .Where(p => p.AnuncianteId == userId)
+                .Include(p => p.Usuario)
+                .ToListAsync();
+
+            return View(meusProdutos);
+        }
+
     }
-}
+
+   }
