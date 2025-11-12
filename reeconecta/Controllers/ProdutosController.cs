@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using reeconecta.Models;
 
@@ -16,6 +17,7 @@ namespace reeconecta.Controllers
     public class ProdutosController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<Usuario> _userManager;
 
         public ProdutosController(AppDbContext context)
         {
@@ -27,6 +29,7 @@ namespace reeconecta.Controllers
         {
             var produtos = await _context.Produtos
                 .Include(p => p.Usuario)
+                .Include(p => p.ReservasProduto)
                 .ToListAsync();
 
             return View(produtos);
@@ -59,7 +62,6 @@ namespace reeconecta.Controllers
         {
             if (ModelState.IsValid)
             {
-                // tenta pegar o ID da claim
                 var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (string.IsNullOrEmpty(userIdClaim))
@@ -211,6 +213,42 @@ namespace reeconecta.Controllers
             return View(meusProdutos);
         }
 
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Reservar(int id)
+        {
+            var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
+            if (produto == null)
+                return NotFound();
+
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString))
+                return Unauthorized();
+
+            int usuarioId = int.Parse(userIdString);
+
+            bool jaReservado = await _context.ReservasProduto
+                .AnyAsync(r => r.ProdutoId == id && r.Status == StatusReserva.Pendente);
+
+            if (jaReservado)
+                return Json(new { success = false, message = "Produto já reservado." });
+
+            var reserva = new ReservaProduto
+            {
+                ProdutoId = produto.Id,
+                UsuarioId = usuarioId,
+                Status = StatusReserva.Pendente
+            };
+
+            _context.ReservasProduto.Add(reserva);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Produto reservado com sucesso!" });
+        }
+
+
+
     }
 
-   }
+}

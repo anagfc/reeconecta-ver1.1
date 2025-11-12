@@ -14,19 +14,19 @@
 
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label asp-for="Titulo" class="form-label fw-semibold">Título</label>
+                        <label asp-for="Titulo" class="form-label fw-semibold">Título</label><i class="bi bi-asterisk"></i>
                         <input asp-for="Titulo" class="form-control" placeholder="Digite o nome do produto" />
                         <span asp-validation-for="Titulo" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4">
-                        <label asp-for="Preco" class="form-label fw-semibold">Preço (R$)</label>
+                        <label asp-for="Preco" class="form-label fw-semibold">Preço (R$)</label><i class="bi bi-asterisk"></i>
                         <input asp-for="Preco" class="form-control" placeholder="Ex: 250,00 ou 0,00" type="number" step="0.01" />
                         <span asp-validation-for="Preco" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4">
-                        <label asp-for="Condicao" class="form-label fw-semibold"></label>
+                        <label asp-for="Condicao" class="form-label fw-semibold"></label><i class="bi bi-asterisk"></i>
                         <select asp-for="Condicao" class="form-select"
                                 asp-items="Html.GetEnumSelectList<reeconecta.Models.CondicaoProduto>()">
                             <option value="">Selecione...</option>
@@ -35,13 +35,13 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label asp-for="Bairro" class="form-label fw-semibold">Bairro</label>
+                        <label asp-for="Bairro" class="form-label fw-semibold">Bairro</label><i class="bi bi-asterisk"></i>
                         <input asp-for="Bairro" class="form-control" placeholder="Informe o bairro" />
                         <span asp-validation-for="Bairro" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label asp-for="Cidade" class="form-label fw-semibold">Cidade</label>
+                        <label asp-for="Cidade" class="form-label fw-semibold">Cidade</label><i class="bi bi-asterisk"></i>
                         <input asp-for="Cidade" class="form-control" placeholder="Informe a cidade" />
                         <span asp-validation-for="Cidade" class="text-danger"></span>
                     </div>

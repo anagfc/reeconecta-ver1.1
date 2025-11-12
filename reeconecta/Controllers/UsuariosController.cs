@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using reeconecta.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace reeconecta.Controllers
 {
@@ -66,7 +67,7 @@ namespace reeconecta.Controllers
             new Claim(ClaimTypes.Role, dados.TipoUsuario.ToString())
         };
 
-                var usuarioIdentity = new ClaimsIdentity(claims, "login");
+                var usuarioIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(usuarioIdentity);
 
                 var props = new AuthenticationProperties
@@ -76,7 +77,7 @@ namespace reeconecta.Controllers
                     IsPersistent = true
                 };
 
-                await HttpContext.SignInAsync(principal, props);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
                 return Redirect("/");
             }
             else

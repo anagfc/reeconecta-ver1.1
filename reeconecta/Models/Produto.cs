@@ -42,6 +42,10 @@ namespace reeconecta.Models
 
         [Required(ErrorMessage = "É obrigaátorio informar o status.")]
         public StatusProduto? StatusProduto { get; set; } = Models.StatusProduto.Disponivel;
+
+
+        public ICollection<ReservaProduto>? ReservasProduto { get; set; }
+
     }
 
     public enum CondicaoProduto

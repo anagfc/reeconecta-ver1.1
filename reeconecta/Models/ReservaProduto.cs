@@ -25,6 +25,8 @@ namespace reeconecta.Models
         public DateTime DataReserva { get; set; } = DateTime.Now;
 
         public StatusReserva Status { get; set; } = StatusReserva.Pendente;
+
+
     }
 
     public enum StatusReserva
