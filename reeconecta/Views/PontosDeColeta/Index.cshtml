@@ -1,0 +1,95 @@
+﻿@model IEnumerable<reeconecta.Models.PontoDeColeta>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomePonto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescricaoPonto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CepPonto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FuncionamentoPonto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HorarioPonto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TelefoneP01)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WppTelP1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TelefoneP02)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WppTelP2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Imagem)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomePonto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DescricaoPonto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CepPonto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FuncionamentoPonto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HorarioPonto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TelefoneP01)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WppTelP1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TelefoneP02)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WppTelP2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Imagem)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

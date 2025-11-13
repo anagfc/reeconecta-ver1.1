@@ -40,5 +40,7 @@ namespace reeconecta.Models
                 .HasForeignKey(r => r.ProdutoId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
+
+        public DbSet<PontoDeColeta> PontosDeColeta { get; set; }
     }
 }
