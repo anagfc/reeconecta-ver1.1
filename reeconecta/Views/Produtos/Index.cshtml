@@ -4,6 +4,7 @@
     ViewData["Title"] = "Marketplace";
 }
 
+
 <div class="container mt-4">
 
     <div class="mb-4">
@@ -15,6 +16,9 @@
     <div class="d-flex justify-content-center gap-3 mb-4">
         <a asp-controller="Produtos" asp-action="MeusProdutos" class="btn btn-outline-secondary shadow-sm">
             Meus produtos
+        </a>
+        <a asp-controller="Produtos" asp-action="MinhasReservas" class="btn btn-outline-success shadow-sm">
+            Minhas Reservas
         </a>
         <a asp-action="Create" class="btn btn-outline-primary shadow-sm">
             Anuncie seu produto <i class="bi bi-plus-circle"></i>
@@ -53,8 +57,9 @@
                             </div>
                             <div class="card-body text-center">
                                 <h6 class="fw-semibold">@item.Titulo</h6>
-                                <p class="mb-1 text-muted">R$@item.Preco.ToString("N2")</p>
+                                <p class="mb-1 text-muted">R$ @item.Preco.ToString("N2")</p>
                                 <p class="mb-1 text-muted">@item.Bairro, @item.Cidade</p>
+                                <p class="mb-3">@item.StatusProduto</p>
                                 <div class="produto-card" style="position: relative;">
                                     @{
                                         bool reservado = item.ReservasProduto?.Any(r => r.Status == StatusReserva.Pendente) ?? false;

@@ -41,10 +41,10 @@ namespace reeconecta.Models
         public DateTime CriacaoProduto { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "É obrigaátorio informar o status.")]
-        public StatusProduto? StatusProduto { get; set; } = Models.StatusProduto.Disponivel;
+        public StatusProduto StatusProduto { get; set; } = StatusProduto.Disponivel;
 
 
-        public ICollection<ReservaProduto>? ReservasProduto { get; set; }
+        public virtual ICollection<ReservaProduto> ReservasProduto { get; set; } = new List<ReservaProduto>();
 
     }
 
