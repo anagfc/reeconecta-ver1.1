@@ -7,10 +7,11 @@
     bool isAnunciante = usuarioLogadoId == Model.AnuncianteId.ToString();
 }
 
+<a asp-action="" asp-route-id="" class="btn btn-link float-end">
+    <i class="bi bi-x-lg fs-4"></i>
+</a>
 
-    <button class="btn btn-link float-end" onclick="window.history.back();">
-        <i class="bi bi-x-lg fs-4"></i>
-    </button>
+
 <div class="container mt-5"><br>
     <h4>Detalhes do Produto</h4><br>
 
@@ -26,10 +27,13 @@
             <p><strong>Descrição:</strong><br /><em>@Model.Descricao</em></p>
             <p><strong>Localização:</strong><br />@Model.Bairro - @Model.Cidade</p>
 
+            @{
+                var telefoneLimpo = Model.Usuario?.Telefone01?.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
+            }
 
             @if (!isAnunciante)
             {
-                <a href="https://wa.me/@Model.Usuario?.Telefone01" target="_blank" class="btn btn-outline-success w-100 mt-4" style="font-weight: 600;">
+                <a href="https://wa.me/@telefoneLimpo" target="_blank" class="btn btn-outline-success w-100 mt-4" style="font-weight: 600;">
                     <i class="bi bi-whatsapp me-2"></i> Entre em contato com o anunciante
                 </a>
             }
@@ -79,6 +83,17 @@
                                             ;
                                             break;
                                     }
+                                    @{
+                                        var telefoneLimpo2 = reserva.Usuario?.Telefone01?.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
+                                    }
+
+                                    @if (reserva.Status == reeconecta.Models.StatusReserva.Confirmada)
+                                    {
+                                        <a href="https://wa.me/@telefoneLimpo2" target="_blank" class="btn btn-outline-success w-100 mt-4" style="font-weight: 600;">
+                                            <i class="bi bi-whatsapp me-2"></i> Entre em contato com o interessado
+                                        </a>
+                                    }
+
                                 </div>
                                 <div>
                                     @if (reserva.Status == reeconecta.Models.StatusReserva.Pendente)
