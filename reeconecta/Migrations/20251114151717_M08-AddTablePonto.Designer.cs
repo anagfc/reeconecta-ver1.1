@@ -12,8 +12,8 @@ using reeconecta.Models;
 namespace reeconecta.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251113145645_M08-AddTablePontosDeColeta")]
-    partial class M08AddTablePontosDeColeta
+    [Migration("20251114151717_M08-AddTablePonto")]
+    partial class M08AddTablePonto
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace reeconecta.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("reeconecta.Models.PontoDeColeta", b =>
+            modelBuilder.Entity("reeconecta.Models.Ponto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

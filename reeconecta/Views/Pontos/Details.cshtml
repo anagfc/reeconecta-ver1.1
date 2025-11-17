@@ -1,4 +1,4 @@
-﻿@model reeconecta.Models.PontoDeColeta
+﻿@model reeconecta.Models.Ponto
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>PontoDeColeta</h4>
+    <h4>Ponto</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -35,18 +35,6 @@
             @Html.DisplayFor(model => model.CepPonto)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FuncionamentoPonto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FuncionamentoPonto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HorarioPonto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HorarioPonto)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TelefoneP01)
         </dt>
         <dd class = "col-sm-10">
@@ -69,12 +57,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.WppTelP2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Imagem)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Imagem)
         </dd>
     </dl>
 </div>

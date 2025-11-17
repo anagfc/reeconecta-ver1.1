@@ -43,6 +43,5 @@ namespace reeconecta.Models
                 .OnDelete(DeleteBehavior.NoAction);
         }
 
-        public DbSet<PontoDeColeta> PontosDeColeta { get; set; }
     }
 }

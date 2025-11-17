@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace reeconecta.Models
 {
     [Table("Pontos")]
-    public class PontoDeColeta
+    public class Ponto
     {
         [Key]
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace reeconecta.Models
 
         [Required(ErrorMessage = "Obrigatório informar o tipo de ponto!")]
         [Display(Name = "Tipo de ponto")]
-        public TipoPonto Tipo { get; set; } 
+        public TipoPonto Tipo { get; set; }
 
         [Required(ErrorMessage = "Obrigatório informar a descrição!")]
         [Display(Name = "Descrição")]
@@ -24,15 +24,7 @@ namespace reeconecta.Models
 
         [Required(ErrorMessage = "Obrigatório informar o CEP!")]
         [Display(Name = "CEP")]
-        public string? CepPonto {  get; set; }
-
-        [Required(ErrorMessage = "Obrigatório informar a data de funcionamento!")]
-        [Display(Name = "Data de funcionamento")]
-        public DayOfWeek FuncionamentoPonto { get; set; }
-
-        [Required(ErrorMessage = "É obrigatório informar o horário de funcionamento!")]
-        [Display(Name = "Horário de funcionamento!")]
-        public TimeOnly HorarioPonto { get; set; }
+        public string? CepPonto { get; set; }
 
         [Required(ErrorMessage = "É obrigatório informar ao menos um telefone.")]
         [Display(Name = "Telefone nº 1")]
@@ -46,8 +38,6 @@ namespace reeconecta.Models
 
         [Display(Name = "Telefone nº 2 possui WhatsApp.")]
         public bool WppTelP2 { get; set; } = false;
-
-        public string? Imagem { get; set; }
 
     }
 
