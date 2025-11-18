@@ -12,8 +12,8 @@ using reeconecta.Models;
 namespace reeconecta.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251118214032_UpdatePontoModelo")]
-    partial class UpdatePontoModelo
+    [Migration("20251118230426_SyncPontoModel")]
+    partial class SyncPontoModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,12 @@ namespace reeconecta.Migrations
                     b.Property<string>("CepPonto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CriadoPorUsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DescricaoPonto")
                         .IsRequired()
@@ -70,6 +76,8 @@ namespace reeconecta.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CriadoPorUsuarioId");
 
                     b.ToTable("Pontos");
                 });
@@ -278,6 +286,15 @@ namespace reeconecta.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("VisualizacaoProduto");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.Ponto", b =>
+                {
+                    b.HasOne("reeconecta.Models.Usuario", "CriadoPorUsuario")
+                        .WithMany()
+                        .HasForeignKey("CriadoPorUsuarioId");
+
+                    b.Navigation("CriadoPorUsuario");
                 });
 
             modelBuilder.Entity("reeconecta.Models.Produto", b =>

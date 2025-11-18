@@ -1,4 +1,5 @@
-﻿@model reeconecta.Models.Ponto
+﻿@using reeconecta.Models
+@model reeconecta.Models.Ponto
 
 @{
     ViewData["Title"] = "Detalhes do Ponto";
@@ -98,9 +99,11 @@
                                 <p class="fw-semibold">@Model.TelefoneP01</p>
                                 @if (Model.WppTelP1)
                                 {
-                                    <span class="badge bg-success">
+                                    string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.TelefoneP01, @"\D", "");
+                                    string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
+                                    <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
                                         <i class="bi bi-whatsapp"></i> WhatsApp
-                                    </span>
+                                    </a>
                                 }
                             </div>
                             @if (!string.IsNullOrEmpty(Model.TelefoneP02))
@@ -110,9 +113,11 @@
                                     <p class="fw-semibold">@Model.TelefoneP02</p>
                                     @if (Model.WppTelP2)
                                     {
-                                        <span class="badge bg-success">
+                                        string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.TelefoneP02, @"\D", "");
+                                        string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
+                                        <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
                                             <i class="bi bi-whatsapp"></i> WhatsApp
-                                        </span>
+                                        </a>
                                     }
                                 </div>
                             }
@@ -123,15 +128,35 @@
 
                     <!-- Botões de Ação -->
                     <div class="d-flex gap-2">
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning flex-grow-1">
-                            <i class="bi bi-pencil-square"></i> Editar
-                        </a>
-                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger flex-grow-1">
-                            <i class="bi bi-trash"></i> Remover
-                        </a>
+                        @{
+                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst("UserId")?.Value, out var id) ? id : 0;
+                            var tipoUsuarioAtualEnum = TipoUsuario.User;
+
+                            if (Enum.TryParse<TipoUsuario>(Context.User.FindFirst("TipoUsuario")?.Value ?? "User", out var tipo))
+                            {
+                                tipoUsuarioAtualEnum = tipo;
+                            }
+
+                            var podeEditar = tipoUsuarioAtualEnum == TipoUsuario.Administrador || Model.CriadoPorUsuarioId == usuarioIdAtual;
+                        }
+
+                        @if (podeEditar)
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning flex-grow-1">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                        }
+
                         <a asp-action="Index" class="btn btn-outline-secondary flex-grow-1">
                             <i class="bi bi-list"></i> Voltar
                         </a>
+
+                        @if (podeEditar)
+                        {
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger flex-grow-1">
+                                <i class="bi bi-trash"></i> Remover
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

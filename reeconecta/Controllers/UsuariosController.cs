@@ -52,7 +52,6 @@ namespace reeconecta.Controllers
             if (dados == null)
             {
                 ViewBag.Message = "Usuário e/ou senha inválidos.";
-                
                 return View();
             }
 
@@ -61,12 +60,14 @@ namespace reeconecta.Controllers
             if (SenhaCorreta)
             {
                 var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, dados.Nome ?? dados.NomeFantasia ?? "Usuário"),
-            new Claim(ClaimTypes.NameIdentifier, dados.Id.ToString()),
-            new Claim(ClaimTypes.Email, dados.Email),
-            new Claim(ClaimTypes.Role, dados.TipoUsuario.ToString())
-        };
+                {
+                    new Claim(ClaimTypes.Name, dados.Nome ?? dados.NomeFantasia ?? "Usuário"),
+                    new Claim(ClaimTypes.NameIdentifier, dados.Id.ToString()),
+                    new Claim("UserId", dados.Id.ToString()),
+                    new Claim(ClaimTypes.Email, dados.Email),
+                    new Claim(ClaimTypes.Role, dados.TipoUsuario.ToString()),
+                    new Claim("TipoUsuario", dados.TipoUsuario.ToString())
+                };
 
                 var usuarioIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(usuarioIdentity);

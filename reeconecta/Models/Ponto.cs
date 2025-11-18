@@ -45,6 +45,16 @@ namespace reeconecta.Models
 
         [Display(Name = "Imagem do Ponto")]
         public string? Imagem { get; set; }
+
+        // Propriedades para rastreamento do usuário
+        public int? CriadoPorUsuarioId { get; set; }
+
+        [ForeignKey("CriadoPorUsuarioId")]
+        public Usuario? CriadoPorUsuario { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Data de Criação")]
+        public DateTime DataCriacao { get; set; } = DateTime.Now;
     }
 
     public enum TipoPonto

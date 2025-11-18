@@ -1,7 +1,10 @@
-﻿@model IEnumerable<reeconecta.Models.Ponto>
+﻿@using reeconecta.Models
+@model IEnumerable<reeconecta.Models.Ponto>
 
 @{
     ViewData["Title"] = "Pontos de Coleta";
+    var usuarioAtual = Context.User;
+    var tipoUsuarioAtual = Context.User.FindFirst("TipoUsuario");
 }
 
 <div class="container mt-4">
@@ -73,15 +76,35 @@
                                         }
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm flex-grow-1">
-                                            <i class="bi bi-pencil"></i> Editar
-                                        </a>
+                                        @{
+                                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst("UserId")?.Value, out var id) ? id : 0;
+                                            var tipoUsuarioAtualEnum = TipoUsuario.User;
+
+                                            if (Enum.TryParse<TipoUsuario>(Context.User.FindFirst("TipoUsuario")?.Value ?? "User", out var tipo))
+                                            {
+                                                tipoUsuarioAtualEnum = tipo;
+                                            }
+
+                                            var podeEditar = tipoUsuarioAtualEnum == TipoUsuario.Administrador || item.CriadoPorUsuarioId == usuarioIdAtual;
+                                        }
+
+                                        @if (podeEditar)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm flex-grow-1">
+                                                <i class="bi bi-pencil"></i> Editar
+                                            </a>
+                                        }
+
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm flex-grow-1">
                                             <i class="bi bi-eye"></i> Detalhes
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm flex-grow-1">
-                                            <i class="bi bi-trash"></i> Remover
-                                        </a>
+
+                                        @if (podeEditar)
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm flex-grow-1">
+                                                <i class="bi bi-trash"></i> Remover
+                                            </a>
+                                        }
                                     </div>
                                 </div>
                             </div>
