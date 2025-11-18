@@ -36,13 +36,45 @@
 
             <div class="form-group">
                 <label asp-for="CepPonto" class="control-label"></label>
-                <input asp-for="CepPonto" class="form-control" />
+                <input asp-for="CepPonto" class="form-control" id="cep-ponto" placeholder="Digite o CEP" />
                 <span asp-validation-for="CepPonto" class="text-danger"></span>
             </div>
 
             <div class="form-group">
+                <label for="endereco-logradouro-ponto" class="control-label">Endereço</label>
+                <input type="text" name="endereco-logradouro-ponto" id="endereco-logradouro-ponto" class="form-control" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="endereco-numero-ponto" class="control-label">Número</label>
+                <input type="text" name="endereco-numero-ponto" id="endereco-numero-ponto" class="form-control" placeholder="Digite o número" />
+            </div>
+
+            <div class="form-group">
+                <label for="endereco-complemento-ponto" class="control-label">Complemento</label>
+                <input type="text" name="endereco-complemento-ponto" id="endereco-complemento-ponto" class="form-control" placeholder="Loja, lixeira, etc." />
+            </div>
+
+            <div class="form-group">
+                <label for="endereco-bairro-ponto" class="control-label">Bairro</label>
+                <input type="text" name="endereco-bairro-ponto" id="endereco-bairro-ponto" class="form-control" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="endereco-cidade-ponto" class="control-label">Cidade</label>
+                <input type="text" name="endereco-cidade-ponto" id="endereco-cidade-ponto" class="form-control" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="endereco-uf-ponto" class="control-label">UF</label>
+                <input type="text" name="endereco-uf-ponto" id="endereco-uf-ponto" class="form-control" readonly />
+            </div>
+
+            <input type="hidden" asp-for="EnderecoPonto" id="endereco-completo-ponto" name="EnderecoPonto" />
+
+            <div class="form-group">
                 <label asp-for="TelefoneP01" class="control-label"></label>
-                <input asp-for="TelefoneP01" class="form-control" />
+                <input asp-for="TelefoneP01" class="form-control" id="tel-ponto-01" />
                 <span asp-validation-for="TelefoneP01" class="text-danger"></span>
             </div>
 
@@ -54,7 +86,7 @@
 
             <div class="form-group">
                 <label asp-for="TelefoneP02" class="control-label"></label>
-                <input asp-for="TelefoneP02" class="form-control" />
+                <input asp-for="TelefoneP02" class="form-control" id="tel-ponto-02" />
                 <span asp-validation-for="TelefoneP02" class="text-danger"></span>
             </div>
 
@@ -100,14 +132,176 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        function previewImagem(event) {
-            const img = document.getElementById('preview');
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => img.src = e.target.result;
-                reader.readAsDataURL(file);
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ELEMENTOS DE ENDEREÇO
+            const cepInput = document.getElementById("cep-ponto");
+            const enderecoInput = document.getElementById("endereco-logradouro-ponto");
+            const bairroInput = document.getElementById("endereco-bairro-ponto");
+            const cidadeInput = document.getElementById("endereco-cidade-ponto");
+            const ufInput = document.getElementById("endereco-uf-ponto");
+            const numeroInput = document.getElementById("endereco-numero-ponto");
+            const complementoInput = document.getElementById("endereco-complemento-ponto");
+            const enderecoCompletoInput = document.getElementById("endereco-completo-ponto");
+
+            // ELEMENTOS DE TELEFONE
+            const telefone1 = document.getElementById("tel-ponto-01");
+            const telefone2 = document.getElementById("tel-ponto-02");
+
+            // FUNÇÃO: Extrair componentes do endereço completo ao carregar a página
+            function extrairComponentesEndereço() {
+                const enderecoCompleto = enderecoCompletoInput.value;
+                if (!enderecoCompleto) return;
+
+                // Padrão: "Logradouro, nº Número (Complemento), Bairro - Cidade / UF"
+                // Extrai logradouro (antes da primeira vírgula)
+                const partes = enderecoCompleto.split(',');
+                if (partes.length > 0) {
+                    enderecoInput.value = partes[0].trim();
+                }
+
+                // Extrai número (após "nº")
+                const numeroMatch = enderecoCompleto.match(/nº\s*(\d+)/);
+                if (numeroMatch) {
+                    numeroInput.value = numeroMatch[1];
+                }
+
+                // Extrai complemento (dentro de parênteses)
+                const complementoMatch = enderecoCompleto.match(/\(([^)]+)\)/);
+                if (complementoMatch) {
+                    complementoInput.value = complementoMatch[1];
+                }
+
+                // Extrai bairro (antes do hífen)
+                const bairroMatch = enderecoCompleto.match(/,\s*([^,]+)\s*-/);
+                if (bairroMatch) {
+                    bairroInput.value = bairroMatch[1].trim();
+                }
+
+                // Extrai cidade (após hífen, antes da barra)
+                const cidadeMatch = enderecoCompleto.match(/\s-\s*([^/]+)/);
+                if (cidadeMatch) {
+                    cidadeInput.value = cidadeMatch[1].trim();
+                }
+
+                // Extrai UF (após barra)
+                const ufMatch = enderecoCompleto.match(/\/\s*([A-Z]{2})/);
+                if (ufMatch) {
+                    ufInput.value = ufMatch[1];
+                }
             }
-        }
+
+            // FUNÇÃO: Limpar campos de endereço
+            function limparCampos() {
+                enderecoInput.value = "";
+                bairroInput.value = "";
+                cidadeInput.value = "";
+                ufInput.value = "";
+            }
+
+            // FUNÇÃO: Montar endereço completo
+            function montarEndereco() {
+                const logradouro = enderecoInput.value.trim();
+                const numero = numeroInput.value.trim();
+                const complemento = complementoInput.value.trim();
+                const bairro = bairroInput.value.trim();
+                const cidade = cidadeInput.value.trim();
+                const uf = ufInput.value.trim();
+
+                let endereco = `${logradouro}`;
+                if (numero) endereco += `, nº ${numero}`;
+                if (complemento) endereco += ` (${complemento})`;
+                if (bairro) endereco += `, ${bairro}`;
+                if (cidade || uf) endereco += ` - ${cidade}${uf ? " / " + uf : ""}`;
+
+                if (enderecoCompletoInput) enderecoCompletoInput.value = endereco;
+            }
+
+            // MÁSCARA DE CEP
+            cepInput.addEventListener("input", function () {
+                let cep = this.value.replace(/\D/g, "");
+                if (cep.length > 5) cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+                this.value = cep;
+            });
+
+            // BUSCA DE CEP NA API VIACEP
+            cepInput.addEventListener("blur", function () {
+                const cep = this.value.replace(/\D/g, "");
+                if (cep.length !== 8) {
+                    limparCampos();
+                    alert("CEP inválido. Digite 8 números.");
+                    return;
+                }
+
+                const url = `https://viacep.com.br/ws/${cep}/json/`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.erro) {
+                            limparCampos();
+                            alert("CEP não encontrado.");
+                            return;
+                        }
+
+                        enderecoInput.value = data.logradouro;
+                        bairroInput.value = data.bairro;
+                        cidadeInput.value = data.localidade;
+                        ufInput.value = data.uf.toUpperCase();
+
+                        montarEndereco();
+                    })
+                    .catch(() => {
+                        limparCampos();
+                        alert("Erro ao buscar o CEP. Tente novamente.");
+                    });
+            });
+
+            // REMONTAR ENDEREÇO QUANDO CAMPOS MUDAM
+            numeroInput.addEventListener("blur", montarEndereco);
+            complementoInput.addEventListener("blur", montarEndereco);
+
+            // MÁSCARA DE TELEFONE
+            function aplicarMascaraTelefone(input) {
+                input.addEventListener("input", function (e) {
+                    let valor = e.target.value.replace(/\D/g, "");
+                    if (valor.length > 11) valor = valor.slice(0, 11);
+
+                    if (valor.length > 10) {
+                        valor = valor.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                    } else if (valor.length > 6) {
+                        valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+                    } else if (valor.length > 2) {
+                        valor = valor.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                    } else {
+                        valor = valor.replace(/^(\d*)/, "($1");
+                    }
+
+                    e.target.value = valor;
+                });
+            }
+
+            if (telefone1) aplicarMascaraTelefone(telefone1);
+            if (telefone2) aplicarMascaraTelefone(telefone2);
+
+            // PREVIEW DE IMAGEM
+            window.previewImagem = function (event) {
+                const img = document.getElementById('preview');
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => img.src = e.target.result;
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            // EXTRAIR COMPONENTES AO CARREGAR A PÁGINA
+            extrairComponentesEndereço();
+
+            // MONTAR ENDEREÇO AO ENVIAR FORMULÁRIO
+            const form = document.querySelector("form");
+            if (form) {
+                form.addEventListener("submit", montarEndereco);
+            }
+        });
     </script>
 }

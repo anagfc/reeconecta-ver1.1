@@ -5,23 +5,24 @@
 namespace reeconecta.Migrations
 {
     /// <inheritdoc />
-    public partial class ImagensParaPontos : Migration
+    public partial class UpdatePontoModelo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Imagem",
+                name: "EnderecoPonto",
                 table: "Pontos",
                 type: "nvarchar(max)",
-                nullable: true);
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Imagem",
+                name: "EnderecoPonto",
                 table: "Pontos");
         }
     }

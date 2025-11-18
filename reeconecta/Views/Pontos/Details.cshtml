@@ -43,9 +43,9 @@
 
                     <hr />
 
-                    <!-- Informações em Grid -->
+                    <!-- Descrição -->
                     <div class="row mb-4">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <h6 class="fw-semibold text-muted">Descrição</h6>
                             <p>@Model.DescricaoPonto</p>
                         </div>
@@ -55,9 +55,36 @@
                     <div class="bg-light p-3 rounded mb-4">
                         <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> Localização</h6>
                         <div class="row">
-                            <div class="col-md-6 mb-2">
+                            <div class="col-md-6 mb-3">
                                 <label class="text-muted small">CEP</label>
                                 <p class="fw-semibold">@Model.CepPonto</p>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="text-muted small">Endereço Completo</label>
+                                <p class="fw-semibold">@Model.EnderecoPonto</p>
+                            </div>
+
+                            <div class="col-md-12">
+                                @{
+                                    // Remove o complemento do endereço para o Google Maps
+                                    string enderecoPonto = Model.EnderecoPonto;
+
+                                    // Remove complemento entre parênteses
+                                    int indexAbreParentese = enderecoPonto.IndexOf('(');
+                                    if (indexAbreParentese > 0)
+                                    {
+                                        enderecoPonto = enderecoPonto.Substring(0, indexAbreParentese).Trim();
+                                    }
+
+                                    // Usa CEP + endereço para melhor precisão no Google Maps
+                                    string enderecoComCep = $"{enderecoPonto}, {Model.CepPonto}";
+                                    string enderecoEncoded = System.Web.HttpUtility.UrlEncode(enderecoComCep);
+                                    string googleMapsUrl = $"https://www.google.com/maps/search/{enderecoEncoded}";
+                                }
+                                <a href="@googleMapsUrl" target="_blank" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-geo-alt-fill"></i> Ver no Google Maps
+                                </a>
                             </div>
                         </div>
                     </div>

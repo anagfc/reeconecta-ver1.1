@@ -71,6 +71,7 @@ namespace reeconecta.Controllers
             }
             return View(dados);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Ponto ponto, IFormFile? ImagemFile)
@@ -83,6 +84,15 @@ namespace reeconecta.Controllers
             {
                 try
                 {
+                    // Recupera o ponto atual do banco de dados para manter a imagem existente
+                    var pontoAtual = await _context.Pontos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+                    if (pontoAtual == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Se uma nova imagem for enviada, processa e substitui
                     if (ImagemFile != null && ImagemFile.Length > 0)
                     {
                         var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImagemFile.FileName);
@@ -93,6 +103,11 @@ namespace reeconecta.Controllers
                             await ImagemFile.CopyToAsync(stream);
 
                         ponto.Imagem = "/images/pontos/" + fileName;
+                    }
+                    else
+                    {
+                        // Se nenhuma imagem foi enviada, mantém a imagem existente
+                        ponto.Imagem = pontoAtual.Imagem;
                     }
 
                     _context.Pontos.Update(ponto);
@@ -138,6 +153,7 @@ namespace reeconecta.Controllers
 
             return View(dados);
         }
+
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {

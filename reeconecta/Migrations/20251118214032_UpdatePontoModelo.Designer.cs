@@ -12,8 +12,8 @@ using reeconecta.Models;
 namespace reeconecta.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251117205334_CorrecoesParaTestePontos")]
-    partial class CorrecoesParaTestePontos
+    [Migration("20251118214032_UpdatePontoModelo")]
+    partial class UpdatePontoModelo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,13 @@ namespace reeconecta.Migrations
 
                     b.Property<string>("DescricaoPonto")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnderecoPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imagem")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomePonto")

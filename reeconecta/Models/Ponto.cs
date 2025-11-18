@@ -26,6 +26,10 @@ namespace reeconecta.Models
         [Display(Name = "CEP")]
         public string? CepPonto { get; set; }
 
+        [Required(ErrorMessage = "Obrigatório informar o endereço!")]
+        [Display(Name = "Endereço")]
+        public string EnderecoPonto { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "É obrigatório informar ao menos um telefone.")]
         [Display(Name = "Telefone nº 1")]
         public string TelefoneP01 { get; set; } = string.Empty;
@@ -41,7 +45,6 @@ namespace reeconecta.Models
 
         [Display(Name = "Imagem do Ponto")]
         public string? Imagem { get; set; }
-
     }
 
     public enum TipoPonto

@@ -38,6 +38,10 @@ namespace reeconecta.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EnderecoPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Imagem")
                         .HasColumnType("nvarchar(max)");
 
