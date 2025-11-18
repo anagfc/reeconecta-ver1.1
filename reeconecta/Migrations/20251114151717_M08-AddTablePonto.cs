@@ -24,8 +24,6 @@ namespace reeconecta.Migrations
                     Tipo = table.Column<int>(type: "int", nullable: false),
                     DescricaoPonto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CepPonto = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FuncionamentoPonto = table.Column<int>(type: "int", nullable: false),
-                    HorarioPonto = table.Column<TimeOnly>(type: "time", nullable: false),
                     TelefoneP01 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WppTelP1 = table.Column<bool>(type: "bit", nullable: false),
                     TelefoneP02 = table.Column<string>(type: "nvarchar(max)", nullable: false),

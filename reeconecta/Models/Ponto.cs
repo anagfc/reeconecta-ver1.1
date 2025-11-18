@@ -39,6 +39,9 @@ namespace reeconecta.Models
         [Display(Name = "Telefone nº 2 possui WhatsApp.")]
         public bool WppTelP2 { get; set; } = false;
 
+        [Display(Name = "Imagem do Ponto")]
+        public string? Imagem { get; set; }
+
     }
 
     public enum TipoPonto
