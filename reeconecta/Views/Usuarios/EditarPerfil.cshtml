@@ -4,95 +4,154 @@
     ViewData["Title"] = "Editar Perfil";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg">
-                <div class="card-header bg-warning text-dark">
-                    <h2 class="mb-0"><i class="bi bi-pencil-square"></i> Editar Perfil</h2>
-                </div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
 
-                <div class="card-body">
+            <!-- Cabeçalho -->
+            <div class="mb-4">
+                <a asp-action="Perfil" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+
+            <!-- Card Principal -->
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Conteúdo -->
+                <div class="card-body p-4">
+
+                    <!-- Título -->
+                    <div class="mb-4">
+                        <h2 class="fw-bold mb-2"><i class="bi bi-pencil-square"></i> Editar Perfil</h2>
+                    </div>
+
+                    <hr />
+
+                    <!-- Formulário -->
                     <form asp-action="EditarPerfil" asp-route-id="@Model.Id" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
                         <input type="hidden" asp-for="Id" />
 
-                        <div class="row">
+                        <!-- Informações Básicas -->
+                        <div class="row mb-4">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Nome" class="form-label fw-bold"></label>
+                                <label asp-for="Nome" class="form-label text-muted small fw-semibold"></label>
                                 <input asp-for="Nome" class="form-control" placeholder="Seu nome completo" />
                                 <span asp-validation-for="Nome" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label asp-for="NomeFantasia" class="form-label fw-bold"></label>
-                                <input asp-for="NomeFantasia" class="form-control" placeholder="Nome fantasia (se aplicável)" />
-                                <span asp-validation-for="NomeFantasia" class="text-danger small"></span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Email" class="form-label fw-bold"></label>
+                                <label asp-for="Email" class="form-label text-muted small fw-semibold"></label>
                                 <input asp-for="Email" class="form-control" type="email" />
                                 <span asp-validation-for="Email" class="text-danger small"></span>
                             </div>
+                        </div>
+
+                        <div class="row mb-4">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Documento" class="form-label fw-bold"></label>
+                                <label asp-for="Documento" class="form-label text-muted small fw-semibold"></label>
                                 <input asp-for="Documento" class="form-control" disabled />
                                 <small class="text-muted">Campo não editável</small>
                             </div>
+                            @if (Model.TipodePerfil == reeconecta.Models.TipoPerfil.PessoaJuridica)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="NomeFantasia" class="form-label text-muted small fw-semibold"></label>
+                                    <input asp-for="NomeFantasia" class="form-control" placeholder="Nome fantasia (se aplicável)" />
+                                    <span asp-validation-for="NomeFantasia" class="text-danger small"></span>
+                                </div>
+                            }
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Cep" class="form-label fw-bold"></label>
-                                <input asp-for="Cep" class="form-control" placeholder="00000-000" />
-                                <span asp-validation-for="Cep" class="text-danger small"></span>
+                        <!-- Localização -->
+                        <div class="bg-light p-3 rounded mb-4">
+                            <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> Localização</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="endereco-cep" class="form-label text-muted small fw-semibold">CEP</label>
+                                    <input type="text" id="endereco-cep" asp-for="Cep" class="form-control" placeholder="00000-000" />
+                                    <span asp-validation-for="Cep" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="endereco-logradouro" class="form-label text-muted small fw-semibold">Endereço</label>
+                                    <input type="text" id="endereco-logradouro" class="form-control" readonly />
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Endereco" class="form-label fw-bold"></label>
-                                <input asp-for="Endereco" class="form-control" placeholder="Rua, número, complemento" />
-                                <span asp-validation-for="Endereco" class="text-danger small"></span>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="endereco-numero" class="form-label text-muted small fw-semibold">Número</label>
+                                    <input type="text" id="endereco-numero" class="form-control" placeholder="Digite o número" required />
+                                    <span class="text-danger small" id="erro-numero"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="endereco-complemento" class="form-label text-muted small fw-semibold">Complemento</label>
+                                    <input type="text" id="endereco-complemento" class="form-control" placeholder="Digite o complemento" />
+                                </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="endereco-bairro" class="form-label text-muted small fw-semibold">Bairro</label>
+                                    <input type="text" id="endereco-bairro" class="form-control" readonly />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="endereco-cidade" class="form-label text-muted small fw-semibold">Cidade</label>
+                                    <input type="text" id="endereco-cidade" class="form-control" readonly />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="endereco-uf" class="form-label text-muted small fw-semibold">UF</label>
+                                    <input type="text" id="endereco-uf" class="form-control" readonly />
+                                </div>
+                            </div>
+
+                            <input type="hidden" asp-for="Endereco" id="enderecoCompleto" />
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Telefone01" class="form-label fw-bold"></label>
-                                <input asp-for="Telefone01" class="form-control" placeholder="(00) 00000-0000" />
-                                <span asp-validation-for="Telefone01" class="text-danger small"></span>
+                        <!-- Contato -->
+                        <div class="bg-light p-3 rounded mb-4">
+                            <h6 class="fw-semibold mb-3"><i class="bi bi-telephone"></i> Contato</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Telefone01" class="form-label text-muted small fw-semibold"></label>
+                                    <input asp-for="Telefone01" class="form-control" placeholder="(00) 00000-0000" id="tel01" />
+                                    <span asp-validation-for="Telefone01" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" asp-for="WppTel1" />
+                                        <label class="form-check-label" asp-for="WppTel1">
+                                            WhatsApp
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-2 mb-3">
-                                <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" asp-for="WppTel1" />
-                                    <label class="form-check-label" for="WppTel1">
-                                        WhatsApp
-                                    </label>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Telefone02" class="form-label text-muted small fw-semibold"></label>
+                                    <input asp-for="Telefone02" class="form-control" placeholder="(00) 00000-0000" id="tel02" />
+                                    <span asp-validation-for="Telefone02" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" asp-for="WppTel2" />
+                                        <label class="form-check-label" asp-for="WppTel2">
+                                            WhatsApp
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Telefone02" class="form-label fw-bold"></label>
-                                <input asp-for="Telefone02" class="form-control" placeholder="(00) 00000-0000" />
-                                <span asp-validation-for="Telefone02" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" asp-for="WppTel2" />
-                                    <label class="form-check-label" for="WppTel2">
-                                        WhatsApp
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                        <hr />
 
-                        <div class="d-flex gap-2 mt-4">
-                            <button type="submit" class="btn btn-success btn-lg">
+                        <!-- Botões de Ação -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success flex-grow-1">
                                 <i class="bi bi-check-circle"></i> Salvar Alterações
                             </button>
-                            <a asp-action="Perfil" class="btn btn-secondary btn-lg">
+                            <a asp-action="Perfil" class="btn btn-secondary flex-grow-1">
                                 <i class="bi bi-arrow-left"></i> Cancelar
                             </a>
                         </div>
@@ -107,4 +166,210 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // MÁSCARA DE TELEFONE
+            function aplicarMascaraTelefone(input) {
+                input.addEventListener("input", function (e) {
+                    let valor = e.target.value.replace(/\D/g, "");
+                    if (valor.length > 11) valor = valor.slice(0, 11);
+
+                    if (valor.length > 10) {
+                        valor = valor.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                    } else if (valor.length > 6) {
+                        valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+                    } else if (valor.length > 2) {
+                        valor = valor.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                    } else {
+                        valor = valor.replace(/^(\d*)/, "($1");
+                    }
+
+                    e.target.value = valor;
+                });
+            }
+
+            const telefone1 = document.getElementById("tel01");
+            const telefone2 = document.getElementById("tel02");
+            if (telefone1) aplicarMascaraTelefone(telefone1);
+            if (telefone2) aplicarMascaraTelefone(telefone2);
+
+            // Prevenir submissão do formulário ao pressionar Enter nos campos de telefone
+            if (telefone1) {
+                telefone1.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            if (telefone2) {
+                telefone2.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            // CONFIGURAÇÃO DE ENDEREÇO
+            const cepInput = document.getElementById("endereco-cep");
+            const enderecoInput = document.getElementById("endereco-logradouro");
+            const bairroInput = document.getElementById("endereco-bairro");
+            const cidadeInput = document.getElementById("endereco-cidade");
+            const ufInput = document.getElementById("endereco-uf");
+            const numeroInput = document.getElementById("endereco-numero");
+            const complementoInput = document.getElementById("endereco-complemento");
+            const enderecoCompletoInput = document.getElementById("enderecoCompleto");
+
+            function limparCampos() {
+                enderecoInput.value = "";
+                bairroInput.value = "";
+                cidadeInput.value = "";
+                ufInput.value = "";
+            }
+
+            function montarEndereco() {
+                const logradouro = enderecoInput.value.trim();
+                const numero = numeroInput.value.trim();
+                const complemento = complementoInput.value.trim();
+                const bairro = bairroInput.value.trim();
+                const cidade = cidadeInput.value.trim();
+                const uf = ufInput.value.trim();
+
+                let endereco = `${logradouro}`;
+                if (numero) endereco += `, nº ${numero}`;
+                if (complemento) endereco += ` (${complemento})`;
+                if (bairro) endereco += `, ${bairro}`;
+                if (cidade || uf) endereco += ` - ${cidade}${uf ? " / " + uf : ""}`;
+
+                if (enderecoCompletoInput) enderecoCompletoInput.value = endereco;
+            }
+
+            // Função para fazer parse do endereço existente
+            function parseEnderecoExistente() {
+                const enderecoCompleto = enderecoCompletoInput.value;
+                if (!enderecoCompleto) return;
+
+                // Padrão: "Logradouro, nº Número (Complemento), Bairro - Cidade / UF"
+                const regexEndereco = /^([^,]+),\s*(?:nº\s*)?([^(,]+)?(?:\s*\(([^)]*)\))?(?:,\s*([^-]+))?(?:\s*-\s*([^/]+))?(?:\s*\/\s*(.+))?$/;
+                const match = enderecoCompleto.match(regexEndereco);
+
+                if (match) {
+                    enderecoInput.value = match[1]?.trim() || "";
+                    numeroInput.value = match[2]?.trim() || "";
+                    complementoInput.value = match[3]?.trim() || "";
+                    bairroInput.value = match[4]?.trim() || "";
+                    cidadeInput.value = match[5]?.trim() || "";
+                    ufInput.value = match[6]?.trim() || "";
+                }
+            }
+
+            // Formatar CEP ao carregar
+            function formatarCepInicial() {
+                let cep = cepInput.value.replace(/\D/g, "");
+                if (cep.length === 8) {
+                    cepInput.value = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+                }
+            }
+
+            // Inicializar dados existentes
+            formatarCepInicial();
+            parseEnderecoExistente();
+
+            cepInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                }
+            });
+
+            cepInput.addEventListener("input", function () {
+                let cep = this.value.replace(/\D/g, "");
+                if (cep.length > 5) cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+                this.value = cep;
+            });
+
+            cepInput.addEventListener("blur", function () {
+                const cep = this.value.replace(/\D/g, "");
+                if (cep.length !== 8) {
+                    if (cep.length > 0) {
+                        alert("CEP inválido. Digite 8 números.");
+                    }
+                    return;
+                }
+
+                const url = `https://viacep.com.br/ws/${cep}/json/`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.erro) {
+                            limparCampos();
+                            alert("CEP não encontrado.");
+                            return;
+                        }
+
+                        enderecoInput.value = data.logradouro;
+                        bairroInput.value = data.bairro;
+                        cidadeInput.value = data.localidade;
+                        ufInput.value = data.uf.toUpperCase();
+
+                        montarEndereco();
+                    })
+                    .catch(() => {
+                        limparCampos();
+                        alert("Erro ao buscar o CEP. Tente novamente.");
+                    });
+            });
+
+            numeroInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                }
+            });
+
+            complementoInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                }
+            });
+
+            numeroInput.addEventListener("blur", montarEndereco);
+            complementoInput.addEventListener("blur", montarEndereco);
+
+            const form = document.querySelector("form");
+            if (form) {
+                form.addEventListener("submit", function (e) {
+                    const numero = numeroInput.value.trim();
+                    const erroNumero = document.getElementById("erro-numero");
+
+                    if (!numero) {
+                        e.preventDefault();
+                        erroNumero.textContent = "Número é obrigatório.";
+                        erroNumero.style.display = "block";
+                        return false;
+                    } else {
+                        erroNumero.textContent = "";
+                        erroNumero.style.display = "none";
+                    }
+
+                    // Limpar caracteres especiais dos telefones antes de salvar
+                    const telefone1Valor = telefone1.value.replace(/\D/g, "");
+                    const telefone2Valor = telefone2.value.replace(/\D/g, "");
+
+                    // Se o telefone estiver vazio ou com caracteres inválidos, limpar o campo
+                    if (!telefone1Valor) {
+                        telefone1.value = "";
+                    } else {
+                        telefone1.value = telefone1Valor.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                    }
+
+                    if (!telefone2Valor) {
+                        telefone2.value = "";
+                    } else {
+                        telefone2.value = telefone2Valor.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                    }
+
+                    montarEndereco();
+                });
+            }
+        });
+    </script>
 }
