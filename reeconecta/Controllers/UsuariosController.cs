@@ -52,7 +52,7 @@ namespace reeconecta.Controllers
             if (dados == null)
             {
                 ViewBag.Message = "Usuário e/ou senha inválidos.";
-                
+
                 return View();
             }
 
@@ -335,7 +335,7 @@ namespace reeconecta.Controllers
             return _context.Usuarios.Any(e => e.Id == id);
         }
 
-        public async Task<IActionResult> Relatorio  (int? id)
+        public async Task<IActionResult> Relatorio(int? id)
         {
             if (id == null)
                 return NotFound();
