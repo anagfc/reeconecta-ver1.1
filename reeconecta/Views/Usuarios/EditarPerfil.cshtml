@@ -1,0 +1,110 @@
+﻿@model reeconecta.Models.Usuario
+
+@{
+    ViewData["Title"] = "Editar Perfil";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="mb-0"><i class="bi bi-pencil-square"></i> Editar Perfil</h2>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="EditarPerfil" asp-route-id="@Model.Id" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nome" class="form-label fw-bold"></label>
+                                <input asp-for="Nome" class="form-control" placeholder="Seu nome completo" />
+                                <span asp-validation-for="Nome" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NomeFantasia" class="form-label fw-bold"></label>
+                                <input asp-for="NomeFantasia" class="form-control" placeholder="Nome fantasia (se aplicável)" />
+                                <span asp-validation-for="NomeFantasia" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label fw-bold"></label>
+                                <input asp-for="Email" class="form-control" type="email" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Documento" class="form-label fw-bold"></label>
+                                <input asp-for="Documento" class="form-control" disabled />
+                                <small class="text-muted">Campo não editável</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Cep" class="form-label fw-bold"></label>
+                                <input asp-for="Cep" class="form-control" placeholder="00000-000" />
+                                <span asp-validation-for="Cep" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Endereco" class="form-label fw-bold"></label>
+                                <input asp-for="Endereco" class="form-control" placeholder="Rua, número, complemento" />
+                                <span asp-validation-for="Endereco" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefone01" class="form-label fw-bold"></label>
+                                <input asp-for="Telefone01" class="form-control" placeholder="(00) 00000-0000" />
+                                <span asp-validation-for="Telefone01" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" asp-for="WppTel1" />
+                                    <label class="form-check-label" for="WppTel1">
+                                        WhatsApp
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefone02" class="form-label fw-bold"></label>
+                                <input asp-for="Telefone02" class="form-control" placeholder="(00) 00000-0000" />
+                                <span asp-validation-for="Telefone02" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" asp-for="WppTel2" />
+                                    <label class="form-check-label" for="WppTel2">
+                                        WhatsApp
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle"></i> Salvar Alterações
+                            </button>
+                            <a asp-action="Perfil" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

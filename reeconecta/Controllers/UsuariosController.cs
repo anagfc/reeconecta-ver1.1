@@ -265,5 +265,158 @@ namespace reeconecta.Controllers
             return View(anuncios);
 
         }
+
+        // GET: Usuarios/Perfil (Visualização)
+        [Authorize]
+        public async Task<IActionResult> Perfil()
+        {
+            var usuarioIdClaim = User.FindFirst("UserId");
+            if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var usuario = await _context.Usuarios.FindAsync(usuarioId);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return View(usuario);
+        }
+
+        // GET: Usuarios/EditarPerfil (Modo edição)
+        [Authorize]
+        public async Task<IActionResult> EditarPerfil()
+        {
+            var usuarioIdClaim = User.FindFirst("UserId");
+            if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var usuario = await _context.Usuarios.FindAsync(usuarioId);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return View(usuario);
+        }
+
+        // POST: Usuarios/EditarPerfil (Salvar alterações)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> EditarPerfil(int id, [Bind("Id,Nome,NomeFantasia,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email")] Usuario usuario)
+        {
+            var usuarioIdClaim = User.FindFirst("UserId");
+            if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioIdLogado))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Validação de segurança: usuário só pode editar seu próprio perfil
+            if (id != usuarioIdLogado)
+            {
+                return Forbid();
+            }
+
+            if (id != usuario.Id)
+            {
+                return NotFound();
+            }
+
+            // Remover validações dos campos que não estão sendo editados
+            ModelState.Remove("Documento");
+            ModelState.Remove("TipodePerfil");
+            ModelState.Remove("RazaoSocial");
+            ModelState.Remove("RepresentanteLegal");
+            ModelState.Remove("EmailRepresentante");
+            ModelState.Remove("TipoUsuario");
+            ModelState.Remove("Senha");
+            ModelState.Remove("ContaAtiva");
+            ModelState.Remove("CriacaoConta");
+            ModelState.Remove("Produtos");
+            ModelState.Remove("ReservasProduto");
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var usuarioExistente = await _context.Usuarios.FindAsync(id);
+                    if (usuarioExistente == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Atualizar apenas os campos permitidos
+                    usuarioExistente.Nome = usuario.Nome;
+                    usuarioExistente.NomeFantasia = usuario.NomeFantasia;
+                    usuarioExistente.Cep = usuario.Cep;
+                    usuarioExistente.Endereco = usuario.Endereco;
+                    usuarioExistente.Telefone01 = usuario.Telefone01;
+                    usuarioExistente.WppTel1 = usuario.WppTel1;
+                    usuarioExistente.Telefone02 = usuario.Telefone02;
+                    usuarioExistente.WppTel2 = usuario.WppTel2;
+                    usuarioExistente.Email = usuario.Email;
+
+                    _context.Update(usuarioExistente);
+                    await _context.SaveChangesAsync();
+
+                    // Atualizar os claims do usuário logado
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, usuarioExistente.Nome ?? usuarioExistente.NomeFantasia ?? "Usuário"),
+                        new Claim(ClaimTypes.NameIdentifier, usuarioExistente.Id.ToString()),
+                        new Claim("UserId", usuarioExistente.Id.ToString()),
+                        new Claim(ClaimTypes.Email, usuarioExistente.Email),
+                        new Claim(ClaimTypes.Role, usuarioExistente.TipoUsuario.ToString()),
+                        new Claim("TipoUsuario", usuarioExistente.TipoUsuario.ToString())
+                    };
+
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var principal = new ClaimsPrincipal(identity);
+
+                    var props = new AuthenticationProperties
+                    {
+                        AllowRefresh = true,
+                        ExpiresUtc = DateTime.UtcNow.ToLocalTime().AddHours(8),
+                        IsPersistent = true
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
+
+                    TempData["MensagemSucesso"] = "Perfil atualizado com sucesso!";
+                    return RedirectToAction("Perfil");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UsuarioExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Erro ao atualizar perfil: {ex.Message}");
+                }
+            }
+            else
+            {
+                // Debug: mostrar erros de validação
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Erro de validação: {error.ErrorMessage}");
+                }
+            }
+
+            return View(usuario);
+        }
     }
 }

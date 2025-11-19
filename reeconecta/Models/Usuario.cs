@@ -57,7 +57,7 @@ namespace reeconecta.Models
         public string? Telefone02 { get; set; }
 
         [Display(Name = "Telefone nº 2 possui WhatsApp.")]
-        public bool? WppTel2 { get; set; }
+        public bool WppTel2 { get; set; } = false;
 
         [Required(ErrorMessage = "É obrigatório informar seu email.")]
         [DataType(DataType.EmailAddress)]
