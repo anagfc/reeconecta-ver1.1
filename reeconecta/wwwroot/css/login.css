@@ -24,7 +24,7 @@ main {
 }
 
 .img-banner {
-    height: 92vh;
+    height: 80%
 }
 
 h3 {
@@ -85,8 +85,4 @@ h3 {
 
 .link-criar-conta:hover {
     font-weight: bolder;
-}
-
-#etapa-redefinicao {
-    display:none;
 }
