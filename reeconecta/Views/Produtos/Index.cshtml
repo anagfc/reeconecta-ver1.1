@@ -4,35 +4,48 @@
     ViewData["Title"] = "Marketplace";
 }
 
-
 <div class="container mt-4">
 
     <div class="mb-4">
-        <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 180px;">
-            <img src="~/Logo REEConecta.png" alt="Logotipo ReeConecta" width="160px" /> <!--adicionar outra imagem-->
+        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+             style="height: 180px;">
+            <img src="~/Logo REEConecta.png" alt="Logotipo ReeConecta" width="160px" />
+            <!-- adicionar outra imagem -->
         </div>
     </div>
 
     <div class="d-flex justify-content-center gap-3 mb-4">
-        <a asp-controller="Produtos" asp-action="MeusProdutos" class="btn btn-outline-secondary shadow-sm">
+        <a asp-controller="Produtos"
+           asp-action="MeusProdutos"
+           class="btn btn-outline-secondary shadow-sm">
             Meus produtos
         </a>
-        <a asp-controller="Produtos" asp-action="MinhasReservas" class="btn btn-outline-success shadow-sm">
+
+        <a asp-controller="Produtos"
+           asp-action="MinhasReservas"
+           class="btn btn-outline-success shadow-sm">
             Minhas Reservas
         </a>
-        <a asp-action="Create" class="btn btn-outline-primary shadow-sm">
-            Anuncie seu produto <i class="bi bi-plus-circle"></i>
+
+        <a asp-action="Create"
+           class="btn btn-outline-primary shadow-sm">
+            Anuncie seu produto
+            <i class="bi bi-plus-circle"></i>
         </a>
     </div>
 
     <div class="row">
+
+        <!-- FILTROS -->
         <aside class="col-md-3 mb-4">
             <h5 class="fw-bold mb-3">Filtros</h5>
+
             <div class="d-flex flex-column gap-3">
                 <p>Adicionar os filtros</p>
             </div>
         </aside>
 
+        <!-- LISTA -->
         <section class="col-md-9">
 
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -44,43 +57,75 @@
                 {
                     <div class="col-md-4">
                         <div class="card h-100 shadow-sm border-0">
-                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height: 200px;">
+
                                 @if (!string.IsNullOrEmpty(item.Imagem))
                                 {
-                                    <img src="@item.Imagem" class="img-fluid rounded" style="max-height:180px; object-fit:cover;" />
-
+                                    <img src="@item.Imagem"
+                                         class="img-fluid rounded"
+                                         style="max-height:180px; object-fit:cover;" />
                                 }
                                 else
                                 {
-                                    <i class="bi bi-image" style="font-size: 2rem; color: gray;"></i>
+                                    <i class="bi bi-image"
+                                       style="font-size: 2rem; color: gray;"></i>
                                 }
+
                             </div>
+
                             <div class="card-body text-center">
                                 <h6 class="fw-semibold">@item.Titulo</h6>
-                                <p class="mb-1 text-muted">R$ @item.Preco.ToString("N2")</p>
-                                <p class="mb-1 text-muted">@item.Bairro, @item.Cidade</p>
-                                <p class="mb-3">@item.StatusProduto</p>
+
+                                <p class="mb-1 text-muted">
+                                    R$ @item.Preco.ToString("N2")
+                                </p>
+
+                                <p class="mb-1 text-muted">
+                                    @item.Bairro, @item.Cidade
+                                </p>
+
+                                <p class="mb-3">
+                                    @item.StatusProduto
+                                </p>
+
                                 <div class="produto-card" style="position: relative;">
                                     @{
-                                        bool reservado = item.ReservasProduto?.Any(r => r.Status == StatusReserva.Pendente) ?? false;
+                                        bool reservado = item.ReservasProduto?.Any(r =>
+                                        r.Status == StatusReserva.Pendente) ?? false;
                                     }
+
                                     @if (reservado)
                                     {
-                                        <button class="btn btn-secondary btn-sm" disabled>Reservado</button>
+                                        <button class="btn btn-secondary btn-sm" disabled>
+                                            Reservado
+                                        </button>
                                     }
                                     else
                                     {
-                                        <button class="btn btn-primary btn-sm btn-reservar" data-id="@item.Id">Tenho interesse</button>
+                                        <button class="btn btn-primary btn-sm btn-reservar"
+                                                data-id="@item.Id">
+                                            Tenho interesse
+                                        </button>
                                     }
 
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">Detalhes</a>
+                                    <button class="btn btn-outline-secondary btn-sm btn-detalhes"
+                                            data-id="@item.Id">
+                                        Detalhes
+                                    </button>
 
-                                    <div class="reserva-feedback position-absolute top-0 start-50 translate-middle-x w-100 mt-2" style="z-index: 1000;"></div>
+                                    <div class="reserva-feedback
+                                                    position-absolute
+                                                    top-0
+                                                    start-50
+                                                    translate-middle-x
+                                                    w-100 mt-2"
+                                         style="z-index: 1000;"></div>
                                 </div>
 
-
-
                             </div>
+
                         </div>
                     </div>
                 }
@@ -88,7 +133,64 @@
 
         </section>
     </div>
+
 </div>
+
+<!-- MODAL DE DETALHES DO PRODUTO -->
+<div class="modal fade"
+     id="modalDetalhes"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Produto</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="conteudoModalDetalhes">
+                Carregando...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("click", function (e) {
+
+            const btn = e.target.closest(".btn-detalhes");
+            if (!btn) return;
+
+            e.preventDefault();
+            let id = btn.dataset.id;
+
+            let modal = new bootstrap.Modal(document.getElementById("modalDetalhes"));
+            modal.show();
+
+            document.getElementById("conteudoModalDetalhes").innerHTML = "Carregando...";
+
+            fetch(`/Produtos/Details/${id}`)
+                .then(resp => resp.text())
+                .then(html => {
+                    document.getElementById("conteudoModalDetalhes").innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById("conteudoModalDetalhes").innerHTML =
+                        "<div class='text-danger text-center'>Erro ao carregar detalhes.</div>";
+                });
+
+        });
+    </script>
+}
 
 <br>
 <br>
