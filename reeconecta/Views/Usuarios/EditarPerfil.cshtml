@@ -144,6 +144,39 @@
                             </div>
                         </div>
 
+                        <!-- Segurança - Alterar Senha -->
+                        <div class="bg-light p-3 rounded mb-4">
+                            <h6 class="fw-semibold mb-3"><i class="bi bi-shield-lock"></i> Segurança</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="novaSenha" class="form-label text-muted small fw-semibold">Nova Senha</label>
+                                    <div class="input-group">
+                                        <input type="password" id="novaSenha" name="NovaSenha" class="form-control" placeholder="Digite a nova senha" />
+                                        <button class="btn btn-outline-secondary" type="button" id="toggleSenha">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span class="text-danger small" id="erro-novaSenha"></span>
+                                    <small class="text-muted">Mínimo 6 caracteres</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirmacaoSenha" class="form-label text-muted small fw-semibold">Confirmar Nova Senha</label>
+                                    <div class="input-group">
+                                        <input type="password" id="confirmacaoSenha" name="ConfirmacaoSenha" class="form-control" placeholder="Confirme a nova senha" />
+                                        <button class="btn btn-outline-secondary" type="button" id="toggleConfirmacao">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span class="text-danger small" id="erro-confirmacaoSenha"></span>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info small" role="alert">
+                                <i class="bi bi-info-circle"></i>
+                                <strong>Dica:</strong> Deixe os campos de senha em branco se não deseja alterar sua senha.
+                            </div>
+                        </div>
+
                         <hr />
 
                         <!-- Botões de Ação -->
@@ -168,6 +201,69 @@
     }
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // TOGGLE DE VISIBILIDADE DE SENHA
+            const novaSenhaInput = document.getElementById("novaSenha");
+            const confirmacaoSenhaInput = document.getElementById("confirmacaoSenha");
+            const toggleSenhaBtn = document.getElementById("toggleSenha");
+            const toggleConfirmacaoBtn = document.getElementById("toggleConfirmacao");
+
+            function configurarToggleSenha(input, botao) {
+                botao.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const tipo = input.type === "password" ? "text" : "password";
+                    input.type = tipo;
+                    
+                    const icon = botao.querySelector("i");
+                    if (tipo === "text") {
+                        icon.classList.remove("bi-eye");
+                        icon.classList.add("bi-eye-slash");
+                    } else {
+                        icon.classList.remove("bi-eye-slash");
+                        icon.classList.add("bi-eye");
+                    }
+                });
+            }
+
+            configurarToggleSenha(novaSenhaInput, toggleSenhaBtn);
+            configurarToggleSenha(confirmacaoSenhaInput, toggleConfirmacaoBtn);
+
+            // VALIDAÇÃO DE SENHA
+            const form = document.querySelector("form");
+
+            function validarSenha() {
+                const novaSenha = novaSenhaInput.value.trim();
+                const confirmacao = confirmacaoSenhaInput.value.trim();
+                const erroNova = document.getElementById("erro-novaSenha");
+                const erroConfirmacao = document.getElementById("erro-confirmacaoSenha");
+
+                // Limpar erros
+                erroNova.textContent = "";
+                erroConfirmacao.textContent = "";
+
+                // Se houver alteração de senha
+                if (novaSenha || confirmacao) {
+                    if (novaSenha.length < 6) {
+                        erroNova.textContent = "A nova senha deve ter no mínimo 6 caracteres.";
+                        return false;
+                    }
+                    if (novaSenha !== confirmacao) {
+                        erroConfirmacao.textContent = "As senhas não conferem.";
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            if (form) {
+                form.addEventListener("submit", function (e) {
+                    if (!validarSenha()) {
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            }
+
             // MÁSCARA DE TELEFONE
             function aplicarMascaraTelefone(input) {
                 input.addEventListener("input", function (e) {
@@ -334,7 +430,6 @@
             numeroInput.addEventListener("blur", montarEndereco);
             complementoInput.addEventListener("blur", montarEndereco);
 
-            const form = document.querySelector("form");
             if (form) {
                 form.addEventListener("submit", function (e) {
                     const numero = numeroInput.value.trim();

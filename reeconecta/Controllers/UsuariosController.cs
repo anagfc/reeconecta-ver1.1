@@ -308,7 +308,7 @@ namespace reeconecta.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> EditarPerfil(int id, [Bind("Id,Nome,NomeFantasia,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email")] Usuario usuario)
+        public async Task<IActionResult> EditarPerfil(int id, [Bind("Id,Nome,NomeFantasia,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email")] Usuario usuario, string? NovaSenha, string? ConfirmacaoSenha)
         {
             var usuarioIdClaim = User.FindFirst("UserId");
             if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioIdLogado))
@@ -340,6 +340,19 @@ namespace reeconecta.Controllers
             ModelState.Remove("Produtos");
             ModelState.Remove("ReservasProduto");
 
+            // Validação de senha
+            if (!string.IsNullOrEmpty(NovaSenha) || !string.IsNullOrEmpty(ConfirmacaoSenha))
+            {
+                if (NovaSenha != ConfirmacaoSenha)
+                {
+                    ModelState.AddModelError("", "A nova senha e a confirmação devem ser iguais.");
+                }
+                else if (NovaSenha?.Length < 6)
+                {
+                    ModelState.AddModelError("", "A nova senha deve ter no mínimo 6 caracteres.");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -350,7 +363,13 @@ namespace reeconecta.Controllers
                         return NotFound();
                     }
 
-                    // Atualizar apenas os campos permitidos
+                    // Atualizar a senha se fornecida
+                    if (!string.IsNullOrEmpty(NovaSenha))
+                    {
+                        usuarioExistente.Senha = BCrypt.Net.BCrypt.HashPassword(NovaSenha);
+                    }
+
+                    // Atualizar os demais campos permitidos
                     usuarioExistente.Nome = usuario.Nome;
                     usuarioExistente.NomeFantasia = usuario.NomeFantasia;
                     usuarioExistente.Cep = usuario.Cep;
@@ -404,15 +423,6 @@ namespace reeconecta.Controllers
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", $"Erro ao atualizar perfil: {ex.Message}");
-                }
-            }
-            else
-            {
-                // Debug: mostrar erros de validação
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                foreach (var error in errors)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Erro de validação: {error.ErrorMessage}");
                 }
             }
 
