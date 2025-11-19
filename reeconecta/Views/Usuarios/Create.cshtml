@@ -10,7 +10,7 @@
 
 <div class="espaco-formulario shadow-lg">
     <div class="formatacao-conteudo">
-        <form asp-action="Create">
+        <form id="formulario-cadastro" asp-action="Create">
 
             <div class="espaco-separador-secao">
                 <p class="separador-secao">
@@ -37,33 +37,32 @@
 
                 <div class="campo-formulario especifico-pf">
                     <label asp-for="Nome" class="control-label"></label> <i class="bi bi-asterisk"></i>
-                    <input asp-for="Nome" class="form-control" placeholder="Digite o nome completo"/>
-                    <span asp-validation-for="Nome" class="text-danger"></span>
+                    <input asp-for="Nome" class="form-control" id="campo-nome" placeholder="Digite o nome completo" />
+                    <span asp-validation-for="Nome" id="erro-nome" class="text-danger"></span>
                 </div>
 
                 <div class="campo-formulario especifico-pj">
                     <label asp-for="RazaoSocial" class="control-label"></label> <i class="bi bi-asterisk"></i>
-                    <input asp-for="RazaoSocial" class="form-control" placeholder="Digite a razão social" />
-                    <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+                    <input asp-for="RazaoSocial" class="form-control" placeholder="Digite a razão social" id="campo-razao-social" />
+                    <span asp-validation-for="RazaoSocial" class="text-danger" id="erro-razao-social"></span>
                 </div>
 
                 <div class="campo-formulario especifico-pj">
                     <label asp-for="NomeFantasia" class="control-label"></label> <i class="bi bi-asterisk"></i>
-                    <input asp-for="NomeFantasia" class="form-control" placeholder="Digite o nome fantasia" />
-                    <span asp-validation-for="NomeFantasia" class="text-danger"></span>
+                    <input asp-for="NomeFantasia" class="form-control" placeholder="Digite o nome fantasia" id="campo-nome-fantasia" />
+                    <span asp-validation-for="NomeFantasia" class="text-danger" id="erro-nome-fantasia"></span>
                 </div>
 
                 <div class="campo-formulario especifico-pj">
                     <label asp-for="RepresentanteLegal" class="control-label"></label> <i class="bi bi-asterisk"></i>
-                    <input asp-for="RepresentanteLegal" class="form-control" placeholder="Digite o nome do representante legal" />
-                    <span asp-validation-for="RepresentanteLegal" class="text-danger"></span>
+                    <input asp-for="RepresentanteLegal" class="form-control" placeholder="Digite o nome do representante legal" id="campo-rep-legal" />
+                    <span asp-validation-for="RepresentanteLegal" class="text-danger" id="erro-rep-legal"></span>
                 </div>
 
                 <div class="campo-formulario especifico-pj">
                     <label asp-for="EmailRepresentante" class="control-label"></label> <i class="bi bi-asterisk"></i>
-                    <input asp-for="EmailRepresentante" class="form-control" placeholder="Digite o email do representante legal" />
-                    <span asp-validation-for="EmailRepresentante" class="text-danger"></span>
-
+                    <input asp-for="EmailRepresentante" class="form-control" placeholder="Digite o email do representante legal" id="campo-email-rep" />
+                    <span asp-validation-for="EmailRepresentante" class="text-danger" id="erro-email-rep"></span>
                 </div>
             </div>
 
@@ -82,7 +81,7 @@
                 <div class="campo-formulario">
                     <label asp-for="Cep" class="control-label"></label> <i class="bi bi-asterisk"></i>
                     <input asp-for="Cep" class="form-control" placeholder="Digite o CEP" id="endereco-cep" />
-                    <span asp-validation-for="Cep" class="text-danger"></span>
+                    <span asp-validation-for="Cep" class="text-danger" id="erro-cep"></span>
                 </div>
 
                 <div class="campo-formulario">
@@ -91,8 +90,9 @@
                 </div>
 
                 <div class="campo-formulario">
-                    <label for="endereco-numero" class="control-label">Número</label> <i class="bi bi-asterisk"></i>
-                    <input type="text" name="endereco-numero" id="endereco-numero" class="form-control" placeholder="Digite o número" />
+                    <label asp-for="EnderecoNum" class="control-label"></label> <i class="bi bi-asterisk"></i>
+                    <input asp-for="EnderecoNum" class="form-control" placeholder="Digite o número" id="endereco-numero" />
+                    <span asp-validation-for="EnderecoNum" class="text-danger" id="erro-endereco-numero"></span>
                 </div>
 
                 <div class="campo-formulario">
@@ -115,7 +115,7 @@
                     <input type="text" name="endereco-uf" id="endereco-uf" class="form-control" readonly />
                 </div>
 
-                <input type="hidden" asp-for="Endereco" id="enderecoCompleto" name="Endereco" />
+                <input type="hidden" asp-for="Endereco" id="endereco-completo" name="Endereco" />
 
             </div>
 
@@ -160,324 +160,286 @@
 
                 <div class="campo-formulario">
                     <label asp-for="Senha" class="control-label"></label> <i class="bi-asterisk bi"></i>
-                    <input asp-for="Senha" class="form-control" />
+                    <input asp-for="Senha" class="form-control" id="senha-user" />
                     <span asp-validation-for="Senha" class="text-danger"></span>
                 </div>
 
                 <div class="campo-formulario">
-                    <label class="control-label" for="confirmar-senha">Confirmar senha</label> <i class="bi bi-asterisk"></i>
-                    <input class="form-control" type="text" name="confirmar-senha" id="confirmar-senha" />
-                    <!--<span class="text-danger">As senhas não conferem.</span>-->
+                    <label asp-for="ConfirmacaoSenha" class="control-label"></label> <i class="bi bi-asterisk"></i>
+                    <input asp-for="ConfirmacaoSenha" class="form-control" type="password"/>
+                    <span asp-validation-for="ConfirmacaoSenha" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="campo-formulario">
-                <input type="submit" value="Criar conta" class="btn btn-enviar-formulario" />
+                <input id="botao-envio-form" type="submit" value="Criar conta" class="btn btn-enviar-formulario" />
             </div>
 
         </form>
     </div>
 </div>
 
-
-
-
-
-<!--
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TipodePerfil" class="control-label"></label>
-                <select asp-for="TipodePerfil" class="form-control"></select>
-                <span asp-validation-for="TipodePerfil" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Documento" class="control-label"></label>
-                <input asp-for="Documento" class="form-control" />
-                <span asp-validation-for="Documento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RazaoSocial" class="control-label"></label>
-                <input asp-for="RazaoSocial" class="form-control" />
-                <span asp-validation-for="RazaoSocial" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NomeFantasia" class="control-label"></label>
-                <input asp-for="NomeFantasia" class="form-control" />
-                <span asp-validation-for="NomeFantasia" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RepresentanteLegal" class="control-label"></label>
-                <input asp-for="RepresentanteLegal" class="form-control" />
-                <span asp-validation-for="RepresentanteLegal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmailRepresentante" class="control-label"></label>
-                <input asp-for="EmailRepresentante" class="form-control" />
-                <span asp-validation-for="EmailRepresentante" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TipoUsuario" class="control-label"></label>
-                <select asp-for="TipoUsuario" class="form-control"></select>
-                <span asp-validation-for="TipoUsuario" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cep" class="control-label"></label>
-                <input asp-for="Cep" class="form-control" />
-                <span asp-validation-for="Cep" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Endereco" class="control-label"></label>
-                <input asp-for="Endereco" class="form-control" />
-                <span asp-validation-for="Endereco" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefone01" class="control-label"></label>
-                <input asp-for="Telefone01" class="form-control" />
-                <span asp-validation-for="Telefone01" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="WppTel1" /> @Html.DisplayNameFor(model => model.WppTel1)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefone02" class="control-label"></label>
-                <input asp-for="Telefone02" class="form-control" />
-                <span asp-validation-for="Telefone02" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="WppTel2" /> @Html.DisplayNameFor(model => model.WppTel2)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Senha" class="control-label"></label>
-                <input asp-for="Senha" class="form-control" />
-                <span asp-validation-for="Senha" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ContaAtiva" /> @Html.DisplayNameFor(model => model.ContaAtiva)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div> -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const selecao = document.getElementById("tipo-form");
-            const camposPF = document.querySelectorAll(".especifico-pf");
-            const camposPJ = document.querySelectorAll(".especifico-pj");
-            const inputDocumento = document.getElementById("documento");
 
-            function desabilitarCampos(grupo) {
-                grupo.forEach(div => {
-                    div.querySelectorAll("input, select, textarea")
-                       .forEach(campo => campo.disabled = true);
-                    div.style.display = "none";
-                });
-            }
+        // Identificação dos campos que serão manipulados
+        const formulario = document.getElementById("formulario-cadastro");
 
-            function habilitarCampos(grupo) {
-                grupo.forEach(div => {
-                    div.querySelectorAll("input, select, textarea")
-                       .forEach(campo => campo.disabled = false);
-                    div.style.display = "block";
-                });
-            }
+        const selecao = document.getElementById("tipo-form");
+        const camposPF = document.querySelectorAll(".especifico-pf");
+        const camposPJ = document.querySelectorAll(".especifico-pj");
+        const inputDocumento = document.getElementById("documento");
 
+        const campoNomePessoa = document.getElementById("campo-nome");
+        const campoRazaoSocial = document.getElementById("campo-razao-social");
+        const campoNomeFantasia = document.getElementById("campo-nome-fantasia");
+        const campoRepLegal = document.getElementById("campo-rep-legal");
+        const campoEmailRepLegal = document.getElementById("campo-email-rep");
+
+        const erroCampoNome = document.getElementById("erro-nome");
+        const erroCampoRazaoSocial = document.getElementById("erro-razao-social");
+        const erroCampoNomeFantasia = document.getElementById("erro-nome-fantasia");
+        const erroCampoRepLegal = document.getElementById("erro-rep-legal");
+        const erroCampoEmailRep = document.getElementById("erro-email-rep");
+
+        const telefone1 = document.getElementById("tel01");
+        const telefone2 = document.getElementById("tel02");
+
+        const cepInput = document.getElementById("endereco-cep");
+        const enderecoInput = document.getElementById("endereco-logradouro");
+        const bairroInput = document.getElementById("endereco-bairro");
+        const cidadeInput = document.getElementById("endereco-cidade");
+        const ufInput = document.getElementById("endereco-uf");
+        const numeroInput = document.getElementById("endereco-numero");
+        const complementoInput = document.getElementById("endereco-complemento");
+        const enderecoCompletoInput = document.getElementById("endereco-completo");
+
+
+        const erroCampoCep = document.getElementById("erro-cep");
+
+
+        // CONTROLE DA EXIBIÇÃO DE CAMPOS PF E PJ
+        function desabilitarCampos(grupo) {
+            grupo.forEach(div => {
+                div.querySelectorAll("input, select, textarea")
+                    .forEach(campo => campo.disabled = true);
+                div.style.display = "none";
+            });
+        }
+
+        function habilitarCampos(grupo) {
+            grupo.forEach(div => {
+                div.querySelectorAll("input, select, textarea")
+                    .forEach(campo => campo.disabled = false);
+                div.style.display = "block";
+            });
+        }
+
+        // Controla a exibição de acordo com o valor inicial
+        if (selecao.value === "PessoaFisica") {
             habilitarCampos(camposPF);
             desabilitarCampos(camposPJ);
+        } else {
+            habilitarCampos(camposPJ);
+            desabilitarCampos(camposPF);
+        }
 
-            selecao.addEventListener("change", function () {
-                const valor = this.value;
-                inputDocumento.value = "";
+        // Modifica a habilitação de acordo com o tipo de pessoa selecionada
+        selecao.addEventListener("change", function () {
+            const valor = this.value;
+            inputDocumento.value = "";
 
-                if (valor === "PessoaFisica") {
-                    habilitarCampos(camposPF);
-                    desabilitarCampos(camposPJ);
-                    inputDocumento.placeholder = "Digite o CPF";
-                    inputDocumento.maxLength = 14;
-                } else if (valor === "PessoaJuridica") {
-                    habilitarCampos(camposPJ);
-                    desabilitarCampos(camposPF);
-                    inputDocumento.placeholder = "Digite o CNPJ";
-                    inputDocumento.maxLength = 18;
-                } else {
-                    desabilitarCampos(camposPF);
-                    desabilitarCampos(camposPJ);
-                    inputDocumento.placeholder = "";
-                }
-            });
+            if (valor === "PessoaFisica") {
+                habilitarCampos(camposPF);
+                desabilitarCampos(camposPJ);
+                inputDocumento.placeholder = "Digite o CPF";
+                inputDocumento.maxLength = 14;
 
-            // MÁSCARA CPF E CNPJ
-
-            function aplicarMascaraDocumento(input) {
-                input.addEventListener("input", function (e) {
-                    let valor = e.target.value.replace(/\D/g, "");
-
-                    const tipo = selecao.value;
-
-                    if (tipo === "PessoaFisica") {
-                        
-                        if (valor.length > 11) valor = valor.slice(0, 11);
-
-                        if (valor.length > 9)
-                            valor = valor.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2})/, "$1.$2.$3-$4");
-                        else if (valor.length > 6)
-                            valor = valor.replace(/^(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
-                        else if (valor.length > 3)
-                            valor = valor.replace(/^(\d{3})(\d{0,3})/, "$1.$2");
-                    }
-                    else if (tipo === "PessoaJuridica") {
-                        if (valor.length > 14) valor = valor.slice(0, 14);
-
-                        if (valor.length > 12)
-                            valor = valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, "$1.$2.$3/$4-$5");
-                        else if (valor.length > 8)
-                            valor = valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/, "$1.$2.$3/$4");
-                        else if (valor.length > 5)
-                            valor = valor.replace(/^(\d{2})(\d{3})(\d{0,3})/, "$1.$2.$3");
-                        else if (valor.length > 2)
-                            valor = valor.replace(/^(\d{2})(\d{0,3})/, "$1.$2");
-                    }
-
-                    e.target.value = valor;
-                });
-            }
-
-            aplicarMascaraDocumento(inputDocumento);
-
-            // MÁSCARA DE TELEFONE
-
-            function aplicarMascaraTelefone(input) {
-                input.addEventListener("input", function (e) {
-                    let valor = e.target.value.replace(/\D/g, "");
-                    if (valor.length > 11) valor = valor.slice(0, 11);
-
-                    if (valor.length > 10) {
-                        valor = valor.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-                    } else if (valor.length > 6) {
-                        valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
-                    } else if (valor.length > 2) {
-                        valor = valor.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
-                    } else {
-                        valor = valor.replace(/^(\d*)/, "($1");
-                    }
-
-                    e.target.value = valor;
-                });
-            }
-
-            const telefone1 = document.getElementById("tel01");
-            const telefone2 = document.getElementById("tel02");
-            if (telefone1) aplicarMascaraTelefone(telefone1);
-            if (telefone2) aplicarMascaraTelefone(telefone2);
-
-            // CONFIGURAÇÃO DE ENDEREÇO
-
-            const cepInput = document.getElementById("endereco-cep");
-            const enderecoInput = document.getElementById("endereco-logradouro");
-            const bairroInput = document.getElementById("endereco-bairro");
-            const cidadeInput = document.getElementById("endereco-cidade");
-            const ufInput = document.getElementById("endereco-uf");
-            const numeroInput = document.getElementById("endereco-numero");
-            const complementoInput = document.getElementById("endereco-complemento");
-            const enderecoCompletoInput = document.getElementById("enderecoCompleto");
-
-            function limparCampos() {
-                enderecoInput.value = "";
-                bairroInput.value = "";
-                cidadeInput.value = "";
-                ufInput.value = "";
-            }
-
-            function montarEndereco() {
-                const logradouro = enderecoInput.value.trim();
-                const numero = numeroInput.value.trim();
-                const complemento = complementoInput.value.trim();
-                const bairro = bairroInput.value.trim();
-                const cidade = cidadeInput.value.trim();
-                const uf = ufInput.value.trim();
-
-                let endereco = `${logradouro}`;
-                if (numero) endereco += `, nº ${numero}`;
-                if (complemento) endereco += ` (${complemento})`;
-                if (bairro) endereco += `, ${bairro}`;
-                if (cidade || uf) endereco += ` - ${cidade}${uf ? " / " + uf : ""}`;
-
-                if (enderecoCompletoInput) enderecoCompletoInput.value = endereco;
-            }
-
-            cepInput.addEventListener("input", function () {
-                let cep = this.value.replace(/\D/g, "");
-                if (cep.length > 5) cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
-                this.value = cep;
-            });
-
-            cepInput.addEventListener("blur", function () {
-                const cep = this.value.replace(/\D/g, "");
-                if (cep.length !== 8) {
-                    limparCampos();
-                    alert("CEP inválido. Digite 8 números.");
-                    return;
-                }
-
-                const url = `https://viacep.com.br/ws/${cep}/json/`;
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.erro) {
-                            limparCampos();
-                            alert("CEP não encontrado.");
-                            return;
-                        }
-
-                        enderecoInput.value = data.logradouro;
-                        bairroInput.value = data.bairro;
-                        cidadeInput.value = data.localidade;
-                        ufInput.value = data.uf.toUpperCase();
-
-                        montarEndereco();
-                    })
-                    .catch(() => {
-                        limparCampos();
-                        alert("Erro ao buscar o CEP. Tente novamente.");
-                    });
-            });
-
-            numeroInput.addEventListener("blur", montarEndereco);
-            complementoInput.addEventListener("blur", montarEndereco);
-
-            const form = document.querySelector("form");
-            if (form) {
-                form.addEventListener("submit", montarEndereco);
+            } else if (valor === "PessoaJuridica") {
+                habilitarCampos(camposPJ);
+                desabilitarCampos(camposPF);
+                inputDocumento.placeholder = "Digite o CNPJ";
+                inputDocumento.maxLength = 18;
             }
         });
+
+        // PUXA DADOS A PARTIR DO CPF
+        function limparCampos() {
+            enderecoInput.value = "";
+            bairroInput.value = "";
+            cidadeInput.value = "";
+            ufInput.value = "";
+        }
+        
+        // MÁSCARA DO CEP E AVISO DE CEP INVÁLIDO
+        cepInput.addEventListener("input", function () {
+            let cep = this.value.replace(/\D/g, "");
+            if (cep.length > 5) cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+
+            if ((cep.length >= 1 && cep.length < 8) || cep.length > 8) {
+                erroCampoCep.innerHTML = "CEP inválido";
+                erroCampoCep.style.display = "block";
+            } else {
+                this.value = cep;
+            }
+        });
+
+        // API VIA CEP
+        cepInput.addEventListener("blur", function () {
+            let cep = this.value.replace(/\D/g, "");
+
+            const url = `https://viacep.com.br/ws/${cep}/json/`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        limparCampos();
+                        alert("CEP não encontrado.");
+                        return;
+                    }
+
+                    enderecoInput.value = data.logradouro;
+                    bairroInput.value = data.bairro;
+                    cidadeInput.value = data.localidade;
+                    ufInput.value = data.uf.toUpperCase();
+                })
+                .catch(() => {
+                    limparCampos();
+                    alert("Erro ao buscar o CEP.");
+                });
+        });
+
+        // MONTA O ENDEREÇO PARA MANDAR PRO BD
+        function montarEndereco() {
+            const logradouro = enderecoInput.value.trim();
+            const numero = numeroInput.value.trim();
+            const complemento = complementoInput.value.trim();
+            const bairro = bairroInput.value.trim();
+            const cidade = cidadeInput.value.trim();
+            const uf = ufInput.value.trim();
+
+            let endereco = `${logradouro}`;
+            if (numero) endereco += `, ${numero}`;
+            if (complemento) endereco += ` - ${complemento}`;
+            if (bairro) endereco += `, ${bairro}`;
+
+            if (cidade || uf) {
+                endereco += ` - ${cidade}`;
+                if (uf) endereco += ` / ${uf}`;
+            }
+
+            enderecoCompletoInput.value = endereco;
+        }
+
+        numeroInput.addEventListener("blur", montarEndereco);
+        complementoInput.addEventListener("blur", montarEndereco);
+
+        if (formulario) {
+            formulario.addEventListener("submit", montarEndereco);
+        }
+
+        // MÁSCARA DE CPF E CNPJ
+        function mascararDocumento(doc) {
+            doc.addEventListener("input", function(event){
+                let valor = event.target.value.replace(/\D/g, "");
+
+                if (selecao.value === "PessoaFisica") {
+                    if (valor.length > 11) valor = valor.slice(0, 11);
+
+                    if (valor.length > 9)
+                        valor = valor.replace(/^(\d{3})(\d{3})(\d{3})(\d{0,2})/, "$1.$2.$3-$4");
+                    else if (valor.length > 6)
+                        valor = valor.replace(/^(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
+                    else if (valor.length > 3)
+                        valor = valor.replace(/^(\d{3})(\d{0,3})/, "$1.$2");
+
+                } else if (selecao.value === "PessoaJuridica") {
+                    if (valor.length > 14) valor = valor.slice(0, 14);
+
+                    if (valor.length > 12)
+                        valor = valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, "$1.$2.$3/$4-$5");
+                    else if (valor.length > 8)
+                        valor = valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/, "$1.$2.$3/$4");
+                    else if (valor.length > 5)
+                        valor = valor.replace(/^(\d{2})(\d{3})(\d{0,3})/, "$1.$2.$3");
+                    else if (valor.length > 2)
+                        valor = valor.replace(/^(\d{2})(\d{0,3})/, "$1.$2");
+                }
+
+                event.target.value = valor;
+            });
+        }
+
+        mascararDocumento(inputDocumento);
+
+        // MÁSCARA DE TELEFONE
+        function mascararTelefone(tel) {
+            tel.addEventListener("input", function(event) {
+                let valor = event.target.value.replace(/\D/g, "");
+
+                if (valor.length > 11) valor = valor.slice(0, 11);
+
+                if (valor.length > 10) {
+                    valor = valor.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                } else if (valor.length > 6) {
+                    valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+                } else if (valor.length > 2) {
+                    valor = valor.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                } else {
+                    valor = valor.replace(/^(\d*)/, "($1");
+                }
+
+                event.target.value = valor;
+            });
+        }
+
+        if (telefone1) mascararTelefone(telefone1);
+        if (telefone2) mascararTelefone(telefone2);
+
+        // CONDIÇÕES DE BLOQUEIO DO ENVIO DO FORMULÁRIO
+        formulario.addEventListener("submit", function(event) {
+
+            // Verifica o preenchimento dos itens obrigatórios de cada tipo de pessoa
+            if (selecao.value === "PessoaFisica")
+            {
+                if (campoNomePessoa.value === "") {
+                    erroCampoNome.innerHTML = "É obrigatório informar o nome.";
+                    erroCampoNome.style.display = "block";
+                    event.preventDefault();
+                }
+
+            } else if (selecao.value === "PessoaJuridica") {
+                if (campoRazaoSocial.value === "") {
+                    erroCampoRazaoSocial.innerHTML = "É obrigatório informar a razão social.";
+                    erroCampoRazaoSocial.style.display = "block";
+                    event.preventDefault();
+                }
+
+                if (campoNomeFantasia.value === "" ) {
+                    erroCampoNomeFantasia.innerHTML = "É obrigatório informar o nome fantasia.";
+                    erroCampoNomeFantasia.style.display = "block";
+                    event.preventDefault();
+                }
+
+                if (campoRepLegal.value === "" ) {
+                    erroCampoRepLegal.innerHTML = "É obrigatório informar o representante legal.";
+                    erroCampoRepLegal.style.display = "block";
+                    event.preventDefault();
+                }
+
+                if (campoEmailRepLegal.value === "" ) {
+                    erroCampoEmailRep.innerHTML = "É obrigatório informar o email do representante.";
+                    erroCampoEmailRep.style.display = "block";
+                    event.preventDefault();
+                }
+            }
+
+        });
+
     </script>
 
 

@@ -11,60 +11,87 @@ namespace reeconecta.Models
         [Key]
         public int Id { get; set; }
 
+
         [Display(Name = "Tipo de perfil")]
-        public TipoPerfil TipodePerfil { get; set; } = TipoPerfil.PessoaFisica;
+        public TipoPerfil TipodePerfil { get; set; }
+
 
         [Required(ErrorMessage = "É obrigatório informar seu documento.")]
         public string Documento { get; set; } = string.Empty;
 
-        //[Required(ErrorMessage = "É obrigatório informar seu nome.")]
+
         public string? Nome { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar a razão social.")]
+
+        [Display(Name = "Razão social")]
         public string? RazaoSocial { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar o nome fantasia.")]
+
+        [Display(Name = "Nome fantasia")]
         public string? NomeFantasia { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar o representante legal.")]
+
+        [Display(Name = "Representante legal")]
         public string? RepresentanteLegal { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar o email do representante legal.")]
+
         [Display(Name = "Email do representante")]
         [DataType(DataType.EmailAddress)]
         public string? EmailRepresentante { get; set; }
 
+
         [Display(Name = "Tipo de Usuário")]
         public TipoUsuario TipoUsuario { get; set; } = TipoUsuario.User;
+
 
         [Required(ErrorMessage = "É obrigatório informar seu CEP.")]
         [Display(Name = "CEP")]
         public string Cep { get; set; } = string.Empty;
 
+
         [Required(ErrorMessage = "É obrigatório informar seu endereço.")]
         [Display(Name = "Endereço")]
         public string Endereco { get; set; } = string.Empty;
+
+        [NotMapped]
+        [Required(ErrorMessage = "É obrigatório informar o número.")]
+        [Display(Name = "Número")]
+        public string EnderecoNum { get; set; } = string.Empty;
+
 
         [Required(ErrorMessage = "É obrigatório informar ao menos um telefone.")]
         [Display(Name = "Telefone nº1")]
         public string Telefone01 { get; set; } = string.Empty;
 
+
         [Display(Name = "Telefone nº 1 possui WhatsApp.")]
         public bool WppTel1 { get; set; } = false;
+
 
         [Display(Name = "Telefone nº2")]
         public string? Telefone02 { get; set; }
 
+
         [Display(Name = "Telefone nº 2 possui WhatsApp.")]
         public bool? WppTel2 { get; set; }
+
 
         [Required(ErrorMessage = "É obrigatório informar seu email.")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = string.Empty;
 
+
         [Required(ErrorMessage = "É obrigatório inserir uma senha.")]
         [DataType(DataType.Password)]
         public string Senha { get; set; } = string.Empty;
+
+
+        [NotMapped]
+        [Required(ErrorMessage = "É obrigatório confirmar sua senha.")]
+        [Compare("Senha", ErrorMessage = "As senhas não conferem.")]
+        [Display(Name = "Confirmar a senha")]
+        public string ConfirmacaoSenha { get; set; } = string.Empty;
+
 
         [Display(Name = "Situação")]
         public bool ContaAtiva { get; set; } = true;
