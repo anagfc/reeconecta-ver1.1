@@ -25,13 +25,54 @@ namespace reeconecta.Controllers
         }
 
         // GET: Produtos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? busca, string? cidade, string? condicao, string? ordenar)
         {
-            var produtos = await _context.Produtos
+            var query = _context.Produtos
                 .AsNoTracking()
                 .Where(p => p.StatusProduto == StatusProduto.Disponivel)
                 .Include(p => p.Usuario)
                 .Include(p => p.ReservasProduto)
+                .AsQueryable();
+
+            // BUSCA (título e descrição)
+            if (!string.IsNullOrWhiteSpace(busca))
+            {
+                query = query.Where(p =>
+                    p.Titulo.Contains(busca) ||
+                    p.Descricao.Contains(busca));
+            }
+
+            // FILTRO POR CIDADE
+            if (!string.IsNullOrWhiteSpace(cidade))
+            {
+                query = query.Where(p => p.Cidade == cidade);
+            }
+
+            // FILTRO POR CONDIÇÃO (Novo, SemiNovo, Usado)
+            if (!string.IsNullOrEmpty(condicao) &&
+             Enum.TryParse<CondicaoProduto>(condicao, true, out var condicaoEnum))
+            {
+                query = query.Where(p => p.Condicao == condicaoEnum);
+            }
+
+            // ORDENAR
+            query = ordenar switch
+            {
+                "preco_asc" => query.OrderBy(p => p.Preco),
+                "preco_desc" => query.OrderByDescending(p => p.Preco),
+                "titulo_asc" => query.OrderBy(p => p.Titulo),
+                "titulo_desc" => query.OrderByDescending(p => p.Titulo),
+                _ => query.OrderByDescending(p => p.CriacaoProduto)
+            };
+
+            // Carrega lista final
+            var produtos = await query.ToListAsync();
+
+            // Enviar cidades únicas para dropdown
+            ViewBag.Cidades = await _context.Produtos
+                .Select(p => p.Cidade)
+                .Distinct()
+                .OrderBy(c => c)
                 .ToListAsync();
 
             return View(produtos);
