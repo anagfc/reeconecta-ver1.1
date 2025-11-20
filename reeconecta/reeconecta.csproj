@@ -29,4 +29,8 @@
     <Folder Include="wwwroot\images\pontos\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\css\home.css" />
+  </ItemGroup>
+
 </Project>
