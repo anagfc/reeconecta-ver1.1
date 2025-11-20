@@ -1,0 +1,80 @@
+﻿@model reeconecta.Models.Usuario
+
+@{
+    ViewData["Title"] = "Desativar Conta";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+
+            <!-- Cabeçalho -->
+            <div class="mb-4">
+                <a asp-action="Perfil" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+
+            <!-- Card Principal -->
+            <div class="card shadow-lg border-0 rounded-4 border-danger">
+
+                <!-- Conteúdo -->
+                <div class="card-body p-4">
+
+                    <!-- Título -->
+                    <div class="mb-4">
+                        <h2 class="fw-bold text-danger mb-2">
+                            <i class="bi bi-exclamation-triangle"></i> Desativar Conta
+                        </h2>
+                        <p class="text-muted">Esta ação não é reversível imediatamente</p>
+                    </div>
+
+                    <hr />
+
+                    <!-- Aviso -->
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Atenção:</strong> Ao desativar sua conta, você não poderá mais acessar a plataforma ou gerenciar seus anúncios.
+                    </div>
+
+                    <!-- Informações da Conta -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="fw-semibold mb-3">Informações da Conta a Desativar</h6>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="text-muted small">Nome</label>
+                                <p class="fw-semibold">@(string.IsNullOrEmpty(Model.Nome) ? Model.NomeFantasia : Model.Nome)</p>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="text-muted small">Email</label>
+                                <p class="fw-semibold">@Model.Email</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmação -->
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Tem certeza que deseja desativar sua conta?</strong>
+                    </div>
+
+                    <hr />
+
+                    <!-- Formulário -->
+                    <form asp-action="DesativarConta" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Botões de Ação -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger flex-grow-1">
+                                <i class="bi bi-x-circle"></i> Desativar Conta
+                            </button>
+                            <a asp-action="Perfil" class="btn btn-secondary flex-grow-1">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

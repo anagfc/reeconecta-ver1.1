@@ -84,29 +84,25 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="text-muted small">Telefone Principal</label>
-                                <p class="fw-semibold">@Model.Telefone01</p>
-                                @if (Model.WppTel1)
-                                {
-                                    string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.Telefone01, @"\D", "");
-                                    string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
-                                    <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
-                                        <i class="bi bi-whatsapp"></i> WhatsApp
-                                    </a>
-                                }
+                                <p class="fw-semibold">
+                                    @Model.Telefone01
+                                    @if (Model.WppTel1)
+                                    {
+                                        <i class="bi bi-whatsapp" style="color: #25D366; margin-left: 8px;"></i>
+                                    }
+                                </p>
                             </div>
                             @if (!string.IsNullOrEmpty(Model.Telefone02))
                             {
                                 <div class="col-md-6 mb-3">
                                     <label class="text-muted small">Telefone Secundário</label>
-                                    <p class="fw-semibold">@Model.Telefone02</p>
-                                    @if (Model.WppTel2)
-                                    {
-                                        string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.Telefone02, @"\D", "");
-                                        string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
-                                        <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
-                                            <i class="bi bi-whatsapp"></i> WhatsApp
-                                        </a>
-                                    }
+                                    <p class="fw-semibold">
+                                        @Model.Telefone02
+                                        @if (Model.WppTel2)
+                                        {
+                                            <i class="bi bi-whatsapp" style="color: #25D366; margin-left: 8px;"></i>
+                                        }
+                                    </p>
                                 </div>
                             }
                         </div>
@@ -142,6 +138,9 @@
                     <div class="d-flex gap-2">
                         <a asp-action="EditarPerfil" class="btn btn-warning flex-grow-1">
                             <i class="bi bi-pencil-square"></i> Editar Perfil
+                        </a>
+                        <a asp-action="DesativarConta" class="btn btn-danger flex-grow-1">
+                            <i class="bi bi-x-circle"></i> Desativar Conta
                         </a>
                     </div>
                 </div>

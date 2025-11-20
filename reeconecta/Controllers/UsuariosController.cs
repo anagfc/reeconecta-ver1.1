@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace reeconecta.Controllers
 {
-    [Authorize(Roles = "Administrador")]
     public class UsuariosController : Controller
     {
         private readonly AppDbContext _context;
@@ -25,6 +24,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Usuarios
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Usuarios.ToListAsync());
@@ -98,6 +98,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Usuarios/Details/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -146,6 +147,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Usuarios/Edit/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -166,6 +168,7 @@ namespace reeconecta.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TipodePerfil,Documento,Nome,RazaoSocial,NomeFantasia,RepresentanteLegal, EmailRepresentante,TipoUsuario,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email,Senha,ContaAtiva,CriacaoConta")] Usuario usuario)
         {
             if (id != usuario.Id)
@@ -199,6 +202,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Usuarios/Delete/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -219,6 +223,7 @@ namespace reeconecta.Controllers
         // POST: Usuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
@@ -236,6 +241,7 @@ namespace reeconecta.Controllers
             return _context.Usuarios.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Relatorio  (int? id)
         {
             if (id == null)
@@ -427,6 +433,69 @@ namespace reeconecta.Controllers
             }
 
             return View(usuario);
+        }
+
+        // GET: Usuarios/DesativarConta (Confirmação)
+        [Authorize]
+        public async Task<IActionResult> DesativarConta()
+        {
+            var usuarioIdClaim = User.FindFirst("UserId");
+            if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var usuario = await _context.Usuarios.FindAsync(usuarioId);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            return View(usuario);
+        }
+
+        // POST: Usuarios/DesativarConta (Desativar)
+        [HttpPost, ActionName("DesativarConta")]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> DesativarContaConfirmado(int id)
+        {
+            var usuarioIdClaim = User.FindFirst("UserId");
+            if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioIdLogado))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Validação de segurança: usuário só pode desativar sua própria conta
+            if (id != usuarioIdLogado)
+            {
+                return Forbid();
+            }
+
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                // Desativar a conta ao invés de deletá-la
+                usuario.ContaAtiva = false;
+                _context.Update(usuario);
+                await _context.SaveChangesAsync();
+
+                // Deslogar o usuário
+                await HttpContext.SignOutAsync();
+
+                TempData["MensagemSucesso"] = "Sua conta foi desativada com sucesso.";
+                return RedirectToAction("Login");
+            }
+            catch (Exception ex)
+            {
+                TempData["MensagemErro"] = $"Erro ao desativar conta: {ex.Message}";
+                return RedirectToAction("Perfil");
+            }
         }
     }
 }
