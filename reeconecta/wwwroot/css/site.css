@@ -12,6 +12,18 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/* Remover contorno azul dos botões outline */
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+/* Opcional: adicionar um hover subtil */
+.btn-outline-secondary:hover {
+  opacity: 0.85;
+}
+
 html {
   position: relative;
   min-height: 100%;

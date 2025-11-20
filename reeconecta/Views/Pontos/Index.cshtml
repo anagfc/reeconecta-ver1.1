@@ -1,0 +1,131 @@
+﻿@using reeconecta.Models
+@model IEnumerable<reeconecta.Models.Ponto>
+
+@{
+    ViewData["Title"] = "Pontos de Coleta";
+    var usuarioAtual = Context.User;
+    var tipoUsuarioAtual = Context.User.FindFirst("TipoUsuario");
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 180px;">
+            <img src="~/Logo REEConecta.png" alt="Logotipo ReeConecta" width="160px" />
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 mb-4">
+        <a asp-action="Create" class="btn btn-outline-primary shadow-sm">
+            Novo Ponto de Coleta <i class="bi bi-plus-circle"></i>
+        </a>
+    </div>
+
+    <div class="row">
+        <aside class="col-md-3 mb-4">
+            <h5 class="fw-bold mb-3">Filtros</h5>
+            <div class="d-flex flex-column gap-3">
+                <div>
+                    <label class="form-label fw-semibold">Tipo de Ponto</label>
+                    <select id="filtroTipo" class="form-select form-select-sm">
+                        <option value="">Todos</option>
+                        <option value="Compra">Compra</option>
+                        <option value="Descarte">Descarte</option>
+                    </select>
+                </div>
+                <p class="text-muted small">Mais filtros em breve...</p>
+            </div>
+        </aside>
+
+        <section class="col-md-9">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold">Pontos Disponíveis</h5>
+                <span class="badge bg-secondary">@(Model?.Count() ?? 0) pontos</span>
+            </div>
+
+            @if (Model?.Count() > 0)
+            {
+                <div class="row g-4">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    @if (!string.IsNullOrEmpty(item.Imagem))
+                                    {
+                                        <img src="@item.Imagem" class="img-fluid rounded" style="max-height: 180px; object-fit: cover;" alt="@item.NomePonto" />
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-image" style="font-size: 2rem; color: gray;"></i>
+                                    }
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="fw-semibold mb-0">@item.NomePonto</h6>
+                                        <span class="badge bg-info">@item.Tipo</span>
+                                    </div>
+                                    <p class="text-muted small mb-2">@item.DescricaoPonto</p>
+                                    <div class="mb-3">
+                                        <p class="mb-1"><i class="bi bi-geo-alt"></i> @item.CepPonto</p>
+                                        <p class="mb-1"><i class="bi bi-telephone"></i> @item.TelefoneP01</p>
+                                        @if (!string.IsNullOrEmpty(item.TelefoneP02))
+                                        {
+                                            <p class="mb-0"><i class="bi bi-telephone"></i> @item.TelefoneP02</p>
+                                        }
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        @{
+                                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst("UserId")?.Value, out var id) ? id : 0;
+                                            var tipoUsuarioAtualEnum = TipoUsuario.User;
+
+                                            if (Enum.TryParse<TipoUsuario>(Context.User.FindFirst("TipoUsuario")?.Value ?? "User", out var tipo))
+                                            {
+                                                tipoUsuarioAtualEnum = tipo;
+                                            }
+
+                                            var podeEditar = tipoUsuarioAtualEnum == TipoUsuario.Administrador || item.CriadoPorUsuarioId == usuarioIdAtual;
+                                        }
+
+                                        @if (podeEditar)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm flex-grow-1">
+                                                <i class="bi bi-pencil"></i> Editar
+                                            </a>
+                                        }
+
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm flex-grow-1">
+                                            <i class="bi bi-eye"></i> Detalhes
+                                        </a>
+
+                                        @if (podeEditar)
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm flex-grow-1">
+                                                <i class="bi bi-trash"></i> Remover
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center" role="alert">
+                    <i class="bi bi-info-circle"></i> Nenhum ponto de coleta cadastrado.
+                    <a asp-action="Create" class="alert-link">Cadastre um agora!</a>
+                </div>
+            }
+
+        </section>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>

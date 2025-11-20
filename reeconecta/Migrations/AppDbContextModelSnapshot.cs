@@ -22,6 +22,63 @@ namespace reeconecta.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("reeconecta.Models.Ponto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CepPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CriadoPorUsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DescricaoPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnderecoPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imagem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomePonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelefoneP01")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelefoneP02")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("WppTelP1")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WppTelP2")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CriadoPorUsuarioId");
+
+                    b.ToTable("Pontos");
+                });
+
             modelBuilder.Entity("reeconecta.Models.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -194,7 +251,7 @@ namespace reeconecta.Migrations
                     b.Property<bool>("WppTel1")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("WppTel2")
+                    b.Property<bool>("WppTel2")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -226,6 +283,15 @@ namespace reeconecta.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("VisualizacaoProduto");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.Ponto", b =>
+                {
+                    b.HasOne("reeconecta.Models.Usuario", "CriadoPorUsuario")
+                        .WithMany()
+                        .HasForeignKey("CriadoPorUsuarioId");
+
+                    b.Navigation("CriadoPorUsuario");
                 });
 
             modelBuilder.Entity("reeconecta.Models.Produto", b =>

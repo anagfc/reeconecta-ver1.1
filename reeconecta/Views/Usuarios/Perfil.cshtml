@@ -1,0 +1,151 @@
+﻿@model reeconecta.Models.Usuario
+
+@{
+    ViewData["Title"] = "Meu Perfil";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+
+            <!-- Cabeçalho -->
+            <div class="mb-4">
+                <a href="/" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+
+            <!-- Card Principal -->
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Conteúdo -->
+                <div class="card-body p-4">
+
+                    <!-- Mensagem de Sucesso -->
+                    @if (TempData["MensagemSucesso"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                            @TempData["MensagemSucesso"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <!-- Título e Badge -->
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-2">@(string.IsNullOrEmpty(Model.Nome) ? Model.NomeFantasia : Model.Nome)</h2>
+                            <span class="badge bg-info fs-6">@Model.TipodePerfil</span>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Informações Básicas -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Email</label>
+                            <p class="fw-semibold">@Model.Email</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Documento</label>
+                            <p class="fw-semibold">@Model.Documento</p>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.NomeFantasia))
+                    {
+                        <div class="row mb-4">
+                            <div class="col-md-12 mb-3">
+                                <label class="text-muted small">Nome Fantasia</label>
+                                <p class="fw-semibold">@Model.NomeFantasia</p>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Localização -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> Localização</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">CEP</label>
+                                <p class="fw-semibold">@Model.Cep</p>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="text-muted small">Endereço Completo</label>
+                                <p class="fw-semibold">@Model.Endereco</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contato -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="fw-semibold mb-3"><i class="bi bi-telephone"></i> Contato</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Telefone Principal</label>
+                                <p class="fw-semibold">@Model.Telefone01</p>
+                                @if (Model.WppTel1)
+                                {
+                                    string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.Telefone01, @"\D", "");
+                                    string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
+                                    <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
+                                        <i class="bi bi-whatsapp"></i> WhatsApp
+                                    </a>
+                                }
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.Telefone02))
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Telefone Secundário</label>
+                                    <p class="fw-semibold">@Model.Telefone02</p>
+                                    @if (Model.WppTel2)
+                                    {
+                                        string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.Telefone02, @"\D", "");
+                                        string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
+                                        <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
+                                            <i class="bi bi-whatsapp"></i> WhatsApp
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Informações da Conta -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="fw-semibold mb-3"><i class="bi bi-info-circle"></i> Informações da Conta</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Situação</label>
+                                <p class="fw-semibold">
+                                    @if (Model.ContaAtiva)
+                                    {
+                                        <span class="badge bg-success">Ativa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inativa</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Membro desde</label>
+                                <p class="fw-semibold">@Model.CriacaoConta.ToString("dd/MM/yyyy HH:mm")</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Botões de Ação -->
+                    <div class="d-flex gap-2">
+                        <a asp-action="EditarPerfil" class="btn btn-warning flex-grow-1">
+                            <i class="bi bi-pencil-square"></i> Editar Perfil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -38,13 +38,21 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Produtos" asp-action="Index">Produtos</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pontos" asp-action="Index">Pontos</a>
+                            </li>
                         }
                     </ul>
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                Olá, <strong>@User.Identity.Name</strong>
+                            <li class="nav-item d-flex align-items-center gap-2">
+                                <a class="btn btn-link text-decoration-none text-dark p-0" asp-area="" asp-controller="Usuarios" asp-action="Perfil" title="Meu Perfil">
+                                    <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                                </a>
+                                <span class="text-dark">
+                                    Olá, <strong>@User.Identity.Name</strong>
+                                </span>
                                 <a class="btn btn-outline-danger btn-sm" asp-area="" asp-controller="Usuarios" asp-action="Logout" style="margin-left: 10px">
                                     <i class="bi bi-box-arrow-right"></i> Sair
                                 </a>

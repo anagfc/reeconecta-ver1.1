@@ -18,6 +18,8 @@ namespace reeconecta.Models
 
         public DbSet<VisualizacaoProduto> VisualizacaoProdutos { get; set; }
 
+        public DbSet<Ponto> Pontos { get; set; }    
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,5 +42,6 @@ namespace reeconecta.Models
                 .HasForeignKey(r => r.ProdutoId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
+
     }
 }
