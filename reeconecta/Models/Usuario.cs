@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace reeconecta.Models
 {
     [Table("Usuarios")]
-    public class Usuario
+    public class Usuario 
     {
         [Key]
         public int Id { get; set; }
@@ -73,7 +74,9 @@ namespace reeconecta.Models
         [Display(Name = "Criação da Conta")]
         public DateTime CriacaoConta { get; set; } = DateTime.Now;
 
-        public ICollection<Produto> Produtos { get; set; } = new List<Produto>();
+        public ICollection<Produto>? Produtos { get; set; } = new List<Produto>();
+
+        public ICollection<ReservaProduto>? ReservasProduto { get; set; }
     }
 
     public enum TipoUsuario

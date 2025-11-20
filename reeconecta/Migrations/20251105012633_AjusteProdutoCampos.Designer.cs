@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using reeconecta.Models;
 
@@ -11,9 +12,11 @@ using reeconecta.Models;
 namespace reeconecta.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251105012633_AjusteProdutoCampos")]
+    partial class AjusteProdutoCampos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +61,9 @@ namespace reeconecta.Migrations
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("StatusProduto")
                         .HasColumnType("int");
@@ -233,7 +239,7 @@ namespace reeconecta.Migrations
                     b.HasOne("reeconecta.Models.Usuario", "Usuario")
                         .WithMany("Produtos")
                         .HasForeignKey("AnuncianteId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Usuario");
@@ -244,13 +250,13 @@ namespace reeconecta.Migrations
                     b.HasOne("reeconecta.Models.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("reeconecta.Models.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Produto");
@@ -261,15 +267,15 @@ namespace reeconecta.Migrations
             modelBuilder.Entity("reeconecta.Models.ReservaProduto", b =>
                 {
                     b.HasOne("reeconecta.Models.Produto", "Produto")
-                        .WithMany("ReservasProduto")
+                        .WithMany()
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("reeconecta.Models.Usuario", "Usuario")
-                        .WithMany("ReservasProduto")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Produto");
@@ -282,13 +288,13 @@ namespace reeconecta.Migrations
                     b.HasOne("reeconecta.Models.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("reeconecta.Models.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Produto");
@@ -296,16 +302,9 @@ namespace reeconecta.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("reeconecta.Models.Produto", b =>
-                {
-                    b.Navigation("ReservasProduto");
-                });
-
             modelBuilder.Entity("reeconecta.Models.Usuario", b =>
                 {
                     b.Navigation("Produtos");
-
-                    b.Navigation("ReservasProduto");
                 });
 #pragma warning restore 612, 618
         }
