@@ -1,0 +1,168 @@
+﻿@using reeconecta.Models
+@model reeconecta.Models.Ponto
+
+@{
+    ViewData["Title"] = "Detalhes do Ponto";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+
+            <!-- Cabeçalho -->
+            <div class="mb-4">
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+
+            <!-- Card Principal -->
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Seção de Imagem -->
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 300px; border-bottom: 1px solid #dee2e6;">
+                    @if (!string.IsNullOrEmpty(Model.Imagem))
+                    {
+                        <img src="@Model.Imagem" class="img-fluid rounded" style="max-height: 300px; object-fit: cover;" alt="@Model.NomePonto" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-image" style="font-size: 4rem; color: #ccc;"></i>
+                    }
+                </div>
+
+                <!-- Conteúdo -->
+                <div class="card-body p-4">
+
+                    <!-- Título e Badge -->
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-2">@Model.NomePonto</h2>
+                            <span class="badge bg-info fs-6">@Model.Tipo</span>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Descrição -->
+                    <div class="row mb-4">
+                        <div class="col-md-12 mb-3">
+                            <h6 class="fw-semibold text-muted">Descrição</h6>
+                            <p>@Model.DescricaoPonto</p>
+                        </div>
+                    </div>
+
+                    <!-- Localização -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> Localização</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">CEP</label>
+                                <p class="fw-semibold">@Model.CepPonto</p>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="text-muted small">Endereço Completo</label>
+                                <p class="fw-semibold">@Model.EnderecoPonto</p>
+                            </div>
+
+                            <div class="col-md-12">
+                                @{
+                                    // Remove o complemento do endereço para o Google Maps
+                                    string enderecoPonto = Model.EnderecoPonto;
+
+                                    // Remove complemento entre parênteses
+                                    int indexAbreParentese = enderecoPonto.IndexOf('(');
+                                    if (indexAbreParentese > 0)
+                                    {
+                                        enderecoPonto = enderecoPonto.Substring(0, indexAbreParentese).Trim();
+                                    }
+
+                                    // Usa CEP + endereço para melhor precisão no Google Maps
+                                    string enderecoComCep = $"{enderecoPonto}, {Model.CepPonto}";
+                                    string enderecoEncoded = System.Web.HttpUtility.UrlEncode(enderecoComCep);
+                                    string googleMapsUrl = $"https://www.google.com/maps/search/{enderecoEncoded}";
+                                }
+                                <a href="@googleMapsUrl" target="_blank" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-geo-alt-fill"></i> Ver no Google Maps
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contato -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="fw-semibold mb-3"><i class="bi bi-telephone"></i> Contato</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Telefone Principal</label>
+                                <p class="fw-semibold">@Model.TelefoneP01</p>
+                                @if (Model.WppTelP1)
+                                {
+                                    string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.TelefoneP01, @"\D", "");
+                                    string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
+                                    <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
+                                        <i class="bi bi-whatsapp"></i> WhatsApp
+                                    </a>
+                                }
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.TelefoneP02))
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Telefone Secundário</label>
+                                    <p class="fw-semibold">@Model.TelefoneP02</p>
+                                    @if (Model.WppTelP2)
+                                    {
+                                        string telefoneFormatado = System.Text.RegularExpressions.Regex.Replace(Model.TelefoneP02, @"\D", "");
+                                        string whatsappUrl = $"https://wa.me/55{telefoneFormatado}";
+                                        <a href="@whatsappUrl" target="_blank" class="btn btn-success btn-sm">
+                                            <i class="bi bi-whatsapp"></i> WhatsApp
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Botões de Ação -->
+                    <div class="d-flex gap-2">
+                        @{
+                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst("UserId")?.Value, out var id) ? id : 0;
+                            var tipoUsuarioAtualEnum = TipoUsuario.User;
+
+                            if (Enum.TryParse<TipoUsuario>(Context.User.FindFirst("TipoUsuario")?.Value ?? "User", out var tipo))
+                            {
+                                tipoUsuarioAtualEnum = tipo;
+                            }
+
+                            var podeEditar = tipoUsuarioAtualEnum == TipoUsuario.Administrador || Model.CriadoPorUsuarioId == usuarioIdAtual;
+                        }
+
+                        @if (podeEditar)
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning flex-grow-1">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                        }
+
+                        <a asp-action="Index" class="btn btn-outline-secondary flex-grow-1">
+                            <i class="bi bi-list"></i> Voltar
+                        </a>
+
+                        @if (podeEditar)
+                        {
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger flex-grow-1">
+                                <i class="bi bi-trash"></i> Remover
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>

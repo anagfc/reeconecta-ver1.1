@@ -1,65 +1,92 @@
 ﻿@model IEnumerable<reeconecta.Models.Produto>
 
 @{
-    ViewData["Title"] = "Produtos";
+    ViewData["Title"] = "Marketplace";
 }
 
-<h1>Produtos</h1>
+<div class="container mt-4">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Preco)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Condicao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AnuncioAtivo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Preco)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Condicao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnuncioAtivo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="mb-4">
+        <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 180px;">
+            <img src="~/Logo REEConecta.png" alt="Logotipo ReeConecta" width="160px" /> <!--adicionar outra imagem-->
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 mb-4">
+        <a asp-controller="Produtos" asp-action="MeusProdutos" class="btn btn-outline-secondary shadow-sm">
+            Meus produtos
+        </a>
+        <a asp-action="Create" class="btn btn-outline-primary shadow-sm">
+            Anuncie seu produto <i class="bi bi-plus-circle"></i>
+        </a>
+    </div>
+
+    <div class="row">
+        <aside class="col-md-3 mb-4">
+            <h5 class="fw-bold mb-3">Filtros</h5>
+            <div class="d-flex flex-column gap-3">
+                <p>Adicionar os filtros</p>
+            </div>
+        </aside>
+
+        <section class="col-md-9">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p style="text-align:center;">Adicionar o buscar e ordenar</p>
+            </div>
+
+            <div class="row g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                @if (!string.IsNullOrEmpty(item.Imagem))
+                                {
+                                    <img src="@item.Imagem" class="img-fluid rounded" style="max-height:180px; object-fit:cover;" />
+
+                                }
+                                else
+                                {
+                                    <i class="bi bi-image" style="font-size: 2rem; color: gray;"></i>
+                                }
+                            </div>
+                            <div class="card-body text-center">
+                                <h6 class="fw-semibold">@item.Titulo</h6>
+                                <p class="mb-1 text-muted">R$@item.Preco.ToString("N2")</p>
+                                <p class="mb-1 text-muted">@item.Bairro, @item.Cidade</p>
+                                <div class="produto-card" style="position: relative;">
+                                    @{
+                                        bool reservado = item.ReservasProduto?.Any(r => r.Status == StatusReserva.Pendente) ?? false;
+                                    }
+                                    @if (reservado)
+                                    {
+                                        <button class="btn btn-secondary btn-sm" disabled>Reservado</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary btn-sm btn-reservar" data-id="@item.Id">Tenho interesse</button>
+                                    }
+
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">Detalhes</a>
+
+                                    <div class="reserva-feedback position-absolute top-0 start-50 translate-middle-x w-100 mt-2" style="z-index: 1000;"></div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>

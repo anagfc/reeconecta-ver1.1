@@ -22,6 +22,63 @@ namespace reeconecta.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("reeconecta.Models.Ponto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CepPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CriadoPorUsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DescricaoPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnderecoPonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imagem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomePonto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelefoneP01")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelefoneP02")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("WppTelP1")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WppTelP2")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CriadoPorUsuarioId");
+
+                    b.ToTable("Pontos");
+                });
+
             modelBuilder.Entity("reeconecta.Models.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -36,31 +93,97 @@ namespace reeconecta.Migrations
                     b.Property<bool>("AnuncioAtivo")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Condicao")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CriacaoAnuncio")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Descricao")
+                    b.Property<string>("Bairro")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nome")
+                    b.Property<string>("Cidade")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Condicao")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CriacaoProduto")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imagem")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("StatusAnuncio")
+                    b.Property<int>("StatusProduto")
                         .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AnuncianteId");
 
                     b.ToTable("Produtos");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.ProdutoInteressado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataInteresse")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("ProdutoInteressado");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.ReservaProduto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataReserva")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("ReservaProduto");
                 });
 
             modelBuilder.Entity("reeconecta.Models.Usuario", b =>
@@ -90,7 +213,6 @@ namespace reeconecta.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailRepresentante")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Endereco")
@@ -98,19 +220,15 @@ namespace reeconecta.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomeFantasia")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RazaoSocial")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RepresentanteLegal")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Senha")
@@ -133,7 +251,7 @@ namespace reeconecta.Migrations
                     b.Property<bool>("WppTel1")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("WppTel2")
+                    b.Property<bool>("WppTel2")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -141,20 +259,119 @@ namespace reeconecta.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("reeconecta.Models.VisualizacaoProduto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataVisualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("VisualizacaoProduto");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.Ponto", b =>
+                {
+                    b.HasOne("reeconecta.Models.Usuario", "CriadoPorUsuario")
+                        .WithMany()
+                        .HasForeignKey("CriadoPorUsuarioId");
+
+                    b.Navigation("CriadoPorUsuario");
+                });
+
             modelBuilder.Entity("reeconecta.Models.Produto", b =>
                 {
                     b.HasOne("reeconecta.Models.Usuario", "Usuario")
                         .WithMany("Produtos")
                         .HasForeignKey("AnuncianteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("reeconecta.Models.ProdutoInteressado", b =>
+                {
+                    b.HasOne("reeconecta.Models.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("reeconecta.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.ReservaProduto", b =>
+                {
+                    b.HasOne("reeconecta.Models.Produto", "Produto")
+                        .WithMany("ReservasProduto")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("reeconecta.Models.Usuario", "Usuario")
+                        .WithMany("ReservasProduto")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.VisualizacaoProduto", b =>
+                {
+                    b.HasOne("reeconecta.Models.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("reeconecta.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("reeconecta.Models.Produto", b =>
+                {
+                    b.Navigation("ReservasProduto");
+                });
+
             modelBuilder.Entity("reeconecta.Models.Usuario", b =>
                 {
                     b.Navigation("Produtos");
+
+                    b.Navigation("ReservasProduto");
                 });
 #pragma warning restore 612, 618
         }
