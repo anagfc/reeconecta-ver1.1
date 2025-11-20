@@ -1,59 +1,100 @@
 ﻿@model reeconecta.Models.Produto
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Produto";
 }
 
-<h1>Edit</h1>
+<div class="container mt-5 mb-5">
+    <h3 class="mb-4 text-center">Editar Produto</h3>
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
 
-<h4>Produto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Preco" class="control-label"></label>
-                <input value="@Model.Preco" id="Preco" name="Preco" required data-val-required="&#xC9; obrigat&#xF3;rio dar um preço ao produto." class="form-control" />
-                <span asp-validation-for="Preco" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descricao" class="control-label"></label>
-                <input asp-for="Descricao" class="form-control" />
-                <span asp-validation-for="Descricao" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Condicao" class="control-label"></label>
-                <select asp-for="Condicao" class="form-control" asp-items="Html.GetEnumSelectList<CondicaoProduto>()"></select>
-                <span asp-validation-for="Condicao" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AnuncianteId" class="control-label"></label>
-                <select asp-for="AnuncianteId" class="form-control" asp-items="ViewBag.AnuncianteId"></select>
-                <span asp-validation-for="AnuncianteId" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="AnuncioAtivo" /> @Html.DisplayNameFor(model => model.AnuncioAtivo)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Titulo" class="form-label fw-semibold">Título</label><span class="text-danger ms-1">*</span>
+                        <input asp-for="Titulo" class="form-control" placeholder="Digite o nome do produto" />
+                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Preco" class="form-label fw-semibold">Preço (R$)</label><span class="text-danger ms-1">*</span>
+                        <input asp-for="Preco" type="number" step="0.01" class="form-control" placeholder="Ex: 250,00 ou 0,00" />
+                        <span asp-validation-for="Preco" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Condicao" class="form-label fw-semibold">Condição</label><span class="text-danger ms-1">*</span>
+                        <select asp-for="Condicao" class="form-select"
+                                asp-items="Html.GetEnumSelectList<reeconecta.Models.CondicaoProduto>()"></select>
+                        <span asp-validation-for="Condicao" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="StatusProduto" class="form-label fw-semibold">Status do Produto</label><span class="text-danger ms-1">*</span>
+                        <select asp-for="StatusProduto" class="form-select"
+                                asp-items="Html.GetEnumSelectList<reeconecta.Models.StatusProduto>()"></select>
+                        <span asp-validation-for="StatusProduto" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Bairro" class="form-label fw-semibold">Bairro</label><span class="text-danger ms-1">*</span>
+                        <input asp-for="Bairro" class="form-control" placeholder="Informe o bairro" />
+                        <span asp-validation-for="Bairro" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Cidade" class="form-label fw-semibold">Cidade</label><span class="text-danger ms-1">*</span>
+                        <input asp-for="Cidade" class="form-control" placeholder="Informe a cidade" />
+                        <span asp-validation-for="Cidade" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Descricao" class="form-label fw-semibold">Descrição</label>
+                        <textarea asp-for="Descricao" class="form-control" rows="3" placeholder="Descreva o produto"></textarea>
+                        <span asp-validation-for="Descricao" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Imagem do Produto</label>
+                        <input type="file" name="ImagemFile" id="ImagemFile" class="form-control" accept="image/*" onchange="previewImagem(event)" />
+                        <span asp-validation-for="Imagem" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 text-center">
+                        <label class="form-label fw-semibold d-block">Pré-visualização</label>
+                        <img id="preview" src="@Model.Imagem" alt="Prévia da imagem"
+                             class="img-thumbnail rounded shadow-sm" style="max-height: 200px; object-fit: cover;" />
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <a asp-action="MeusProdutos" class="btn btn-secondary px-4 py-2 me-2">
+                        <i class="bi bi-arrow-left-circle"></i> Voltar
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4 py-2">
+                        <i class="bi bi-pencil-square"></i> Atualizar
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewImagem(event) {
+            const img = document.getElementById('preview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => img.src = e.target.result;
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 }

@@ -25,29 +25,126 @@ namespace reeconecta.Controllers
         }
 
         // GET: Produtos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? busca, string? cidade, string? condicao, string? ordenar)
         {
-            var produtos = await _context.Produtos
+            var query = _context.Produtos
+                .AsNoTracking()
+                .Where(p => p.StatusProduto == StatusProduto.Disponivel)
                 .Include(p => p.Usuario)
                 .Include(p => p.ReservasProduto)
+                .AsQueryable();
+
+            // BUSCA (título e descrição)
+            if (!string.IsNullOrWhiteSpace(busca))
+            {
+                query = query.Where(p =>
+                    p.Titulo.Contains(busca) ||
+                    p.Descricao.Contains(busca));
+            }
+
+            // FILTRO POR CIDADE
+            if (!string.IsNullOrWhiteSpace(cidade))
+            {
+                query = query.Where(p => p.Cidade == cidade);
+            }
+
+            // FILTRO POR CONDIÇÃO (Novo, SemiNovo, Usado)
+            if (!string.IsNullOrEmpty(condicao) &&
+             Enum.TryParse<CondicaoProduto>(condicao, true, out var condicaoEnum))
+            {
+                query = query.Where(p => p.Condicao == condicaoEnum);
+            }
+
+            // ORDENAR
+            query = ordenar switch
+            {
+                "preco_asc" => query.OrderBy(p => p.Preco),
+                "preco_desc" => query.OrderByDescending(p => p.Preco),
+                "titulo_asc" => query.OrderBy(p => p.Titulo),
+                "titulo_desc" => query.OrderByDescending(p => p.Titulo),
+                _ => query.OrderByDescending(p => p.CriacaoProduto)
+            };
+
+            // Carrega lista final
+            var produtos = await query.ToListAsync();
+
+            // Enviar cidades únicas para dropdown
+            ViewBag.Cidades = await _context.Produtos
+                .Select(p => p.Cidade)
+                .Distinct()
+                .OrderBy(c => c)
                 .ToListAsync();
 
             return View(produtos);
         }
 
+
         // GET: Produtos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
             var produto = await _context.Produtos
-                .Include(p => p.Usuario)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(p => p.Usuario) 
+                .Include(p => p.ReservasProduto) 
+                    .ThenInclude(r => r.Usuario) 
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (produto == null) return NotFound();
+
+            if (produto == null)
+                return NotFound();
 
             return View(produto);
         }
+
+        // Confirmar e recusar
+        [HttpGet]
+        public async Task<IActionResult> Confirmar(int id)
+        {
+            var reserva = await _context.ReservasProduto
+                .Include(r => r.Produto)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reserva == null)
+                return NotFound();
+
+            reserva.Status = StatusReserva.Confirmada;
+
+            if (reserva.Produto != null)
+            {
+                reserva.Produto.StatusProduto = StatusProduto.Vendido;
+
+                var outrasReservas = await _context.ReservasProduto
+                    .Where(r => r.ProdutoId == reserva.ProdutoId && r.Id != reserva.Id && r.Status == StatusReserva.Pendente)
+                    .ToListAsync();
+
+                foreach (var r in outrasReservas)
+                {
+                    r.Status = StatusReserva.Cancelada;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Produtos", new { id = reserva.ProdutoId });
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Recusar(int id)
+        {
+            var reserva = await _context.ReservasProduto.FindAsync(id);
+            if (reserva == null) return NotFound();
+
+            reserva.Status = StatusReserva.Cancelada;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Produtos", new { id = reserva.ProdutoId });
+        }
+
+
 
         // GET: Produtos/Create
         public IActionResult Create()
@@ -118,11 +215,10 @@ namespace reeconecta.Controllers
             var produto = await _context.Produtos.FindAsync(id);
             if (produto == null) return NotFound();
 
-            ViewData["AnuncianteId"] = new SelectList(_context.Usuarios, "Id", "Nome", produto.AnuncianteId);
             return View(produto);
         }
 
-        // POST: Produtos/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Produto produto, IFormFile? ImagemFile)
@@ -131,34 +227,33 @@ namespace reeconecta.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    // Atualiza imagem a cada novo envio
-                    if (ImagemFile != null && ImagemFile.Length > 0)
-                    {
-                        using (var ms = new MemoryStream())
-                        {
-                            await ImagemFile.CopyToAsync(ms);
-                            var bytes = ms.ToArray();
-                            produto.Imagem = $"data:{ImagemFile.ContentType};base64,{Convert.ToBase64String(bytes)}";
-                        }
-                    }
+                var produtoDb = await _context.Produtos.FindAsync(id);
+                if (produtoDb == null) return NotFound();
 
-                    _context.Update(produto);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
+                produtoDb.Titulo = produto.Titulo;
+                produtoDb.Preco = produto.Preco;
+                produtoDb.Descricao = produto.Descricao;
+                produtoDb.Condicao = produto.Condicao;
+                produtoDb.Bairro = produto.Bairro;
+                produtoDb.Cidade = produto.Cidade;
+                produtoDb.StatusProduto = produto.StatusProduto;
+
+                if (ImagemFile != null && ImagemFile.Length > 0)
                 {
-                    if (!ProdutoExists(produto.Id)) return NotFound();
-                    else throw;
+                    using var ms = new MemoryStream();
+                    await ImagemFile.CopyToAsync(ms);
+                    produtoDb.Imagem = $"data:{ImagemFile.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
                 }
 
-                return RedirectToAction(nameof(Index));
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { id = produto.Id });
             }
 
-            ViewData["AnuncianteId"] = new SelectList(_context.Usuarios, "Id", "Nome", produto.AnuncianteId);
             return View(produto);
         }
+
+
 
         // GET: Produtos/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -180,22 +275,44 @@ namespace reeconecta.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var produto = await _context.Produtos.FindAsync(id);
+
             if (produto != null)
             {
+                var reservas = _context.ReservasProduto
+                                       .Where(r => r.ProdutoId == id)
+                                       .ToList(); 
+                _context.ReservasProduto.RemoveRange(reservas);
+
                 _context.Produtos.Remove(produto);
                 await _context.SaveChangesAsync();
+
+                TempData["MensagemSucesso"] = "Produto deletado com sucesso!";
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProdutoExists(int id)
-        {
-            return _context.Produtos.Any(e => e.Id == id);
-        }
 
         // GET: Produtos/MeusProdutos
         public async Task<IActionResult> MeusProdutos()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim))
+                return RedirectToAction("Login", "Usuarios");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                return BadRequest("ID do usuário logado inválido.");
+
+            var meusProdutos = await _context.Produtos
+                .Where(p => p.AnuncianteId == userId) 
+                .Include(p => p.Usuario)
+                .ToListAsync();
+
+            return View(meusProdutos);
+        }
+
+        // GET: Produtos/MinhasReservas
+        public async Task<IActionResult> MinhasReservas()
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -205,15 +322,41 @@ namespace reeconecta.Controllers
             if (!int.TryParse(userIdClaim, out int userId))
                 return BadRequest("ID do usuário logado inválido.");
 
-            var meusProdutos = await _context.Produtos
-                .Where(p => p.AnuncianteId == userId)
-                .Include(p => p.Usuario)
+            var minhasReservas = await _context.ReservasProduto
+                .Include(r => r.Produto)
+                .ThenInclude(p => p.Usuario)
+                .Where(r => r.UsuarioId == userId)
                 .ToListAsync();
 
-            return View(meusProdutos);
+            return View(minhasReservas);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CancelarReserva(int id)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userIdClaim))
+                return RedirectToAction("Login", "Usuarios");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                return BadRequest("ID do usuário logado inválido.");
+
+            var reserva = await _context.ReservasProduto
+                .FirstOrDefaultAsync(r => r.Id == id && r.UsuarioId == userId);
+
+            if (reserva == null)
+                return NotFound();
+
+            reserva.Status = StatusReserva.Cancelada;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(MinhasReservas));
         }
 
 
+
+        // GET: Produtos/Reservar
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Reservar(int id)
