@@ -27,7 +27,12 @@
         <!-- Informações -->
         <div class="col-md-8">
 
-            <h3 class="fw-bold mb-3">@Model.Titulo</h3>
+            <h3 class="fw-bold mb-1">@Model.Titulo</h3>
+
+            <!-- 👉 Nome do anunciante aqui -->
+            <p class="text-muted mb-3" style="font-size: 0.95rem;">
+                Anunciado por: <strong>@Model.Usuario?.Nome</strong>
+            </p>
 
             <div class="mb-3">
                 <strong class="text-secondary">Preço:</strong>
@@ -63,7 +68,7 @@
                 <br />
                 <div class="mt-3">
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-link">
-                        <i class="bi bi-pencil fs-5 text-primary"></i> 
+                        <i class="bi bi-pencil fs-5 text-primary"></i>
                     </a>
 
                     <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
@@ -104,13 +109,17 @@
                                             ;
                                             break;
                                     }
+
                                     @{
-                                        var telefoneLimpo2 = reserva.Usuario?.Telefone01?.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
+                                        var telefoneLimpo2 = reserva.Usuario?.Telefone01?
+                                        .Replace("(", "").Replace(")", "")
+                                        .Replace("-", "").Replace(" ", "");
                                     }
 
                                     @if (reserva.Status == reeconecta.Models.StatusReserva.Confirmada)
                                     {
-                                        <a href="https://wa.me/@telefoneLimpo2" target="_blank" class="btn btn-outline-success w-100 mt-4" style="font-weight: 600;">
+                                        <a href="https://wa.me/@telefoneLimpo2" target="_blank"
+                                           class="btn btn-outline-success w-100 mt-4" style="font-weight: 600;">
                                             <i class="bi bi-whatsapp me-2"></i> Entre em contato com o interessado
                                         </a>
                                     }
