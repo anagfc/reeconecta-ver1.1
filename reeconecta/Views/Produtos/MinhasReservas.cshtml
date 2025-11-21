@@ -54,10 +54,10 @@
                     </div>
 
                     <div>
-                        <a asp-controller="Produtos" asp-action="Details" asp-route-id="@reserva.ProdutoId"
-                           class="btn btn-link text-secondary" title="Ver detalhes">
+                        <button class="btn btn-link text-secondary btn-detalhes"
+                                data-id="@reserva.ProdutoId">
                             <i class="bi bi-eye fs-5"></i>
-                        </a>
+                        </button>
 
                         @if (reserva.Status == reeconecta.Models.StatusReserva.Pendente)
                         {
@@ -72,3 +72,56 @@
         </div>
     }
 </div>
+
+<!-- MODAL DE DETALHES -->
+
+<div class="modal fade"
+     id="modalDetalhes"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Produto</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="conteudoModalDetalhes">
+                Carregando...
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("click", function (e) {
+            const btn = e.target.closest(".btn-detalhes");
+            if (!btn) return;
+
+            e.preventDefault();
+            let id = btn.dataset.id;
+
+            let modal = new bootstrap.Modal(document.getElementById("modalDetalhes"));
+            modal.show();
+
+            document.getElementById("conteudoModalDetalhes").innerHTML = "Carregando...";
+
+            fetch(`/Produtos/Details/${id}`)
+                .then(resp => resp.text())
+                .then(html => {
+                    document.getElementById("conteudoModalDetalhes").innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById("conteudoModalDetalhes").innerHTML =
+                        "<div class='text-danger text-center'>Erro ao carregar detalhes.</div>";
+                });
+        });
+    </script>
+}
