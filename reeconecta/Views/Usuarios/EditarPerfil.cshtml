@@ -135,8 +135,8 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-check mt-4">
-                                        <input class="form-check-input" type="checkbox" asp-for="WppTel2" />
-                                        <label class="form-check-label" asp-for="WppTel2">
+                                        <input class="form-check-input" type="checkbox" id="WppTel2" name="WppTel2" value="true" @(Model.WppTel2 == true ? "checked" : "") />
+                                        <label class="form-check-label" for="WppTel2">
                                             WhatsApp
                                         </label>
                                     </div>

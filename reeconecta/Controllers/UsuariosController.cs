@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies; // Adicione este using no topo do arquivo
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,7 +13,6 @@ using reeconecta.Models;
 
 namespace reeconecta.Controllers
 {
-    [Authorize(Roles = "Administrador")]
     public class UsuariosController : Controller
     {
         private readonly AppDbContext _context;
@@ -23,6 +23,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Usuarios
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Usuarios.ToListAsync());
@@ -50,7 +51,6 @@ namespace reeconecta.Controllers
             if (dados == null)
             {
                 ViewBag.Message = "Usuário e/ou senha inválidos.";
-
                 return View();
             }
 
@@ -59,12 +59,12 @@ namespace reeconecta.Controllers
             if (SenhaCorreta)
             {
                 var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, dados.Nome ?? dados.NomeFantasia ?? "Usuário"),
-            new Claim(ClaimTypes.NameIdentifier, dados.Id.ToString()),
-            new Claim(ClaimTypes.Email, dados.Email),
-            new Claim(ClaimTypes.Role, dados.TipoUsuario.ToString())
-        };
+                {
+                    new Claim(ClaimTypes.Name, dados.Nome ?? dados.NomeFantasia ?? "Usuário"),
+                    new Claim(ClaimTypes.NameIdentifier, dados.Id.ToString()),
+                    new Claim(ClaimTypes.Email, dados.Email),
+                    new Claim(ClaimTypes.Role, dados.TipoUsuario.ToString())
+                };
 
                 var usuarioIdentity = new ClaimsIdentity(claims, "login");
                 var principal = new ClaimsPrincipal(usuarioIdentity);
@@ -90,11 +90,11 @@ namespace reeconecta.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-
             return Redirect("/");
         }
 
         // GET: Usuarios/Details/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -120,20 +120,17 @@ namespace reeconecta.Controllers
         }
 
         // POST: Usuarios/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
         public async Task<IActionResult> Create(Usuario usuario)
         {
-
             if (ModelState.IsValid)
             {
                 usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-                //usuario.TipoUsuario = TipoUsuario.User;
                 usuario.ContaAtiva = true;
                 usuario.CriacaoConta = DateTime.Now;
+                usuario.WppTel2 = usuario.WppTel2 ?? false;
 
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
@@ -143,6 +140,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Usuarios/Edit/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -159,10 +157,9 @@ namespace reeconecta.Controllers
         }
 
         // POST: Usuarios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TipodePerfil,Documento,Nome,RazaoSocial,NomeFantasia,RepresentanteLegal, EmailRepresentante,TipoUsuario,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email,Senha,ContaAtiva,CriacaoConta")] Usuario usuario)
         {
             if (id != usuario.Id)
@@ -175,7 +172,6 @@ namespace reeconecta.Controllers
                 try
                 {
                     usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-
                     _context.Update(usuario);
                     await _context.SaveChangesAsync();
                 }
@@ -196,6 +192,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Usuarios/Delete/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -216,6 +213,7 @@ namespace reeconecta.Controllers
         // POST: Usuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
@@ -233,6 +231,7 @@ namespace reeconecta.Controllers
             return _context.Usuarios.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Relatorio(int? id)
         {
             if (id == null)
@@ -245,29 +244,28 @@ namespace reeconecta.Controllers
 
             var anuncios = await _context.Produtos
                 .Where(c => c.AnuncianteId == id)
-                .OrderByDescending(c => c.CriacaoAnuncio)
+                .OrderByDescending(c => c.CriacaoProduto)
                 .ToListAsync();
 
             decimal totalVendido = anuncios?
-                .Where(c => c.StatusAnuncio == StatusAnuncio.Vendido)
+                .Where(c => c.StatusProduto == StatusProduto.Vendido)
                 .Sum(c => c.Preco) ?? 0;
 
             int itensVendidos = anuncios?
-                .Count(c => c.StatusAnuncio == StatusAnuncio.Vendido) ?? 0;
+                .Count(c => c.StatusProduto == StatusProduto.Vendido) ?? 0;
 
             ViewBag.Usuario = usuario;
             ViewBag.TotalVendido = totalVendido.ToString("C");
             ViewBag.ItensVendidos = itensVendidos;
 
             return View(anuncios);
-
         }
 
-          // GET: Usuarios/Perfil (Visualização)
+        // GET: Usuarios/Perfil (Visualização)
         [Authorize]
         public async Task<IActionResult> Perfil()
         {
-            var usuarioIdClaim = User.FindFirst("UserId");
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioId))
             {
                 return RedirectToAction("Login");
@@ -286,7 +284,7 @@ namespace reeconecta.Controllers
         [Authorize]
         public async Task<IActionResult> EditarPerfil()
         {
-            var usuarioIdClaim = User.FindFirst("UserId");
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioId))
             {
                 return RedirectToAction("Login");
@@ -307,7 +305,7 @@ namespace reeconecta.Controllers
         [Authorize]
         public async Task<IActionResult> EditarPerfil(int id, [Bind("Id,Nome,NomeFantasia,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email")] Usuario usuario, string? NovaSenha, string? ConfirmacaoSenha)
         {
-            var usuarioIdClaim = User.FindFirst("UserId");
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioIdLogado))
             {
                 return RedirectToAction("Login");
@@ -374,7 +372,7 @@ namespace reeconecta.Controllers
                     usuarioExistente.Telefone01 = usuario.Telefone01;
                     usuarioExistente.WppTel1 = usuario.WppTel1;
                     usuarioExistente.Telefone02 = usuario.Telefone02;
-                    usuarioExistente.WppTel2 = usuario.WppTel2;
+                    usuarioExistente.WppTel2 = usuario.WppTel2 ?? false;
                     usuarioExistente.Email = usuario.Email;
 
                     _context.Update(usuarioExistente);
@@ -430,7 +428,7 @@ namespace reeconecta.Controllers
         [Authorize]
         public async Task<IActionResult> DesativarConta()
         {
-            var usuarioIdClaim = User.FindFirst("UserId");
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioId))
             {
                 return RedirectToAction("Login");
@@ -451,7 +449,7 @@ namespace reeconecta.Controllers
         [Authorize]
         public async Task<IActionResult> DesativarContaConfirmado(int id)
         {
-            var usuarioIdClaim = User.FindFirst("UserId");
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioIdLogado))
             {
                 return RedirectToAction("Login");
@@ -487,5 +485,6 @@ namespace reeconecta.Controllers
                 TempData["MensagemErro"] = $"Erro ao desativar conta: {ex.Message}";
                 return RedirectToAction("Perfil");
             }
+        }
     }
 }
