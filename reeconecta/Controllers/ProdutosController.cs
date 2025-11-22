@@ -164,7 +164,7 @@ namespace reeconecta.Controllers
         // POST: Produtos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Titulo,Preco,Descricao,Condicao,Bairro,Cidade,Imagem,StatusProduto")] Produto produto, IFormFile ImagemFile)
+        public async Task<IActionResult> Create([Bind("Titulo,Preco,Descricao,Condicao,Bairro,Cidade,Imagem")] Produto produto, IFormFile? ImagemFile)
         {
             if (ModelState.IsValid)
             {
@@ -205,6 +205,11 @@ namespace reeconecta.Controllers
 
                     produto.Imagem = "/images/produtos/" + fileName;
                 }
+                else
+                {
+                    produto.Imagem = "/images/produtos/semimagem.png";
+                }
+
 
                 _context.Add(produto);
                 await _context.SaveChangesAsync();
@@ -235,7 +240,7 @@ namespace reeconecta.Controllers
         {
             if (id != produto.Id)
             {
-                TempData["MensagemErro"] = "Erro ao atualizar o produto!";
+                TempData["Error"] = "Erro ao atualizar o produto!";
                 return RedirectToAction(nameof(MeusProdutos));
             }
 
@@ -244,7 +249,7 @@ namespace reeconecta.Controllers
                 var produtoDb = await _context.Produtos.FindAsync(id);
                 if (produtoDb == null)
                 {
-                    TempData["MensagemErro"] = "Erro ao atualizar o produto!";
+                    TempData["Error"] = "Erro ao atualizar o produto!";
                     return RedirectToAction(nameof(MeusProdutos));
                 }
 
@@ -266,7 +271,7 @@ namespace reeconecta.Controllers
 
                 await _context.SaveChangesAsync();
 
-                TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+                TempData["Success"] = "Produto atualizado com sucesso!";
                 return RedirectToAction(nameof(MeusProdutos));
             }
 
@@ -280,7 +285,7 @@ namespace reeconecta.Controllers
         {
             if (id == null)
             {
-                TempData["MensagemErro"] = "Erro ao deletar o produto!";
+                TempData["Error"] = "Erro ao deletar o produto!";
                 return RedirectToAction(nameof(MeusProdutos));
             }
 
@@ -290,7 +295,7 @@ namespace reeconecta.Controllers
 
             if (produto == null)
             {
-                TempData["MensagemErro"] = "Erro ao deletar o produto!";
+                TempData["Error"] = "Erro ao deletar o produto!";
                 return RedirectToAction(nameof(MeusProdutos));
             }
 
@@ -315,10 +320,10 @@ namespace reeconecta.Controllers
                 await _context.SaveChangesAsync();
 
 
-                TempData["MensagemSucesso"] = "Produto deletado com sucesso!";
+                TempData["Success"] = "Produto excluído com sucesso!";
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MeusProdutos));
         }
 
 
