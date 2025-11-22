@@ -1,7 +1,26 @@
-﻿@model IEnumerable<reeconecta.Models.Produto>
+﻿@using System.Security.Claims
+@model IEnumerable<reeconecta.Models.Produto>
 
 @{
     ViewData["Title"] = "Marketplace";
+    var usuarioLogadoId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
 }
 
 <div class="container mt-4">
@@ -115,6 +134,7 @@
             <div class="row g-4">
                 @foreach (var item in Model)
                 {
+                    var isAnunciante = usuarioLogadoId == item.AnuncianteId.ToString();
                     <div class="col-md-4">
                         <div class="card h-100 shadow-sm border-0">
 
@@ -145,10 +165,6 @@
                                     @item.Bairro, @item.Cidade
                                 </p>
 
-                                <p class="mb-3">
-                                    @item.StatusProduto
-                                </p>
-
                                 <div class="produto-card" style="position: relative;">
 
                                     @{
@@ -156,18 +172,21 @@
                                         r.Status == StatusReserva.Pendente) ?? false;
                                     }
 
-                                    @if (reservado)
+                                    @if (!isAnunciante)
                                     {
+                                        if (reservado)
+                                        {
                                         <button class="btn btn-secondary btn-sm" disabled>
                                             Reservado
                                         </button>
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-primary btn-sm btn-reservar"
-                                                data-id="@item.Id">
-                                            Tenho interesse
-                                        </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-primary btn-sm btn-reservar"
+                                                    data-id="@item.Id">
+                                                Tenho interesse
+                                            </button>
+                                        }
                                     }
 
                                     <button class="btn btn-outline-secondary btn-sm btn-detalhes"

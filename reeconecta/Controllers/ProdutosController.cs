@@ -107,7 +107,10 @@ namespace reeconecta.Controllers
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (reserva == null)
-                return NotFound();
+            {
+                TempData["Error"] = "Reserva não encontrada.";
+                return RedirectToAction(nameof(MeusProdutos));
+            }
 
             reserva.Status = StatusReserva.Confirmada;
 
@@ -127,7 +130,8 @@ namespace reeconecta.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Produtos", new { id = reserva.ProdutoId });
+            TempData["Success"] = "Reserva confirmada com sucesso!";
+            return RedirectToAction(nameof(MeusProdutos));
         }
 
 
@@ -136,12 +140,17 @@ namespace reeconecta.Controllers
         public async Task<IActionResult> Recusar(int id)
         {
             var reserva = await _context.ReservasProduto.FindAsync(id);
-            if (reserva == null) return NotFound();
+            if (reserva == null)
+            {
+                TempData["Error"] = "Reserva não encontrada.";
+                return RedirectToAction(nameof(MeusProdutos));
+            }
 
             reserva.Status = StatusReserva.Cancelada;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Produtos", new { id = reserva.ProdutoId });
+            TempData["Success"] = "Reserva recusada com sucesso!";
+            return RedirectToAction(nameof(MeusProdutos));
         }
 
 
@@ -200,6 +209,7 @@ namespace reeconecta.Controllers
                 _context.Add(produto);
                 await _context.SaveChangesAsync();
 
+                TempData["Success"] = "Anúncio cadastrado com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -223,12 +233,20 @@ namespace reeconecta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Produto produto, IFormFile? ImagemFile)
         {
-            if (id != produto.Id) return NotFound();
+            if (id != produto.Id)
+            {
+                TempData["MensagemErro"] = "Erro ao atualizar o produto!";
+                return RedirectToAction(nameof(MeusProdutos));
+            }
 
             if (ModelState.IsValid)
             {
                 var produtoDb = await _context.Produtos.FindAsync(id);
-                if (produtoDb == null) return NotFound();
+                if (produtoDb == null)
+                {
+                    TempData["MensagemErro"] = "Erro ao atualizar o produto!";
+                    return RedirectToAction(nameof(MeusProdutos));
+                }
 
                 produtoDb.Titulo = produto.Titulo;
                 produtoDb.Preco = produto.Preco;
@@ -247,7 +265,9 @@ namespace reeconecta.Controllers
 
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Details), new { id = produto.Id });
+
+                TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+                return RedirectToAction(nameof(MeusProdutos));
             }
 
             return View(produto);
@@ -258,13 +278,21 @@ namespace reeconecta.Controllers
         // GET: Produtos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                TempData["MensagemErro"] = "Erro ao deletar o produto!";
+                return RedirectToAction(nameof(MeusProdutos));
+            }
 
             var produto = await _context.Produtos
                 .Include(p => p.Usuario)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (produto == null) return NotFound();
+            if (produto == null)
+            {
+                TempData["MensagemErro"] = "Erro ao deletar o produto!";
+                return RedirectToAction(nameof(MeusProdutos));
+            }
 
             return View(produto);
         }
@@ -285,6 +313,7 @@ namespace reeconecta.Controllers
 
                 _context.Produtos.Remove(produto);
                 await _context.SaveChangesAsync();
+
 
                 TempData["MensagemSucesso"] = "Produto deletado com sucesso!";
             }

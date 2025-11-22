@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -245,15 +246,15 @@ namespace reeconecta.Controllers
 
             var anuncios = await _context.Produtos
                 .Where(c => c.AnuncianteId == id)
-                .OrderByDescending(c => c.CriacaoAnuncio)
+                .OrderByDescending(c => c.CriacaoProduto)
                 .ToListAsync();
 
             decimal totalVendido = anuncios?
-                .Where(c => c.StatusAnuncio == StatusAnuncio.Vendido)
+                .Where(c => c.StatusProduto == StatusProduto.Vendido)
                 .Sum(c => c.Preco) ?? 0;
 
             int itensVendidos = anuncios?
-                .Count(c => c.StatusAnuncio == StatusAnuncio.Vendido) ?? 0;
+                .Count(c => c.StatusProduto == StatusProduto.Vendido) ?? 0;
 
             ViewBag.Usuario = usuario;
             ViewBag.TotalVendido = totalVendido.ToString("C");
@@ -263,7 +264,7 @@ namespace reeconecta.Controllers
 
         }
 
-          // GET: Usuarios/Perfil (Visualização)
+        // GET: Usuarios/Perfil (Visualização)
         [Authorize]
         public async Task<IActionResult> Perfil()
         {
@@ -487,5 +488,6 @@ namespace reeconecta.Controllers
                 TempData["MensagemErro"] = $"Erro ao desativar conta: {ex.Message}";
                 return RedirectToAction("Perfil");
             }
+        }
     }
 }
