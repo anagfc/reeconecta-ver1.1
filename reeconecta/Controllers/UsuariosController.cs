@@ -626,6 +626,38 @@ namespace reeconecta.Controllers
                 mensagem = "Senha alterada com sucesso!"
             });
         }
+
+        // GET: Usuarios/VerPerfil/5 (Visualizar perfil de outro usuário)
+        [AllowAnonymous]
+        public async Task<IActionResult> VerPerfil(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null || !usuario.ContaAtiva)
+            {
+                return NotFound();
+            }
+
+            // Buscar TODOS os produtos criados pelo usuário EXCETO os excluídos
+            var todosOsProdutos = await _context.Produtos
+                .Where(p => p.AnuncianteId == id && p.StatusProduto != StatusProduto.Excluido)
+                .OrderByDescending(p => p.CriacaoProduto)
+                .ToListAsync();
+
+            // Agrupar por status
+            ViewBag.Produtos = todosOsProdutos;
+            ViewBag.ProdutosDisponiveis = todosOsProdutos.Where(p => p.StatusProduto == StatusProduto.Disponivel).ToList();
+            ViewBag.ProdutosVendidos = todosOsProdutos.Where(p => p.StatusProduto == StatusProduto.Vendido).ToList();
+            ViewBag.TotalProdutos = todosOsProdutos.Count;
+            ViewBag.TotalDisponiveis = ViewBag.ProdutosDisponiveis.Count;
+            ViewBag.TotalVendidos = ViewBag.ProdutosVendidos.Count;
+
+            return View(usuario);
+        }
     }
 
     // DTOs para requisições
