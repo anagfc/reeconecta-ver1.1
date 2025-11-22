@@ -251,7 +251,7 @@ namespace reeconecta.Migrations
                     b.Property<bool>("WppTel1")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("WppTel2")
+                    b.Property<bool?>("WppTel2")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");

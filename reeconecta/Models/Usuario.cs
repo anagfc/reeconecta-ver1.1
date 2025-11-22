@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace reeconecta.Models
 {
     [Table("Usuarios")]
-    public class Usuario 
+    public class Usuario
     {
         [Key]
         public int Id { get; set; }
@@ -18,19 +17,17 @@ namespace reeconecta.Models
         [Required(ErrorMessage = "É obrigatório informar seu documento.")]
         public string Documento { get; set; } = string.Empty;
 
-        //[Required(ErrorMessage = "É obrigatório informar seu nome.")]
         public string? Nome { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar a razão social.")]
+        [Display(Name = "Razão social")]
         public string? RazaoSocial { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar o nome fantasia.")]
+        [Display(Name = "Nome fantasia")]
         public string? NomeFantasia { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar o representante legal.")]
+        [Display(Name = "Representante legal")]
         public string? RepresentanteLegal { get; set; }
 
-        //[Required(ErrorMessage = "É obrigatório informar o email do representante legal.")]
         [Display(Name = "Email do representante")]
         [DataType(DataType.EmailAddress)]
         public string? EmailRepresentante { get; set; }

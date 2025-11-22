@@ -62,6 +62,30 @@
                         </div>
                     }
 
+                    <!-- Informações da Pessoa Jurídica -->
+                    @if (Model.TipodePerfil == reeconecta.Models.TipoPerfil.PessoaJuridica)
+                    {
+                        <div class="bg-light p-3 rounded mb-4">
+                            <h6 class="fw-semibold mb-3"><i class="bi bi-building"></i> Informações da Empresa</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Razão Social</label>
+                                    <p class="fw-semibold">@Model.RazaoSocial</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Representante Legal</label>
+                                    <p class="fw-semibold">@Model.RepresentanteLegal</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="text-muted small">Email do Representante</label>
+                                    <p class="fw-semibold">@Model.EmailRepresentante</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                     <!-- Localização -->
                     <div class="bg-light p-3 rounded mb-4">
                         <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> Localização</h6>

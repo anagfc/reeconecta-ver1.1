@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies; // Adicione este using no topo do arquivo
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -125,12 +125,55 @@ namespace reeconecta.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Create(Usuario usuario)
         {
+            // Verifica se o cadastro é de pessoa física ou jurídica
+            if (usuario.TipodePerfil == TipoPerfil.PessoaFisica)
+            {
+                if (string.IsNullOrWhiteSpace(usuario.Nome))
+                    ModelState.AddModelError("Nome", "É obrigatório informar o nome.");
+            }
+
+            if (usuario.TipodePerfil == TipoPerfil.PessoaJuridica)
+            {
+                if (string.IsNullOrWhiteSpace(usuario.RazaoSocial))
+                    ModelState.AddModelError("RazaoSocial", "É obrigatório informar a razão social.");
+
+                if (string.IsNullOrWhiteSpace(usuario.NomeFantasia))
+                    ModelState.AddModelError("NomeFantasia", "É obrigatório informar o nome fantasia.");
+
+                if (string.IsNullOrWhiteSpace(usuario.RepresentanteLegal))
+                    ModelState.AddModelError("RepresentanteLegal", "É obrigatório informar o representante legal.");
+            }
+
+            // Verifica se o email inserido é único no BD
+            bool emailExistente = await _context.Usuarios
+                .AnyAsync(u => u.Email.ToLower() == usuario.Email.ToLower());
+
+            if (emailExistente)
+            {
+                ModelState.AddModelError("Email", "Esse email já possui cadastro no ReeConecta.");
+            }
+
+            // Verifica se o documento inserido é único no BD
+            bool documentoExistente = await _context.Usuarios
+                .AnyAsync(u => u.Documento == usuario.Documento);
+
+            if (documentoExistente)
+            {
+                ModelState.AddModelError("Documento", "Esse documento já possui cadastro no ReeConecta.");
+            }
+
             if (ModelState.IsValid)
             {
                 usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
                 usuario.ContaAtiva = true;
                 usuario.CriacaoConta = DateTime.Now;
+                // Garantir que WppTel2 seja false se for null
                 usuario.WppTel2 = usuario.WppTel2 ?? false;
+                // Para Pessoa Jurídica, usar NomeFantasia como Nome
+                if (usuario.TipodePerfil == TipoPerfil.PessoaJuridica && string.IsNullOrEmpty(usuario.Nome))
+                {
+                    usuario.Nome = usuario.NomeFantasia ?? usuario.RazaoSocial;
+                }
 
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
@@ -172,6 +215,7 @@ namespace reeconecta.Controllers
                 try
                 {
                     usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
                     _context.Update(usuario);
                     await _context.SaveChangesAsync();
                 }
@@ -303,7 +347,7 @@ namespace reeconecta.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> EditarPerfil(int id, [Bind("Id,Nome,NomeFantasia,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email")] Usuario usuario, string? NovaSenha, string? ConfirmacaoSenha)
+        public async Task<IActionResult> EditarPerfil(int id, [Bind("Id,Nome,NomeFantasia,RazaoSocial,RepresentanteLegal,EmailRepresentante,Cep,Endereco,Telefone01,WppTel1,Telefone02,WppTel2,Email")] Usuario usuario, string? NovaSenha, string? ConfirmacaoSenha)
         {
             var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (usuarioIdClaim == null || !int.TryParse(usuarioIdClaim.Value, out int usuarioIdLogado))
@@ -325,15 +369,12 @@ namespace reeconecta.Controllers
             // Remover validações dos campos que não estão sendo editados
             ModelState.Remove("Documento");
             ModelState.Remove("TipodePerfil");
-            ModelState.Remove("RazaoSocial");
-            ModelState.Remove("RepresentanteLegal");
-            ModelState.Remove("EmailRepresentante");
+            ModelState.Remove("Produtos");
+            ModelState.Remove("ReservasProduto");
             ModelState.Remove("TipoUsuario");
             ModelState.Remove("Senha");
             ModelState.Remove("ContaAtiva");
             ModelState.Remove("CriacaoConta");
-            ModelState.Remove("Produtos");
-            ModelState.Remove("ReservasProduto");
 
             // Validação de senha
             if (!string.IsNullOrEmpty(NovaSenha) || !string.IsNullOrEmpty(ConfirmacaoSenha))
@@ -375,6 +416,14 @@ namespace reeconecta.Controllers
                     usuarioExistente.WppTel2 = usuario.WppTel2 ?? false;
                     usuarioExistente.Email = usuario.Email;
 
+                    // Atualizar campos da Pessoa Jurídica se aplicável
+                    if (usuarioExistente.TipodePerfil == TipoPerfil.PessoaJuridica)
+                    {
+                        usuarioExistente.RepresentanteLegal = usuario.RepresentanteLegal;
+                        usuarioExistente.EmailRepresentante = usuario.EmailRepresentante;
+                        usuarioExistente.RazaoSocial = usuario.RazaoSocial;
+                    }
+
                     _context.Update(usuarioExistente);
                     await _context.SaveChangesAsync();
 
@@ -383,10 +432,8 @@ namespace reeconecta.Controllers
                     {
                         new Claim(ClaimTypes.Name, usuarioExistente.Nome ?? usuarioExistente.NomeFantasia ?? "Usuário"),
                         new Claim(ClaimTypes.NameIdentifier, usuarioExistente.Id.ToString()),
-                        new Claim("UserId", usuarioExistente.Id.ToString()),
                         new Claim(ClaimTypes.Email, usuarioExistente.Email),
-                        new Claim(ClaimTypes.Role, usuarioExistente.TipoUsuario.ToString()),
-                        new Claim("TipoUsuario", usuarioExistente.TipoUsuario.ToString())
+                        new Claim(ClaimTypes.Role, usuarioExistente.TipoUsuario.ToString())
                     };
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -486,5 +533,110 @@ namespace reeconecta.Controllers
                 return RedirectToAction("Perfil");
             }
         }
+
+        // POST: Recuperação de senha - Validar documento e email
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ValidarRecuperacao([FromBody] RecuperacaoRequest req)
+        {
+            if (string.IsNullOrEmpty(req.Documento) || string.IsNullOrEmpty(req.Email))
+            {
+                return Json(new
+                {
+                    sucesso = false,
+                    mensagem = "Documento e email são obrigatórios."
+                });
+            }
+
+            // Remover formatação do documento
+            string documentoLimpo = req.Documento.Replace(".", "").Replace("-", "").Replace("/", "");
+
+            var usuario = _context.Usuarios
+                .FirstOrDefault(x => x.Documento.Replace(".", "").Replace("-", "").Replace("/", "") == documentoLimpo
+                                    && x.Email.ToLower() == req.Email.ToLower());
+
+            if (usuario == null)
+            {
+                return Json(new
+                {
+                    sucesso = false,
+                    mensagem = "Documento ou email não encontrados."
+                });
+            }
+
+            // Guarda ID do usuário em sessão
+            HttpContext.Session.SetInt32("idRecuperacao", usuario.Id);
+
+            string nomeExibicao = !string.IsNullOrEmpty(usuario.Nome)
+                ? usuario.Nome
+                : usuario.NomeFantasia;
+
+            return Json(new
+            {
+                sucesso = true,
+                nome = nomeExibicao
+            });
+        }
+
+        // POST: Recuperação de senha - Salvar nova senha
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult SalvarNovaSenha([FromBody] SenhaRequest req)
+        {
+            int? id = HttpContext.Session.GetInt32("idRecuperacao");
+
+            if (id == null)
+            {
+                return Json(new
+                {
+                    sucesso = false,
+                    mensagem = "Sessão expirada. Tente novamente."
+                });
+            }
+
+            if (string.IsNullOrEmpty(req.NovaSenha) || req.NovaSenha.Length < 6)
+            {
+                return Json(new
+                {
+                    sucesso = false,
+                    mensagem = "A senha deve ter no mínimo 6 caracteres."
+                });
+            }
+
+            var usuario = _context.Usuarios.Find(id);
+
+            if (usuario == null)
+            {
+                return Json(new
+                {
+                    sucesso = false,
+                    mensagem = "Usuário não encontrado."
+                });
+            }
+
+            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(req.NovaSenha);
+            _context.SaveChanges();
+
+            // Limpar sessão
+            HttpContext.Session.Remove("idRecuperacao");
+
+            return Json(new
+            {
+                sucesso = true,
+                mensagem = "Senha alterada com sucesso!"
+            });
+        }
+    }
+
+    // DTOs para requisições
+    public class RecuperacaoRequest
+    {
+        public string Documento { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class SenhaRequest
+    {
+        public string NovaSenha { get; set; }
     }
 }

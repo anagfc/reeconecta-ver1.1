@@ -63,6 +63,26 @@
                             }
                         </div>
 
+                        <!-- Informações da Pessoa Jurídica -->
+                        @if (Model.TipodePerfil == reeconecta.Models.TipoPerfil.PessoaJuridica)
+                        {
+                            <div class="bg-light p-3 rounded mb-4">
+                                <h6 class="fw-semibold mb-3"><i class="bi bi-building"></i> Informações da Empresa</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="RepresentanteLegal" class="form-label text-muted small fw-semibold"></label>
+                                        <input asp-for="RepresentanteLegal" class="form-control" placeholder="Nome do representante legal" />
+                                        <span asp-validation-for="RepresentanteLegal" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="EmailRepresentante" class="form-label text-muted small fw-semibold"></label>
+                                        <input asp-for="EmailRepresentante" class="form-control" type="email" placeholder="Email do representante" />
+                                        <span asp-validation-for="EmailRepresentante" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
                         <!-- Localização -->
                         <div class="bg-light p-3 rounded mb-4">
                             <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> Localização</h6>
@@ -212,7 +232,7 @@
                     e.preventDefault();
                     const tipo = input.type === "password" ? "text" : "password";
                     input.type = tipo;
-                    
+
                     const icon = botao.querySelector("i");
                     if (tipo === "text") {
                         icon.classList.remove("bi-eye");
