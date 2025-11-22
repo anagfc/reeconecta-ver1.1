@@ -54,8 +54,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Imagem do Produto</label>
-                        <input type="file" name="ImagemFile" id="ImagemFile" class="form-control" accept="image/*" onchange="previewImagem(event)" />
-                        <span asp-validation-for="Imagem" class="text-danger"></span>
+                        <input type="file" name="ImagemFile" id="ImagemFile" class="form-control" accept="image/*" onchange="previewImagem(event)" data-val="false" />
                     </div>
 
                     <div class="col-md-6 text-center">
