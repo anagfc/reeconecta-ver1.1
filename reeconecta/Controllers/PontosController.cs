@@ -14,9 +14,17 @@ namespace reeconecta.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? tipo)
         {
-            var dados = await _context.Pontos.ToListAsync();
+            var query = _context.Pontos.AsQueryable();
+
+            // FILTRO POR TIPO (Compra ou Descarte)
+            if (!string.IsNullOrEmpty(tipo) && Enum.TryParse<TipoPonto>(tipo, true, out var tipoEnum))
+            {
+                query = query.Where(p => p.Tipo == tipoEnum);
+            }
+
+            var dados = await query.ToListAsync();
             return View(dados);
         }
 

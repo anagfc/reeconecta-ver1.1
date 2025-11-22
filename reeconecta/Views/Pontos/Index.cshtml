@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "Pontos de Coleta";
     var usuarioAtual = Context.User;
+    var tipoFiltroAtual = ViewData["TipoFiltro"]?.ToString() ?? "";
 }
 
 <div class="container mt-4">
@@ -123,3 +124,28 @@
 <br>
 <br>
 <br>
+
+<script>
+    document.getElementById('filtroTipo').addEventListener('change', function() {
+        const tipo = this.value;
+        const url = new URL(window.location.href);
+        
+        if (tipo) {
+            url.searchParams.set('tipo', tipo);
+        } else {
+            url.searchParams.delete('tipo');
+        }
+        
+        window.location.href = url.toString();
+    });
+
+    // Restaurar seleção do filtro ao carregar a página
+    window.addEventListener('load', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipoFiltro = urlParams.get('tipo');
+        
+        if (tipoFiltro) {
+            document.getElementById('filtroTipo').value = tipoFiltro;
+        }
+    });
+</script>
