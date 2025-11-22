@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Remover Ponto";
+    var returnUrl = ViewContext.HttpContext.Request.Headers["Referer"].ToString();
+    var ehMeusPontos = returnUrl.Contains("MeusPontos", StringComparison.OrdinalIgnoreCase);
 }
 
 <div class="container mt-4">
@@ -10,7 +12,7 @@
 
             <!-- Cabeçalho -->
             <div class="mb-4">
-                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <a asp-action="@(ehMeusPontos ? "MeusPontos" : "Index")" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-arrow-left"></i> Voltar
                 </a>
             </div>
@@ -105,13 +107,14 @@
                     <hr />
 
                     <!-- Formulário de Exclusão -->
-                    <form asp-action="Delete" method="post">
+                    <form asp-action="DeleteConfirmed" method="post">
                         <input type="hidden" asp-for="Id" />
+                        <input type="hidden" name="returnUrl" value="@(ehMeusPontos ? "MeusPontos" : "Index")" />
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-danger flex-grow-1">
                                 <i class="bi bi-trash"></i> Confirmar Exclusão
                             </button>
-                            <a asp-action="Index" class="btn btn-outline-secondary flex-grow-1">
+                            <a asp-action="@(ehMeusPontos ? "MeusPontos" : "Index")" class="btn btn-outline-secondary flex-grow-1">
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </a>
                         </div>

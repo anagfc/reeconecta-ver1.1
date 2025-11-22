@@ -1,0 +1,76 @@
+﻿@using reeconecta.Models
+@using System.Security.Claims
+@model IEnumerable<reeconecta.Models.Ponto>
+
+@{
+    ViewData["Title"] = "Meus Pontos";
+}
+
+<div class="container mt-5">
+    <h3 style="text-align:center">Meus pontos</h3><br>
+
+    <div style="text-align:center">
+        <a asp-controller="Pontos" asp-action="Index" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <a asp-controller="Pontos" asp-action="Create" class="btn btn-outline-primary">
+            Novo Ponto de Coleta <i class="bi bi-plus-circle"></i>
+        </a>
+    </div>
+    <br />
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted mt-5">
+            <p>Você ainda não cadastrou nenhum ponto de coleta.</p>
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var ponto in Model)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+
+                    <div class="d-flex align-items-center">
+                        @if (!string.IsNullOrEmpty(ponto.Imagem))
+                        {
+                            <img src="@ponto.Imagem"
+                                 alt="Imagem do ponto"
+                                 class="me-3"
+                                 style="width:120px; height:110px; object-fit:cover; border-radius:6px; border:1px solid #ddd;" />
+                        }
+                        else
+                        {
+                            <div class="me-3 d-flex align-items-center justify-content-center"
+                                 style="width:120px; height:110px; background-color:#f0f0f0; border-radius:6px; border:1px solid #ddd;">
+                                <i class="bi bi-image" style="font-size: 2rem; color: gray;"></i>
+                            </div>
+                        }
+
+                        <div>
+                            <h5 class="mb-1 fw-semibold">@ponto.NomePonto</h5>
+                            <p class="mb-1 text-muted"><span class="badge bg-info">@ponto.Tipo</span></p>
+                            <p class="mb-0 text-muted small">@ponto.CepPonto</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <a asp-action="Details" asp-route-id="@ponto.Id" class="btn btn-link text-secondary">
+                            <i class="bi bi-eye fs-5"></i>
+                        </a>
+
+                        <a asp-action="Edit" asp-route-id="@ponto.Id" class="btn btn-link text-secondary">
+                            <i class="bi bi-pencil fs-5"></i>
+                        </a>
+
+                        <a asp-action="Delete" asp-route-id="@ponto.Id" class="btn btn-link text-danger">
+                            <i class="bi bi-trash fs-5"></i>
+                        </a>
+                    </div>
+
+                </div>
+            }
+        </div>
+    }
+</div>

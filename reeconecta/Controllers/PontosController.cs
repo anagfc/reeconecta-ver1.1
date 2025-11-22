@@ -28,6 +28,31 @@ namespace reeconecta.Controllers
             return View(dados);
         }
 
+        // GET: Pontos/MeusPontos
+        [Authorize]
+        public async Task<IActionResult> MeusPontos(string? tipo)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim))
+                return RedirectToAction("Login", "Usuarios");
+
+            if (!int.TryParse(userIdClaim, out int userId))
+                return BadRequest("ID do usuário logado inválido.");
+
+            var query = _context.Pontos
+                .Where(p => p.CriadoPorUsuarioId == userId)
+                .AsQueryable();
+
+            // FILTRO POR TIPO (Compra ou Descarte)
+            if (!string.IsNullOrEmpty(tipo) && Enum.TryParse<TipoPonto>(tipo, true, out var tipoEnum))
+            {
+                query = query.Where(p => p.Tipo == tipoEnum);
+            }
+
+            var meusPontos = await query.ToListAsync();
+            return View(meusPontos);
+        }
+
         //Create
         [Authorize]
         public IActionResult Create()
@@ -205,7 +230,7 @@ namespace reeconecta.Controllers
 
         [HttpPost, ActionName("Delete")]
         [Authorize]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
+        public async Task<IActionResult> DeleteConfirmed(int? id, string? returnUrl)
         {
             if (id == null)
                 return NotFound();
@@ -223,6 +248,13 @@ namespace reeconecta.Controllers
 
             _context.Pontos.Remove(dados);
             await _context.SaveChangesAsync();
+
+            // Retorna para a página anterior (MeusPontos ou Index)
+            if (returnUrl == "MeusPontos")
+            {
+                return RedirectToAction("MeusPontos");
+            }
+            
             return RedirectToAction("Index");
         }
 
