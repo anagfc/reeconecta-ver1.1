@@ -1,4 +1,5 @@
 ﻿@using reeconecta.Models
+@using System.Security.Claims
 @model reeconecta.Models.Ponto
 
 @{
@@ -129,15 +130,9 @@
                     <!-- Botões de Ação -->
                     <div class="d-flex gap-2">
                         @{
-                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst("UserId")?.Value, out var id) ? id : 0;
-                            var tipoUsuarioAtualEnum = TipoUsuario.User;
-
-                            if (Enum.TryParse<TipoUsuario>(Context.User.FindFirst("TipoUsuario")?.Value ?? "User", out var tipo))
-                            {
-                                tipoUsuarioAtualEnum = tipo;
-                            }
-
-                            var podeEditar = tipoUsuarioAtualEnum == TipoUsuario.Administrador || Model.CriadoPorUsuarioId == usuarioIdAtual;
+                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id) ? id : 0;
+                            var tipoUsuarioAtual = Context.User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+                            var podeEditar = tipoUsuarioAtual == "Administrador" || Model.CriadoPorUsuarioId == usuarioIdAtual;
                         }
 
                         @if (podeEditar)

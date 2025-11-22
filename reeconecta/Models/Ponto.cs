@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 
 namespace reeconecta.Models
 {
@@ -38,13 +39,16 @@ namespace reeconecta.Models
         public bool WppTelP1 { get; set; } = false;
 
         [Display(Name = "Telefone nº 2")]
-        public string TelefoneP02 { get; set; } = string.Empty;
+        public string? TelefoneP02 { get; set; } = string.Empty;
 
         [Display(Name = "Telefone nº 2 possui WhatsApp.")]
         public bool WppTelP2 { get; set; } = false;
 
         [Display(Name = "Imagem do Ponto")]
         public string? Imagem { get; set; }
+
+        [NotMapped]
+        public IFormFile? ImagemFile { get; set; }
 
         // Propriedades para rastreamento do usuário
         public int? CriadoPorUsuarioId { get; set; }

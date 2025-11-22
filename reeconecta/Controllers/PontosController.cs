@@ -32,10 +32,16 @@ namespace reeconecta.Controllers
         [Authorize]
         public async Task<IActionResult> Create(Ponto ponto, IFormFile ImagemFile)
         {
+            // Validação: imagem é obrigatória
+            if (ImagemFile == null || ImagemFile.Length == 0)
+            {
+                ModelState.AddModelError("ImagemFile", "Obrigatório enviar uma imagem do ponto de coleta.");
+            }
+
             if (ModelState.IsValid)
             {
                 // Obtém o ID do usuário atual
-                var usuarioIdStr = User.FindFirst("UserId")?.Value;
+                var usuarioIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (int.TryParse(usuarioIdStr, out var usuarioId))
                 {
                     ponto.CriadoPorUsuarioId = usuarioId;
@@ -108,6 +114,9 @@ namespace reeconecta.Controllers
             {
                 return Forbid();
             }
+
+            // Remove a validação do ImagemFile para a edição (não é obrigatório editar a imagem)
+            ModelState.Remove("ImagemFile");
 
             if (ModelState.IsValid)
             {
@@ -218,8 +227,8 @@ namespace reeconecta.Controllers
                 return true;
             }
 
-            // Usuário comum só pode editar seus próprios pontos
-            var usuarioIdStr = User.FindFirst("UserId")?.Value;
+            // Usuário comum só pode editar seus próprios pontos - usando ClaimTypes.NameIdentifier
+            var usuarioIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (int.TryParse(usuarioIdStr, out var usuarioId))
             {
                 return ponto.CriadoPorUsuarioId == usuarioId;
