@@ -1,67 +1,248 @@
-﻿@model IEnumerable<reeconecta.Models.Produto>
+﻿@model reeconecta.Models.Usuario
 
 @{
     ViewData["Title"] = "Relatório";
+    var produtosDisponiveis = ViewBag.ProdutosDisponiveis as List<reeconecta.Models.Produto> ?? new List<reeconecta.Models.Produto>();
+    var produtosVendidos = ViewBag.ProdutosVendidos as List<reeconecta.Models.Produto> ?? new List<reeconecta.Models.Produto>();
+    var totalProdutos = (int?)ViewBag.TotalProdutos ?? 0;
+    var totalDisponiveis = (int?)ViewBag.TotalDisponiveis ?? 0;
+    var totalVendidos = (int?)ViewBag.TotalVendidos ?? 0;
+
 }
 
-<h1>Anúncios Realizados</h1>
-<h5>O usuário @(ViewBag.Usuario.Nome ?? ViewBag.Usuario.NomeFantasia) já vendeu @(ViewBag.ItensVendidos?? 0) itens e arrecadou um total de R$ @(ViewBag.TotalVendido ?? 0.00m) com a ajuda do ReeConecta</h5>
+<div class="text-center mb-5">
+    <h1 class="fw-bold text-dark">
+        Anúncios realizados
+    </h1>
+    <p class="lead mt-2">
+       @(ViewBag.Usuario.Nome ?? ViewBag.Usuario.NomeFantasia) já vendeu @(ViewBag.ItensVendidos ?? 0) itens e arrecadou um total de R$ @(ViewBag.TotalVendido ?? 0.00m) com a ajuda do ReeConecta ♻️
+    </p>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Preco)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Condicao)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.StatusProduto)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.CriacaoProduto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AnuncioAtivo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                R$ @Html.DisplayFor(modelItem => item.Preco)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Condicao)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.StatusProduto)
-            </td>*@
-            <td>
-                    @Html.DisplayFor(modelItem => item.CriacaoProduto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnuncioAtivo)
-            </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
-            </td>
-        </tr>
+<!-- Seção de Produtos -->
+@if (totalProdutos > 0)
+{
+    <div class="card shadow-lg border-0 rounded-4 mt-4">
+        <div class="card-body p-4">
+
+            <h5 class="fw-bold mb-4">
+                <i class="bi bi-box-seam"></i> Produtos (@totalProdutos)
+            </h5>
+
+            <!-- Abas de Filtro -->
+            <ul class="nav nav-tabs mb-4" id="produtosTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="disponiveisTab" data-bs-toggle="tab" data-bs-target="#disponiveisPane" type="button" role="tab" aria-controls="disponiveisPane" aria-selected="true">
+                        <span class="badge bg-success me-2">@totalDisponiveis</span> Disponíveis
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="vendidosTab" data-bs-toggle="tab" data-bs-target="#vendidosPane" type="button" role="tab" aria-controls="vendidosPane" aria-selected="false">
+                        <span class="badge bg-info me-2">@totalVendidos</span> Vendidos
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Conteúdo das Abas -->
+            <div class="tab-content" id="produtosTabContent">
+
+                <!-- Aba Disponíveis -->
+                <div class="tab-pane fade show active" id="disponiveisPane" role="tabpanel" aria-labelledby="disponiveisTab">
+                    @if (produtosDisponiveis.Count > 0)
+                    {
+                        <div class="row g-4">
+                            @foreach (var produto in produtosDisponiveis)
+                            {
+                                <div class="col-md-6">
+                                    <div class="card h-100 shadow-sm border-0 hover-shadow" style="transition: all 0.3s ease;">
+                                        <div class="bg-light d-flex align-items-center justify-content-center position-relative" style="height: 180px;">
+                                            @if (!string.IsNullOrEmpty(produto.Imagem))
+                                            {
+                                                <img src="@produto.Imagem"
+                                                     class="img-fluid rounded"
+                                                     style="max-height: 160px; object-fit: cover;"
+                                                     alt="@produto.Titulo" />
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-image" style="font-size: 2rem; color: gray;"></i>
+                                            }
+                                            <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponível</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class="card-title fw-semibold text-truncate" title="@produto.Titulo">
+                                                @produto.Titulo
+                                            </h6>
+                                            <p class="text-muted small mb-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                @produto.Descricao
+                                            </p>
+
+                                            <div class="mb-3">
+                                                <span class="badge bg-primary">@produto.Condicao</span>
+                                                <span class="badge bg-secondary">@produto.Bairro</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <p class="text-success fw-bold fs-6 mb-0">R$ @produto.Preco.ToString("N2")</p>
+                                            </div>
+
+                                            <button class="btn btn-sm btn-outline-primary w-100 btn-detalhes"
+                                                    data-id="@produto.Id">
+                                                <i class="bi bi-eye"></i> Ver Detalhes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center" role="alert">
+                            <i class="bi bi-info-circle"></i> Nenhum produto disponível.
+                        </div>
+                    }
+                </div>
+
+                <!-- Aba Vendidos -->
+                <div class="tab-pane fade" id="vendidosPane" role="tabpanel" aria-labelledby="vendidosTab">
+                    @if (produtosVendidos.Count > 0)
+                    {
+                        <div class="row g-4">
+                            @foreach (var produto in produtosVendidos)
+                            {
+                                <div class="col-md-6">
+                                    <div class="card h-100 shadow-sm border-0 hover-shadow opacity-75" style="transition: all 0.3s ease;">
+                                        <div class="bg-light d-flex align-items-center justify-content-center position-relative" style="height: 180px;">
+                                            @if (!string.IsNullOrEmpty(produto.Imagem))
+                                            {
+                                                <img src="@produto.Imagem"
+                                                     class="img-fluid rounded"
+                                                     style="max-height: 160px; object-fit: cover;"
+                                                     alt="@produto.Titulo" />
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-image" style="font-size: 2rem; color: gray;"></i>
+                                            }
+                                            <span class="badge bg-info position-absolute top-0 end-0 m-2">Vendido</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class="card-title fw-semibold text-truncate" title="@produto.Titulo">
+                                                @produto.Titulo
+                                            </h6>
+                                            <p class="text-muted small mb-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                @produto.Descricao
+                                            </p>
+
+                                            <div class="mb-3">
+                                                <span class="badge bg-primary">@produto.Condicao</span>
+                                                <span class="badge bg-secondary">@produto.Bairro</span>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <p class="text-muted fw-bold fs-6 mb-0">R$ @produto.Preco.ToString("N2")</p>
+                                            </div>
+
+                                            <button class="btn btn-sm btn-outline-secondary w-100 disabled" disabled>
+                                                <i class="bi bi-eye"></i> Produto Vendido
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center" role="alert">
+                            <i class="bi bi-info-circle"></i> Nenhum produto vendido.
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 }
-    </tbody>
-</table>
+else
+{
+    <div class="card shadow-lg border-0 rounded-4 mt-4">
+        <div class="card-body p-4 text-center">
+            <div class="alert alert-info mb-0" role="alert">
+                <i class="bi bi-info-circle"></i> Este usuário ainda não possui produtos.
+            </div>
+        </div>
+    </div>
+}
+
+</div>
+</div>
+</div>
+
+<!-- MODAL DE DETALHES -->
+<div class="modal fade"
+     id="modalDetalhes"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Produto</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="conteudoModalDetalhes">
+                Carregando...
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-2px);
+    }
+
+    .disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("click", function (e) {
+
+            const btn = e.target.closest(".btn-detalhes");
+            if (!btn) return;
+
+            e.preventDefault();
+            let id = btn.dataset.id;
+
+            let modal = new bootstrap.Modal(document.getElementById("modalDetalhes"));
+            modal.show();
+
+            document.getElementById("conteudoModalDetalhes").innerHTML = "Carregando...";
+
+            fetch(`/Produtos/Details/${id}`)
+                .then(resp => resp.text())
+                .then(html => {
+                    document.getElementById("conteudoModalDetalhes").innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById("conteudoModalDetalhes").innerHTML =
+                        "<div class='text-danger text-center'>Erro ao carregar detalhes.</div>";
+                });
+        });
+    </script>
+}

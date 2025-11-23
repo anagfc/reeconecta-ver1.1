@@ -282,28 +282,38 @@ namespace reeconecta.Controllers
                 return NotFound();
 
             var usuario = await _context.Usuarios.FindAsync(id);
-
             if (usuario == null)
                 return NotFound();
 
             var anuncios = await _context.Produtos
-                .Where(c => c.AnuncianteId == id)
-                .OrderByDescending(c => c.CriacaoProduto)
+                .Where(p => p.AnuncianteId == id && p.StatusProduto != StatusProduto.Excluido)
+                .OrderByDescending(p => p.CriacaoProduto)
                 .ToListAsync();
 
-            decimal totalVendido = anuncios?
-                .Where(c => c.StatusProduto == StatusProduto.Vendido)
-                .Sum(c => c.Preco) ?? 0;
+            var produtosDisponiveis = anuncios
+                .Where(p => p.StatusProduto == StatusProduto.Disponivel)
+                .ToList();
 
-            int itensVendidos = anuncios?
-                .Count(c => c.StatusProduto == StatusProduto.Vendido) ?? 0;
+            var produtosVendidos = anuncios
+                .Where(p => p.StatusProduto == StatusProduto.Vendido)
+                .ToList();
+
+            ViewBag.ProdutosDisponiveis = produtosDisponiveis;
+            ViewBag.ProdutosVendidos = produtosVendidos;
+
+            ViewBag.TotalProdutos = anuncios.Count;
+            ViewBag.TotalDisponiveis = produtosDisponiveis.Count;
+            ViewBag.TotalVendidos = produtosVendidos.Count;
 
             ViewBag.Usuario = usuario;
-            ViewBag.TotalVendido = totalVendido.ToString("C");
-            ViewBag.ItensVendidos = itensVendidos;
+            ViewBag.TotalVendido = produtosVendidos.Sum(p => p.Preco);
+            ViewBag.ItensVendidos = produtosVendidos.Count;
 
-            return View(anuncios);
+            return View(usuario);
         }
+
+
+
 
         // GET: Usuarios/Perfil (Visualização)
         [Authorize]
