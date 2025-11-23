@@ -229,6 +229,7 @@ namespace reeconecta.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int? id, string? returnUrl)
         {

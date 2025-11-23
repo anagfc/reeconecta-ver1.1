@@ -107,7 +107,7 @@
                     <hr />
 
                     <!-- Formulário de Exclusão -->
-                    <form asp-action="DeleteConfirmed" method="post">
+                    <form asp-action="Delete" method="post">
                         <input type="hidden" asp-for="Id" />
                         <input type="hidden" name="returnUrl" value="@(ehMeusPontos ? "MeusPontos" : "Index")" />
                         <div class="d-flex gap-2">
