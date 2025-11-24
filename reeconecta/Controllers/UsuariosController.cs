@@ -173,9 +173,12 @@ namespace reeconecta.Controllers
             {
                 usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
                 usuario.ContaAtiva = true;
+                usuario.TipoUsuario = TipoUsuario.User;
                 usuario.CriacaoConta = DateTime.Now;
+
                 // Garantir que WppTel2 seja false se for null
                 usuario.WppTel2 = usuario.WppTel2 ?? false;
+
                 // Para Pessoa Jurídica, usar NomeFantasia como Nome
                 if (usuario.TipodePerfil == TipoPerfil.PessoaJuridica && string.IsNullOrEmpty(usuario.Nome))
                 {
