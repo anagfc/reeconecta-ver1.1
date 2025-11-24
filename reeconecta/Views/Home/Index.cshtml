@@ -1,4 +1,6 @@
-﻿﻿@{
+﻿﻿@using reeconecta.Models
+@model IEnumerable<Produto>
+@{
     ViewData["Title"] = "ReeConecta - Marketplace Sustentável de REEE";
 }
 
@@ -92,51 +94,62 @@
         </div>
 
         <div class="row mt-5">
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card card-product h-100">
-                    <img src="~/images/produto_exemplo.jpg" class="card-img-top">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="fw-bold mb-2">iPhone 12 Pro</h5>
-                        <p class="fs-4 text-success fw-bolder mb-3">R$ 1.800</p>
-                        <p class="text-muted mb-2"><small><i class="bi bi-pin-map me-1"></i> Belo Horizonte - MG</small></p>
-                        <div class="mt-auto pt-3 border-top">
-                            <span class="badge bg-success mb-3">Ativo</span>
-                            <a href="#" class="btn btn-primary w-100 fw-bold mt-2">Ver Detalhes</a>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var produto in Model)
+                {
+                    bool reservado = false;
+                    if (produto.ReservasProduto != null)
+                    {
+                        foreach (var reserva in produto.ReservasProduto)
+                        {
+                            if (reserva.Status == StatusReserva.Pendente)
+                            {
+                                reservado = true;
+                                break;
+                            }
+                        }
+                    }
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card card-product h-100">
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px; overflow: hidden;">
+                                @if (!string.IsNullOrEmpty(produto.Imagem))
+                                {
+                                    <img src="@produto.Imagem" class="card-img-top" style="max-height: 200px; object-fit: cover; width: 100%;">
+                                }
+                                else
+                                {
+                                    <img src="~/images/produtos/semimagem.png" class="card-img-top" style="max-height: 200px; object-fit: cover; width: 100%;">
+                                }
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="fw-bold mb-2">@produto.Titulo</h5>
+                                <p class="fs-4 text-success fw-bolder mb-3">R$ @produto.Preco.ToString("N2")</p>
+                                <p class="text-muted mb-2"><small><i class="bi bi-pin-map me-1"></i> @produto.Cidade - @produto.Bairro</small></p>
+                                <div class="mt-auto pt-3 border-top">
+                                    @if (reservado)
+                                    {
+                                        <span class="badge bg-warning text-dark mb-3">Reservado</span>
+                                        <a asp-controller="Produtos" asp-action="Index" class="btn btn-outline-secondary w-100 fw-bold mt-2">Ver no Marketplace</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success mb-3">Disponível</span>
+                                        <a asp-controller="Produtos" asp-action="Index" class="btn btn-primary w-100 fw-bold mt-2">Ver no Marketplace</a>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <p class="text-muted">Nenhum produto disponível no momento. Seja o primeiro a anunciar!</p>
+                    <a asp-controller="Produtos" asp-action="Create" class="btn btn-primary mt-3">Anunciar Produto</a>
                 </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card card-product h-100">
-                    <img src="~/images/produto_exemplo.jpg" class="card-img-top">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="fw-bold mb-2">Laptop Dell i5</h5>
-                        <p class="fs-4 text-success fw-bolder mb-3">R$ 950</p>
-                        <p class="text-muted mb-2"><small><i class="bi bi-pin-map me-1"></i> São Paulo - SP</small></p>
-                        <div class="mt-auto pt-3 border-top">
-                            <span class="badge bg-warning text-dark mb-3">Reservado</span>
-                            <a class="btn btn-outline-secondary w-100 disabled fw-bold mt-2">Em negociação</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card card-product h-100">
-                    <img src="~/images/produto_exemplo.jpg" class="card-img-top" style="filter:grayscale(80%);opacity:.7;">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="fw-bold mb-2">Televisão 40"</h5>
-                        <p class="fs-4 text-success fw-bolder mb-3">Doação</p>
-                        <p class="text-muted mb-2"><small><i class="bi bi-pin-map me-1"></i> Rio de Janeiro - RJ</small></p>
-                        <div class="mt-auto pt-3 border-top">
-                            <span class="badge bg-danger mb-3">Vendido</span>
-                            <a class="btn btn-danger w-100 disabled fw-bold mt-2">Encerrado</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            }
         </div>
 
     </section>
@@ -156,7 +169,7 @@
 
                 <div class="carousel-item active">
                     <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
-                        <p class="fs-5 fst-italic text-dark">“Plataforma excelente! Consegui vender meu notebook em menos de 24 horas.”</p>
+                        <p class="fs-5 fst-italic text-dark">"Plataforma excelente! Consegui vender meu notebook em menos de 24 horas."</p>
                         <h5 class="fw-bold mt-3">Carlos Andrade</h5>
                         <span class="text-muted small">São Paulo - SP</span>
                     </div>
@@ -164,7 +177,7 @@
 
                 <div class="carousel-item">
                     <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
-                        <p class="fs-5 fst-italic text-dark">“Finalmente encontrei um destino correto para descartar meus eletrônicos.”</p>
+                        <p class="fs-5 fst-italic text-dark">"Finalmente encontrei um destino correto para descartar meus eletrônicos."</p>
                         <h5 class="fw-bold mt-3">Maria Eduarda</h5>
                         <span class="text-muted small">Belo Horizonte - MG</span>
                     </div>
@@ -172,7 +185,7 @@
 
                 <div class="carousel-item">
                     <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
-                        <p class="fs-5 fst-italic text-dark">“Iniciativa incrível! Ajuda o meio ambiente e gera renda extra.”</p>
+                        <p class="fs-5 fst-italic text-dark">"Iniciativa incrível! Ajuda o meio ambiente e gera renda extra."</p>
                         <h5 class="fw-bold mt-3">João Ribeiro</h5>
                         <span class="text-muted small">Curitiba - PR</span>
                     </div>
