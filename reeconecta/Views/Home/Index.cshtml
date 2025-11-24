@@ -1,11 +1,259 @@
-﻿@{
-    ViewData["Title"] = "Início";
+﻿﻿@{
+    ViewData["Title"] = "ReeConecta - Marketplace Sustentável de REEE";
 }
 
-<div class="text-center">
-    <img src="~/Logo REEConecta.png" alt="Logotipo ReeConecta" width="130px" />
-    <h1 class="display-4">ReeConecta</h1>
-    <p>Esse é um projeto desenvolvido por alunos do 2º Eixo de Análise e Desenvolvimento de Sistemas da PUC Minas Virtual.</p> <hr>
-    <h4 style="padding-top: 50px">Página em construção!</h4>
-    <p style="padding-bottom: 50px">Em breve você terá novos conteúdos aqui.</p>
+<link rel="stylesheet" href="~/css/home.css" />
+
+<header class="container-fluid hero-section text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <img src="~/Logo REEConecta.png" width="100px" class="mb-4 rounded-circle shadow-lg" />
+                <h1 class="display-4 fw-bold">ReeConecta: Marketplace Sustentável de REEE</h1>
+                <p class="lead mt-3 mb-5">Conecte-se com pontos de coleta e negocie eletrônicos usados de forma transparente.</p>
+
+                <div class="row justify-content-center mt-4">
+                    <div class="col-lg-10 col-md-12">
+                        <form>
+                            <div class="search-input-container">
+                                <input type="text" class="form-control" placeholder="Buscar: iPhone, laptop, bateria...">
+                                <button type="submit" class="btn btn-primary fw-bold">
+                                    <i class="bi bi-search me-1"></i> Buscar
+                                </button>
+                            </div>
+                        </form>
+
+                        <p class="text-white-50 mt-3">
+                            <small>
+                                É novo por aqui?
+                                <a asp-controller="Usuarios" asp-action="Login" class="text-white fw-bold text-decoration-underline">Faça Login</a>
+                                para criar seus anúncios.
+                            </small>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container my-5">
+
+    <section class="my-5 py-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="section-title">Nossas Vantagens 💡</h2>
+                <p class="text-muted lead mb-5">Por que escolher a ReeConecta para seus REEE?</p>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <i class="bi bi-shield-lock-fill fs-1 text-primary mb-3"></i>
+                        <h3 class="h5 fw-bold">Transações Seguras</h3>
+                        <p class="text-secondary">Garantia de segurança e verificação de usuários.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <i class="bi bi-recycle fs-1 text-success mb-3"></i>
+                        <h3 class="h5 fw-bold">Impacto Ambiental</h3>
+                        <p class="text-secondary">Ajude a promover a economia circular.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <i class="bi bi-geo-alt-fill fs-1 text-primary mb-3"></i>
+                        <h3 class="h5 fw-bold">Localização Fácil</h3>
+                        <p class="text-secondary">Encontre pontos de coleta rapidamente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="my-5">
+
+    <section class="my-5 py-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="section-title">Anúncios Recentes 🔥</h2>
+                <p class="text-muted lead">Confira os últimos eletrônicos disponíveis.</p>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-product h-100">
+                    <img src="~/images/produto_exemplo.jpg" class="card-img-top">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="fw-bold mb-2">iPhone 12 Pro</h5>
+                        <p class="fs-4 text-success fw-bolder mb-3">R$ 1.800</p>
+                        <p class="text-muted mb-2"><small><i class="bi bi-pin-map me-1"></i> Belo Horizonte - MG</small></p>
+                        <div class="mt-auto pt-3 border-top">
+                            <span class="badge bg-success mb-3">Ativo</span>
+                            <a href="#" class="btn btn-primary w-100 fw-bold mt-2">Ver Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-product h-100">
+                    <img src="~/images/produto_exemplo.jpg" class="card-img-top">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="fw-bold mb-2">Laptop Dell i5</h5>
+                        <p class="fs-4 text-success fw-bolder mb-3">R$ 950</p>
+                        <p class="text-muted mb-2"><small><i class="bi bi-pin-map me-1"></i> São Paulo - SP</small></p>
+                        <div class="mt-auto pt-3 border-top">
+                            <span class="badge bg-warning text-dark mb-3">Reservado</span>
+                            <a class="btn btn-outline-secondary w-100 disabled fw-bold mt-2">Em negociação</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-product h-100">
+                    <img src="~/images/produto_exemplo.jpg" class="card-img-top" style="filter:grayscale(80%);opacity:.7;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="fw-bold mb-2">Televisão 40"</h5>
+                        <p class="fs-4 text-success fw-bolder mb-3">Doação</p>
+                        <p class="text-muted mb-2"><small><i class="bi bi-pin-map me-1"></i> Rio de Janeiro - RJ</small></p>
+                        <div class="mt-auto pt-3 border-top">
+                            <span class="badge bg-danger mb-3">Vendido</span>
+                            <a class="btn btn-danger w-100 disabled fw-bold mt-2">Encerrado</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <hr class="my-5">
+
+    <section class="my-5 py-4">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="section-title">O que dizem sobre nós?</h2>
+                <p class="text-muted lead">Experiências reais de usuários.</p>
+            </div>
+        </div>
+
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+
+                <div class="carousel-item active">
+                    <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
+                        <p class="fs-5 fst-italic text-dark">“Plataforma excelente! Consegui vender meu notebook em menos de 24 horas.”</p>
+                        <h5 class="fw-bold mt-3">Carlos Andrade</h5>
+                        <span class="text-muted small">São Paulo - SP</span>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
+                        <p class="fs-5 fst-italic text-dark">“Finalmente encontrei um destino correto para descartar meus eletrônicos.”</p>
+                        <h5 class="fw-bold mt-3">Maria Eduarda</h5>
+                        <span class="text-muted small">Belo Horizonte - MG</span>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
+                        <p class="fs-5 fst-italic text-dark">“Iniciativa incrível! Ajuda o meio ambiente e gera renda extra.”</p>
+                        <h5 class="fw-bold mt-3">João Ribeiro</h5>
+                        <span class="text-muted small">Curitiba - PR</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </div>
+    </section>
+</main>
+
+<div class="container-fluid cta-section text-center py-5">
+    <div class="container">
+        <h2 class="display-5 fw-bold mb-3">
+            Pronto para Reciclar ou Negociar?
+        </h2>
+        <p class="lead mb-4">Dê um novo ciclo ao seu eletrônico.</p>
+
+        <a class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary me-3 shadow-sm">
+            <i class="bi bi-upload me-2"></i> Anunciar Agora
+        </a>
+
+    </div>
 </div>
+
+<footer class="footer-section pt-5 pb-4">
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <h5>Links Rápidos</h5>
+                <ul class="list-unstyled">
+                    <li><a><i class="bi bi-caret-right-fill text-success me-2"></i> Sobre Nós</a></li>
+                    <li><a><i class="bi bi-caret-right-fill text-success me-2"></i> Como Funciona</a></li>
+                    <li><a><i class="bi bi-caret-right-fill text-success me-2"></i> Ajuda</a></li>
+                    <li><a><i class="bi bi-caret-right-fill text-success me-2"></i> Termos de Uso</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <h5>Fale Conosco</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-envelope-fill text-success me-2"></i> contato@reeconecta.com</li>
+                    <li><i class="bi bi-telephone-fill text-success me-2"></i> (31) 5555-0000</li>
+                    <li><i class="bi bi-geo-alt-fill text-success me-2"></i> Belo Horizonte, MG</li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4 text-center text-lg-start">
+                <img src="~/Logo REEConecta.png" width="60px" class="mb-3 rounded-circle" />
+                <p class="small">Siga-nos:</p>
+                <div class="social-icons">
+                    <a><i class="bi bi-facebook"></i></a>
+                    <a><i class="bi bi-twitter"></i></a>
+                    <a><i class="bi bi-instagram"></i></a>
+                    <a><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row border-top pt-3 mt-3 border-secondary">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0 small">REECONCTA © 2024</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <a class="small text-muted me-3">Termos de Privacidade</a>
+                <a class="small text-muted">Política de Cookies</a>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+<script src="~/js/home.js"></script>
