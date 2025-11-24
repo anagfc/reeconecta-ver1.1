@@ -46,10 +46,11 @@
                                asp-action="Relatorio" asp-route-id="@item.Id">
                                 <i class="bi bi-bar-chart-fill"></i> Desempenho
                             </a>
-                            <a class="btn btn-outline-danger btn-sm flex-fill"
-                               asp-action="Delete" asp-route-id="@item.Id">
-                                <i class="bi bi-trash-fill"></i> Excluir
-                            </a>
+                            <form class="d-inline" asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');">
+                                <button class="btn btn-outline-danger btn-sm flex-fill" type="submit">
+                                    <i class="bi bi-trash-fill"></i> Excluir
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
