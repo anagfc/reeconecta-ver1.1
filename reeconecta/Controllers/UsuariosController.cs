@@ -48,11 +48,18 @@ namespace reeconecta.Controllers
             var dados = await _context.Usuarios
                 .SingleOrDefaultAsync(u => u.Email == usuario.Email);
 
+            if (!dados.ContaAtiva)
+            {
+                ViewBag.Message = "Sua conta está inativa, faça o procedimento de recuperação de senha para reativá-la.";
+                return View();
+            }
+
             if (dados == null)
             {
                 ViewBag.Message = "Usuário e/ou senha inválidos.";
                 return View();
             }
+
 
             bool SenhaCorreta = BCrypt.Net.BCrypt.Verify(usuario.Senha, dados.Senha);
 
@@ -263,7 +270,9 @@ namespace reeconecta.Controllers
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario != null)
             {
-                _context.Usuarios.Remove(usuario);
+                usuario.ContaAtiva = false;
+                _context.Usuarios.Update(usuario);
+                //_context.Usuarios.Remove(usuario);
             }
 
             await _context.SaveChangesAsync();
@@ -615,6 +624,7 @@ namespace reeconecta.Controllers
             }
 
             usuario.Senha = BCrypt.Net.BCrypt.HashPassword(req.NovaSenha);
+            usuario.ContaAtiva = true;
             _context.SaveChanges();
 
             // Limpar sessão

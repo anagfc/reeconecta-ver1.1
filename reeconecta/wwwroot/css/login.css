@@ -2,6 +2,10 @@
     overflow:hidden;
 }
 
+footer {
+    display: none !important;
+}
+
 .border-bottom {
     margin-bottom: 0 !important;
 }
@@ -17,14 +21,19 @@ main {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     padding: 0 !important;
+    height: 100%;
 }
 
 .espaco-login{
     margin: 125px;
 }
 
+.espaco-banner {
+    height: 100vh;
+}
+
 .img-banner {
-    height: 80%
+    height: 92%;
 }
 
 h3 {
@@ -85,4 +94,28 @@ h3 {
 
 .link-criar-conta:hover {
     font-weight: bolder;
+}
+
+@media (max-width: 855px) {
+    .espaco-banner {
+        display: none !important;
+    }
+
+    .container{
+        margin: 0;
+        padding: 0;
+    }
+
+    main {
+        margin: 0;
+        min-height: 100vh;
+        min-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: url('../fundo-celular5.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 }

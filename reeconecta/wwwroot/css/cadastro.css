@@ -112,3 +112,22 @@ form > .campo-formulario:last-of-type {
     color: white;
     font-weight: bolder;
 }
+
+@media (max-width: 768px) {
+    .dados-identificacao {
+        display: block;
+    }
+
+    .dados-endereco {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .dados-endereco > .campo-formulario:first-of-type, .dados-endereco > .campo-formulario:nth-of-type(3), .dados-endereco > .campo-formulario:nth-of-type(4) {
+        grid-column: span 2;
+    }
+
+    .dados-contato, .dados-cadastro {
+        grid-template-columns: 1fr;
+    }
+
+}
