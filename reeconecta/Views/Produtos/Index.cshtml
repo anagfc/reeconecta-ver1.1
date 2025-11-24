@@ -38,25 +38,38 @@
     </div>
 
     <!-- LINKS SUPERIORES -->
-    <div class="d-flex justify-content-center gap-3 mb-4">
-        <a asp-controller="Produtos"
-           asp-action="MeusProdutos"
-           class="btn btn-outline-secondary shadow-sm">
-            Meus produtos
-        </a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="d-flex justify-content-center gap-3 mb-4">
+            <a asp-controller="Produtos"
+               asp-action="MeusProdutos"
+               class="btn btn-outline-secondary shadow-sm">
+                Meus produtos
+            </a>
 
-        <a asp-controller="Produtos"
-           asp-action="MinhasReservas"
-           class="btn btn-outline-success shadow-sm">
-            Minhas Reservas
-        </a>
+            <a asp-controller="Produtos"
+               asp-action="MinhasReservas"
+               class="btn btn-outline-success shadow-sm">
+                Minhas Reservas
+            </a>
 
-        <a asp-action="Create"
-           class="btn btn-outline-primary shadow-sm">
-            Anuncie seu produto
-            <i class="bi bi-plus-circle"></i>
-        </a>
-    </div>
+            <a asp-action="Create"
+               class="btn btn-outline-primary shadow-sm">
+                Anuncie seu produto
+                <i class="bi bi-plus-circle"></i>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-center gap-3 mb-4">
+            <a asp-controller="Usuarios"
+               asp-action="Login"
+               class="btn btn-outline-primary shadow-sm">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Faça Login para Anunciar
+            </a>
+        </div>
+    }
 
     <div class="row">
 
@@ -134,7 +147,7 @@
             <div class="row g-4">
                 @foreach (var item in Model)
                 {
-                    var isAnunciante = usuarioLogadoId == item.AnuncianteId.ToString();
+                    var isAnunciante = User.Identity.IsAuthenticated && usuarioLogadoId == item.AnuncianteId.ToString();
                     <div class="col-md-4">
                         <div class="card h-100 shadow-sm border-0">
 

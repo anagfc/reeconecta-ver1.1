@@ -16,22 +16,25 @@
 
                 <div class="row justify-content-center mt-4">
                     <div class="col-lg-10 col-md-12">
-                        <form>
+                        <form asp-controller="Produtos" asp-action="Index" method="get">
                             <div class="search-input-container">
-                                <input type="text" class="form-control" placeholder="Buscar: iPhone, laptop, bateria...">
+                                <input type="text" name="busca" class="form-control" placeholder="Buscar: iPhone, laptop, bateria..." value="">
                                 <button type="submit" class="btn btn-primary fw-bold">
                                     <i class="bi bi-search me-1"></i> Buscar
                                 </button>
                             </div>
                         </form>
 
-                        <p class="text-white-50 mt-3">
-                            <small>
-                                É novo por aqui?
-                                <a asp-controller="Usuarios" asp-action="Login" class="text-white fw-bold text-decoration-underline">Faça Login</a>
-                                para criar seus anúncios.
-                            </small>
-                        </p>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <p class="text-white-50 mt-3">
+                                <small>
+                                    É novo por aqui?
+                                    <a asp-controller="Usuarios" asp-action="Login" class="text-white fw-bold text-decoration-underline">Faça Login</a>
+                                    para criar seus anúncios.
+                                </small>
+                            </p>
+                        }
                     </div>
                 </div>
 
@@ -154,51 +157,141 @@
 
     <hr class="my-5">
 
-    <section class="my-5 py-4">
+    <section class="my-5 py-5 testimonial-section">
         <div class="row">
-            <div class="col-12 text-center mb-4">
+            <div class="col-12 text-center mb-5">
                 <h2 class="section-title">O que dizem sobre nós?</h2>
-                <p class="text-muted lead">Experiências reais de usuários.</p>
+                <p class="text-muted lead mb-4">Experiências reais de usuários que transformaram seus eletrônicos.</p>
             </div>
         </div>
 
-        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+        <div id="testimonialCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            </div>
+
             <div class="carousel-inner">
-
                 <div class="carousel-item active">
-                    <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
-                        <p class="fs-5 fst-italic text-dark">"Plataforma excelente! Consegui vender meu notebook em menos de 24 horas."</p>
-                        <h5 class="fw-bold mt-3">Carlos Andrade</h5>
-                        <span class="text-muted small">São Paulo - SP</span>
+                    <div class="testimonial-card mx-auto">
+                        <div class="testimonial-content">
+                            <div class="quote-icon mb-3">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                            <p class="testimonial-text">"Plataforma excelente! Consegui vender meu notebook em menos de 24 horas. O processo foi muito simples e seguro."</p>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                                <div class="author-info">
+                                    <h5 class="author-name mb-1">Carlos Andrade</h5>
+                                    <span class="author-location"><i class="bi bi-geo-alt-fill me-1"></i>São Paulo - SP</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="carousel-item">
-                    <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
-                        <p class="fs-5 fst-italic text-dark">"Finalmente encontrei um destino correto para descartar meus eletrônicos."</p>
-                        <h5 class="fw-bold mt-3">Maria Eduarda</h5>
-                        <span class="text-muted small">Belo Horizonte - MG</span>
+                    <div class="testimonial-card mx-auto">
+                        <div class="testimonial-content">
+                            <div class="quote-icon mb-3">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                            <p class="testimonial-text">"Finalmente encontrei um destino correto para descartar meus eletrônicos. A plataforma me ajudou a fazer a diferença no meio ambiente."</p>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                                <div class="author-info">
+                                    <h5 class="author-name mb-1">Maria Eduarda</h5>
+                                    <span class="author-location"><i class="bi bi-geo-alt-fill me-1"></i>Belo Horizonte - MG</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="carousel-item">
-                    <div class="testimonial p-4 mx-auto text-center" style="max-width:700px;">
-                        <p class="fs-5 fst-italic text-dark">"Iniciativa incrível! Ajuda o meio ambiente e gera renda extra."</p>
-                        <h5 class="fw-bold mt-3">João Ribeiro</h5>
-                        <span class="text-muted small">Curitiba - PR</span>
+                    <div class="testimonial-card mx-auto">
+                        <div class="testimonial-content">
+                            <div class="quote-icon mb-3">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                            <p class="testimonial-text">"Iniciativa incrível! Ajuda o meio ambiente e gera renda extra. Recomendo para todos que querem dar um novo ciclo aos seus eletrônicos."</p>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                                <div class="author-info">
+                                    <h5 class="author-name mb-1">João Ribeiro</h5>
+                                    <span class="author-location"><i class="bi bi-geo-alt-fill me-1"></i>Curitiba - PR</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <div class="carousel-item">
+                    <div class="testimonial-card mx-auto">
+                        <div class="testimonial-content">
+                            <div class="quote-icon mb-3">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                            <p class="testimonial-text">"Interface muito intuitiva e processo de negociação transparente. Consegui encontrar exatamente o que procurava e o vendedor foi muito atencioso."</p>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-avatar">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                                <div class="author-info">
+                                    <h5 class="author-name mb-1">Ana Silva</h5>
+                                    <span class="author-location"><i class="bi bi-geo-alt-fill me-1"></i>Rio de Janeiro - RJ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
             </button>
 
             <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Próximo</span>
             </button>
-
         </div>
     </section>
 </main>
@@ -210,9 +303,18 @@
         </h2>
         <p class="lead mb-4">Dê um novo ciclo ao seu eletrônico.</p>
 
-        <a class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary me-3 shadow-sm">
-            <i class="bi bi-upload me-2"></i> Anunciar Agora
-        </a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Produtos" asp-action="Create" class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary me-3 shadow-sm">
+                <i class="bi bi-upload me-2"></i> Anunciar Agora
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Usuarios" asp-action="Login" class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary me-3 shadow-sm">
+                <i class="bi bi-upload me-2"></i> Anunciar Agora
+            </a>
+        }
 
     </div>
 </div>
