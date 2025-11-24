@@ -25,6 +25,7 @@ namespace reeconecta.Controllers
         }
 
         // GET: Produtos
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string? busca, string? cidade, string? condicao, string? ordenar)
         {
             var query = _context.Produtos

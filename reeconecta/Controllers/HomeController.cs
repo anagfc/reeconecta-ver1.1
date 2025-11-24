@@ -38,6 +38,26 @@ namespace reeconecta.Controllers
             return View();
         }
 
+        public IActionResult SobreNos()
+        {
+            return View();
+        }
+
+        public IActionResult ComoFunciona()
+        {
+            return View();
+        }
+
+        public IActionResult Ajuda()
+        {
+            return View();
+        }
+
+        public IActionResult TermosDeUso()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

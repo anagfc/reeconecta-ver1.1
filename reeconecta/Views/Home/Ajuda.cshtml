@@ -1,0 +1,152 @@
+@{
+    ViewData["Title"] = "Ajuda";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3">Central de Ajuda</h1>
+            <p class="lead text-muted">Encontre respostas para suas dúvidas mais frequentes</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Como criar uma conta no ReeConecta?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Para criar uma conta, clique em "Login" no menu superior e depois em "Registrar". 
+                            Preencha seus dados pessoais, incluindo nome, email, telefone e endereço. 
+                            Após o cadastro, você poderá começar a anunciar produtos ou buscar eletrônicos disponíveis.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Como anunciar um produto?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Após fazer login, acesse "Produtos" no menu e clique em "Anuncie seu produto". 
+                            Preencha as informações do produto (título, descrição, preço, condição, localização) 
+                            e adicione uma foto. Clique em "Criar" e seu anúncio estará disponível na plataforma.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Como reservar um produto?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Ao encontrar um produto de seu interesse, clique em "Tenho interesse". 
+                            Isso criará uma reserva pendente. O anunciante será notificado e poderá 
+                            aceitar ou recusar sua reserva. Se aceita, você poderá entrar em contato 
+                            para combinar os detalhes da entrega.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            Como funciona o pagamento?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            O ReeConecta atua como intermediário conectando compradores e vendedores. 
+                            O pagamento é combinado diretamente entre as partes. Recomendamos que 
+                            o pagamento seja feito pessoalmente no momento da entrega, após testar 
+                            o produto. Para sua segurança, evite transferências antecipadas.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                            Posso editar ou excluir um anúncio?
+                        </button>
+                    </h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Sim! Acesse "Meus Produtos" no menu e você verá todos os seus anúncios. 
+                            Você pode editar as informações ou excluir o anúncio a qualquer momento. 
+                            Lembre-se de que produtos com reservas pendentes não podem ser excluídos 
+                            até que a reserva seja cancelada ou confirmada.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                            O que fazer se tiver problemas com uma transação?
+                        </button>
+                    </h2>
+                    <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Em caso de problemas, entre em contato conosco através do email 
+                            <strong>contato@reeconecta.com</strong> ou pelo telefone <strong>(31) 5555-0000</strong>. 
+                            Nossa equipe está pronta para ajudar a resolver qualquer questão relacionada 
+                            à plataforma ou às transações realizadas.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                            A plataforma é gratuita?
+                        </button>
+                    </h2>
+                    <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Sim! O ReeConecta é totalmente gratuito para criar conta, anunciar produtos 
+                            e buscar eletrônicos. Não cobramos taxas de cadastro, comissões sobre vendas 
+                            ou mensalidades. Nossa missão é facilitar a conexão entre pessoas de forma 
+                            acessível e sustentável.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card bg-primary text-white shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <h2 class="h3 fw-bold mb-3"><i class="bi bi-envelope-fill me-2"></i>Não encontrou sua resposta?</h2>
+                    <p class="mb-3">Nossa equipe está pronta para ajudar você!</p>
+                    <p class="mb-0">
+                        <i class="bi bi-envelope me-2"></i><strong>Email:</strong> contato@reeconecta.com<br>
+                        <i class="bi bi-telephone me-2"></i><strong>Telefone:</strong> (31) 5555-0000
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-arrow-left me-2"></i>Voltar ao Início
+            </a>
+        </div>
+    </div>
+</div>
+
