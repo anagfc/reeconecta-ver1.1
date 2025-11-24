@@ -1,78 +1,66 @@
 ﻿@model IEnumerable<reeconecta.Models.Usuario>
 
+
 @{
     ViewData["Title"] = "Usuários";
 }
 
-<h1>Usuários Cadastrados</h1>
-<p>@User.Identity.Name, como um administrador, você pode ter acesso a todos os usuários cadastrados na ReeConecta nesta página</p>
+<link rel="stylesheet" href="~/css/produto-form.css" />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipodePerfil)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone01)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone02)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContaAtiva)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipodePerfil)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone01)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone02)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            @if(item.ContaAtiva == true)
-                {
-                    <td>
-                        Ativa
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        Inativa
-                    </td>
-                }
-            <td>
-                <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.Id" style="padding: 2px 5px; margin-right: 5px">
-                    <i class="bi bi-eye-fill"></i> Ver mais
-                </a>
-                <a class="btn btn-outline-warning" asp-action="Relatorio" asp-route-id="@item.Id" style="padding: 2px 5px; margin-right: 5px">
-                    <i class="bi bi-bar-chart-fill"></i> Desempenho
-                </a>
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" style="padding: 2px 5px; margin-right: 5px">
-                    <i class="bi bi-trash-fill"></i> Excluir
-                </a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container my-5">
+
+    <div class="text-center mb-4">
+        <h1 class="fw-bold text-dark">Usuários cadastrados</h1>
+        <p class="lead text-muted">
+            @User.Identity.Name, como administrador, você pode acessar todos os usuários cadastrados na ReeConecta nesta página.
+        </p>
+    </div>
+
+    <div class="form-section shadow-sm border-0 rounded-4 p-4">
+
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6">
+                    <div class="form-wrapper shadow-sm p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="fw-bold mb-0 text-truncate" title="@item.Nome">@item.Nome</h5>
+                            <span class="badge @(item.ContaAtiva ? "bg-success" : "bg-secondary")">
+                                @(item.ContaAtiva ? "Ativa" : "Inativa")
+                            </span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="bi bi-person-badge me-1"></i> Perfil: @item.TipodePerfil</p>
+                        <p class="text-muted small mb-1">
+                            <i class="bi bi-telephone me-1"></i>
+                            @item.Telefone01
+                            @(string.IsNullOrEmpty(item.Telefone02) ? "" : $" | {item.Telefone02}")
+                        </p>
+                        <p class="text-muted small mb-3"><i class="bi bi-envelope me-1"></i> @item.Email</p>
+
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <a class="btn btn-outline-primary btn-sm flex-fill"
+                               asp-area="" asp-controller="Usuarios" asp-action="VerPerfil" asp-route-id="@item.Id">
+                                <i class="bi bi-person-circle"></i> Perfil
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm flex-fill"
+                               asp-action="Relatorio" asp-route-id="@item.Id">
+                                <i class="bi bi-bar-chart-fill"></i> Desempenho
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm flex-fill"
+                               asp-action="Delete" asp-route-id="@item.Id">
+                                <i class="bi bi-trash-fill"></i> Excluir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info text-center mt-4">
+                <i class="bi bi-info-circle"></i> Nenhum usuário encontrado.
+            </div>
+        }
+    </div>
+</div>

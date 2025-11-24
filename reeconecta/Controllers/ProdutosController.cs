@@ -29,7 +29,8 @@ namespace reeconecta.Controllers
         {
             var query = _context.Produtos
                 .AsNoTracking()
-                .Where(p => p.StatusProduto == StatusProduto.Disponivel)
+                .Where(p => p.StatusProduto == StatusProduto.Disponivel &&
+                    p.Usuario.ContaAtiva)
                 .Include(p => p.Usuario)
                 .Include(p => p.ReservasProduto)
                 .AsQueryable();
