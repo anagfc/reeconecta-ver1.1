@@ -1,0 +1,39 @@
+﻿.footer-form .grupo {
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.footer-form .icone {
+    background: #e2e6ec;
+    border: none;
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.footer-form .input {
+    border-radius: 0;
+    border: none;
+    background: #f0f0f0;
+    padding: 0.75rem 1rem;
+}
+
+.footer-form textarea.input {
+    height: 140px;
+    resize: none;
+}
+
+.footer-form button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    font-weight: 600;
+}
+
+.footer-link {
+    text-decoration: none;
+    color: #333;
+}
+
+    .footer-link:hover {
+        color: #198754;
+    }

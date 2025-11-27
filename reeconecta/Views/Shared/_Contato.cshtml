@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System.Security.Claims
+@model reeconecta.Models.Contato
+
+<link rel="stylesheet" href="~/css/form-contato.cssss" asp-append-version="true" />
+
+@{
+    var email = User.Identity.IsAuthenticated
+                ? User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value
+                : "";
+    var nome = User.Identity.IsAuthenticated
+               ? User.Identity.Name
+               : "";
+}
+
+
+<form asp-controller="Contatos" asp-action="EnviarContato" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="input-group grupo">
+                <span class="input-group-text icone">
+                    <i class="bi bi-person-fill"></i>
+                </span>
+                <input asp-for="Nome" value="@nome" class="form-control input" placeholder="Seu nome" />
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="input-group grupo">
+                <span class="input-group-text icone">
+                    <i class="bi bi-envelope-fill"></i>
+                </span>
+                <input asp-for="Email" value="@email" class="form-control input" placeholder="Seu e-mail" />
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="input-group grupo">
+                <span class="input-group-text icone">
+                    <i class="bi bi-chat-left-text-fill"></i>
+                </span>
+                <textarea asp-for="Mensagem" class="form-control input" placeholder="Sua mensagem"></textarea>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-success shadow-sm">
+                Enviar
+            </button>
+        </div>
+    </div>
+
+</form>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success mt-2">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-2">@TempData["Error"]</div>
+}

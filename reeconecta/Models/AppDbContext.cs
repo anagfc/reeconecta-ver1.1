@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using reeconecta.Models;
 
 namespace reeconecta.Models
 {
@@ -18,7 +19,10 @@ namespace reeconecta.Models
 
         public DbSet<VisualizacaoProduto> VisualizacaoProdutos { get; set; }
 
-        public DbSet<Ponto> Pontos { get; set; }    
+        public DbSet<Ponto> Pontos { get; set; }
+
+        public DbSet<Contato> Contatos { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +46,7 @@ namespace reeconecta.Models
                 .HasForeignKey(r => r.ProdutoId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
+        public DbSet<reeconecta.Models.Contato> Contato { get; set; } = default!;
 
     }
 }

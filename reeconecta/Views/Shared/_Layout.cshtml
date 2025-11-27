@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - ReeConecta</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/form-contato.css" />
     <link rel="stylesheet" href="~/reeconecta.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="icon" type="image/x-icon" href="~/favico.ico" />
@@ -77,52 +78,57 @@
         </main>
     </div>
 
+    <br>
+    <br>
+    <br />
+
     <footer class="footer-section pt-5 pb-4">
         <div class="container">
 
-            <div class="row">
+                <br><br><br />
+                <hr />
+
+                <div class="row mb-4 pb-3 border-bottom">
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <h5 class="fw-bold mb-3">Links Rápidos</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a asp-controller="Home" asp-action="SobreNos" class="footer-link"><i class="bi bi-caret-right-fill text-success me-2"></i> Sobre Nós</a></li>
+                            <li class="mb-2"><a asp-controller="Home" asp-action="ComoFunciona" class="footer-link"><i class="bi bi-caret-right-fill text-success me-2"></i> Como Funciona</a></li>
+                            <li class="mb-2"><a asp-controller="Home" asp-action="Ajuda" class="footer-link"><i class="bi bi-caret-right-fill text-success me-2"></i> Ajuda</a></li>
+                            <li class="mb-2"><a asp-controller="Home" asp-action="TermosDeUso" class="footer-link"><i class="bi bi-caret-right-fill text-success me-2"></i> Termos de Uso</a></li>
+                        </ul>
+                    </div>
 
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <h5>Links Rápidos</h5>
-                    <ul class="list-unstyled">
-                        <li><a asp-controller="Home" asp-action="SobreNos" class="text-decoration-none text-dark"><i class="bi bi-caret-right-fill text-success me-2"></i> Sobre Nós</a></li>
-                        <li><a asp-controller="Home" asp-action="ComoFunciona" class="text-decoration-none text-dark"><i class="bi bi-caret-right-fill text-success me-2"></i> Como Funciona</a></li>
-                        <li><a asp-controller="Home" asp-action="Ajuda" class="text-decoration-none text-dark"><i class="bi bi-caret-right-fill text-success me-2"></i> Ajuda</a></li>
-                        <li><a asp-controller="Home" asp-action="TermosDeUso" class="text-decoration-none text-dark"><i class="bi bi-caret-right-fill text-success me-2"></i> Termos de Uso</a></li>
-                    </ul>
-                </div>
+                    <h5 class="fw-bold mb-3">ReeConecta</h5>
+                        <ul class="list-unstyled lh-lg">
+                            <li><i class="bi bi-envelope-fill text-success me-2"></i> contato@reeconecta.com</li>
+                            <li><i class="bi bi-telephone-fill text-success me-2"></i> (31) 0000-0000</li>
+                            <li><i class="bi bi-geo-alt-fill text-success me-2"></i> Belo Horizonte, MG</li>
+                        </ul>
+                        <img src="~/Logo REEConecta.png" width="70" class="rounded-circle mt-2 shadow-sm" />
+                    </div>
 
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <h5>Fale Conosco</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-envelope-fill text-success me-2"></i> contato@reeconecta.com</li>
-                        <li><i class="bi bi-telephone-fill text-success me-2"></i> (31) 5555-0000</li>
-                        <li><i class="bi bi-geo-alt-fill text-success me-2"></i> Belo Horizonte, MG</li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4 text-center text-lg-start">
-                    <img src="~/Logo REEConecta.png" width="60px" class="mb-3 rounded-circle" />
-                    <p class="small">Siga-nos:</p>
-                    <div class="social-icons">
-                        <a><i class="bi bi-facebook"></i></a>
-                        <a><i class="bi bi-twitter"></i></a>
-                        <a><i class="bi bi-instagram"></i></a>
-                        <a><i class="bi bi-linkedin"></i></a>
+                    <h5 class="fw-bold mb-3">Fale Conosco</h5>
+                    <div class="footer-form">
+                        @await Html.PartialAsync("_Contato", new reeconecta.Models.Contato())
                     </div>
                 </div>
 
-            </div>
+                </div>
 
-            <div class="row border-top pt-3 mt-3 border-secondary">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0 small">&copy; 2025 - Reeconecta | Todos os direitos reservados.</p>
+                <div class="row pt-3">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0 small">&copy; 2025 - Reeconecta | Todos os direitos reservados.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end small">
+                        <a class="text-muted me-3 footer-link">Termos de Privacidade</a>
+                        <a class="text-muted footer-link">Política de Cookies</a>
+                    </div>
                 </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <a class="small text-muted me-3">Termos de Privacidade</a>
-                    <a class="small text-muted">Política de Cookies</a>
-                </div>
-            </div>
+            
 
         </div>
     </footer>
