@@ -19,9 +19,18 @@ html, body {
     background: var(--bg-light)
 }
 
+    body > .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+
 main {
     min-height: 60vh
 }
+
+
 
 .site-navbar {
     position: sticky;
@@ -46,8 +55,9 @@ main {
 
 .hero-section {
     background: linear-gradient(135deg,rgba(0,123,255,0.95),rgba(40,167,69,0.95));
-    padding: 5.5rem 0;
+    padding: 6.5rem 0;
     color: #fff;
+
 }
 
     .hero-section .search-input-container {

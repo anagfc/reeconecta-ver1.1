@@ -1,4 +1,9 @@
-﻿.footer-form .grupo {
+﻿html {
+    scroll-behavior: smooth;
+}
+
+
+.footer-form .grupo {
     border-radius: 14px;
     overflow: hidden;
 }
