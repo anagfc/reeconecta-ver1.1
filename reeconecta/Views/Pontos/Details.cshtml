@@ -130,7 +130,7 @@
                     <!-- Botões de Ação -->
                     <div class="d-flex gap-2">
                         @{
-                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var id) ? id : 0;
+                            var usuarioIdAtual = int.TryParse(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var usuarioIdTemp) ? usuarioIdTemp : 0;
                             var tipoUsuarioAtual = Context.User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
                             var podeEditar = tipoUsuarioAtual == "Administrador" || Model.CriadoPorUsuarioId == usuarioIdAtual;
                         }
@@ -159,5 +159,217 @@
     </div>
 </div>
 
+<!-- Seção de Avaliação -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4"><i class="bi bi-star-fill text-warning"></i> Avaliação do Ponto</h5>
+                    
+                    @if (TempData["Sucesso"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle"></i> 
+                            @TempData["Sucesso"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (TempData["Erro"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-circle"></i> 
+                            @TempData["Erro"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    
+                    @{
+                        var usuarioIdAtual2 = int.TryParse(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var usuarioIdTemp2) ? usuarioIdTemp2 : 0;
+                        var avaliacaoUsuario = Model.Avaliacoes?.FirstOrDefault(a => a.UsuarioId == usuarioIdAtual2);
+                        var notaMedia = Model.Avaliacoes?.Any() == true ? Model.Avaliacoes.Average(a => a.Nota) : 0m;
+                        var totalAvaliacoes = Model.Avaliacoes?.Count ?? 0;
+                    }
+
+                    <!-- Estatísticas de Avaliação -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="text-muted small">Avaliação Média</label>
+                                <div class="d-flex align-items-center mt-2">
+                                    <h3 class="mb-0 text-warning me-3">@notaMedia.ToString("0.0")</h3>
+                                    <div>
+                                        <div class="d-flex mb-2">
+                                            @for (int i = 0; i < 5; i++)
+                                            {
+                                                @if (i < (int)notaMedia)
+                                                {
+                                                    <i class="bi bi-star-fill text-warning me-1"></i>
+                                                }
+                                                else if (i < Math.Ceiling(notaMedia) && notaMedia % 1 != 0)
+                                                {
+                                                    <i class="bi bi-star-half text-warning me-1"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-star text-muted me-1"></i>
+                                                }
+                                            }
+                                        </div>
+                                        <small class="text-muted">@totalAvaliacoes @(totalAvaliacoes == 1 ? "avaliação" : "avaliações")</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <!-- Formulário de Avaliação -->
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">
+                                @(avaliacaoUsuario == null ? "Deixe sua avaliação" : "Sua avaliação")
+                            </h6>
+
+                            <form id="formAvaliacao" method="post" action="@Url.Action("Avaliar", "Pontos")">
+                                <input type="hidden" name="PontoId" value="@Model.Id" />
+                                <input type="hidden" name="NotaString" id="inputNota" value="@(avaliacaoUsuario?.Nota ?? 0)" />
+
+                                <!-- Seletor de Estrelas -->
+                                <div class="mb-3">
+                                    <label class="text-muted small mb-2">Sua Nota</label>
+                                    <div class="rating-stars d-flex gap-2" id="ratingStars">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <span class="star-display"
+                                                    style="color: #ffc107; font-size: 2rem; cursor: default; outline: none;">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Campo para valor decimal -->
+                                <div class="mb-3">
+                                    <label class="form-label small text-muted">Nota: <span id="notaExibicao" class="fw-semibold text-dark">@(avaliacaoUsuario?.Nota ?? 0)</span></label>
+                                    <input type="range" 
+                                           class="form-range" 
+                                           id="rangeNota" 
+                                           min="0" 
+                                           max="50" 
+                                           step="5" 
+                                           value="@((avaliacaoUsuario?.Nota ?? 0) * 10)"
+                                           style="cursor: pointer;">
+                                </div>
+
+                                <!-- Comentário (opcional) -->
+                                <div class="mb-3">
+                                    <label for="comentario" class="form-label">Comentário (opcional)</label>
+                                    <textarea class="form-control" 
+                                              id="comentario" 
+                                              name="Comentario" 
+                                              rows="3" 
+                                              placeholder="Compartilhe sua experiência..."
+                                              maxlength="500">@(avaliacaoUsuario?.Comentario ?? "")</textarea>
+                                    <small class="text-muted d-block mt-1" id="charCount">0/500</small>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-grow-1" id="btnEnviar">
+                                        <i class="bi bi-check-circle"></i> 
+                                        @(avaliacaoUsuario == null ? "Enviar Avaliação" : "Atualizar Avaliação")
+                                    </button>
+                                    
+                                    @if (avaliacaoUsuario != null)
+                                    {
+                                        <button type="button" class="btn btn-danger" id="btnRemoverAvaliacao" data-ponto-id="@Model.Id">
+                                            <i class="bi bi-trash"></i> Remover
+                                        </button>
+                                    }
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mb-0">
+                            <i class="bi bi-info-circle"></i> 
+                            <a href="@Url.Action("Login", "Usuarios")">Faça login</a> para deixar sua avaliação.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <br>
 <br>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ratingStars = document.querySelectorAll('.star-display');
+            const inputNota = document.getElementById('inputNota');
+            const notaExibicao = document.getElementById('notaExibicao');
+            const rangeNota = document.getElementById('rangeNota');
+            const charCount = document.getElementById('charCount');
+            const comentario = document.getElementById('comentario');
+            const btnRemoverAvaliacao = document.getElementById('btnRemoverAvaliacao');
+
+            let notaFixada = parseFloat(inputNota.value) || 0;
+
+            // Atualizar estrelas com base na nota
+            function atualizarEstrelas(nota) {
+                const notaInteira = Math.floor(nota);
+                const temMeia = nota % 1 !== 0;
+
+                ratingStars.forEach((star, index) => {
+                    const valor = index + 1;
+                    if (valor <= notaInteira) {
+                        star.innerHTML = '<i class="bi bi-star-fill text-warning"></i>';
+                    } else if (valor - 1 < nota && temMeia) {
+                        star.innerHTML = '<i class="bi bi-star-half text-warning"></i>';
+                    } else {
+                        star.innerHTML = '<i class="bi bi-star text-muted"></i>';
+                    }
+                });
+            }
+
+            // Range slider
+            rangeNota.addEventListener('input', function() {
+                notaFixada = parseFloat(this.value) / 10;
+                // Garantir que use sempre ponto como separador decimal
+                inputNota.value = notaFixada.toString().replace(',', '.');
+                notaExibicao.textContent = notaFixada.toFixed(1);
+                atualizarEstrelas(notaFixada);
+            });
+
+            // Contador de caracteres
+            if (comentario) {
+                comentario.addEventListener('input', function() {     
+                    charCount.textContent = this.value.length + '/500';
+                });
+                // Inicializar contador
+                charCount.textContent = comentario.value.length + '/500';
+            }
+
+            // Remover avaliação
+            if (btnRemoverAvaliacao) {
+                btnRemoverAvaliacao.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Tem certeza que deseja remover sua avaliação?')) {
+                        const pontoId = this.getAttribute('data-ponto-id');
+                        window.location.href = '@Url.Action("RemoverAvaliacao", "Pontos")' + '?id=' + pontoId;
+                    }
+                });
+            }
+
+            // Inicializar estrelas
+            atualizarEstrelas(notaFixada);
+        });
+    </script>
+}

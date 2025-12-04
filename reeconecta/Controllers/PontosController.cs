@@ -16,7 +16,7 @@ namespace reeconecta.Controllers
 
         public async Task<IActionResult> Index(string? tipo)
         {
-            var query = _context.Pontos.AsQueryable();
+            var query = _context.Pontos.Include(p => p.Avaliacoes).AsQueryable();
 
             // FILTRO POR TIPO (Compra ou Descarte)
             if (!string.IsNullOrEmpty(tipo) && Enum.TryParse<TipoPonto>(tipo, true, out var tipoEnum))
@@ -199,7 +199,11 @@ namespace reeconecta.Controllers
             {
                 return NotFound();
             }
-            var dados = await _context.Pontos.FindAsync(id);
+            // Incluir as avaliações relacionadas ao carregar o ponto
+            var dados = await _context.Pontos
+                .Include(p => p.Avaliacoes)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
             if (dados == null)
             {
                 return NotFound();
@@ -281,6 +285,94 @@ namespace reeconecta.Controllers
         private bool PontoExists(int id)
         {
             return _context.Pontos.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Avaliar(int PontoId, string NotaString, string? Comentario)
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            
+            if (usuarioId == 0)
+                return RedirectToAction("Login", "Usuarios");
+
+            // Converter e validar nota com suporte a valores decimais
+            // Normalizar o separador decimal para ponto
+            NotaString = NotaString?.Replace(',', '.');
+            
+            if (!decimal.TryParse(NotaString, System.Globalization.CultureInfo.InvariantCulture, out decimal nota))
+            {
+                TempData["Erro"] = "Nota inválida.";
+                return RedirectToAction("Details", new { id = PontoId });
+            }
+
+            // Validar nota
+            if (nota < 0 || nota > 5)
+            {
+                TempData["Erro"] = "A nota deve estar entre 0 e 5.";
+                return RedirectToAction("Details", new { id = PontoId });
+            }
+
+            // Verificar se o ponto existe
+            var ponto = await _context.Pontos.FindAsync(PontoId);
+            if (ponto == null)
+                return NotFound();
+
+            // Verificar se o usuário já avaliou
+            var avaliacaoExistente = await _context.Avaliacoes
+                .FirstOrDefaultAsync(a => a.PontoId == PontoId && a.UsuarioId == usuarioId);
+
+            if (avaliacaoExistente != null)
+            {
+                // Atualizar avaliação existente
+                avaliacaoExistente.Nota = nota;
+                avaliacaoExistente.Comentario = Comentario;
+                avaliacaoExistente.DataAvaliacao = DateTime.Now;
+                _context.Avaliacoes.Update(avaliacaoExistente);
+            }
+            else
+            {
+                // Criar nova avaliação
+                var avaliacao = new Avaliacao
+                {
+                    PontoId = PontoId,
+                    UsuarioId = usuarioId,
+                    Nota = nota,
+                    Comentario = Comentario,
+                    DataAvaliacao = DateTime.Now
+                };
+                _context.Avaliacoes.Add(avaliacao);
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Sucesso"] = "Avaliação registrada com sucesso!";
+            return RedirectToAction("Details", new { id = PontoId });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> RemoverAvaliacao(int id)
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            
+            if (usuarioId == 0)
+                return RedirectToAction("Login", "Usuarios");
+
+            // Verificar se a avaliação existe e pertence ao usuário
+            var avaliacao = await _context.Avaliacoes
+                .FirstOrDefaultAsync(a => a.PontoId == id && a.UsuarioId == usuarioId);
+
+            if (avaliacao == null)
+            {
+                TempData["Erro"] = "Avaliação não encontrada.";
+                return RedirectToAction("Details", new { id = id });
+            }
+
+            _context.Avaliacoes.Remove(avaliacao);
+            await _context.SaveChangesAsync();
+
+            TempData["Sucesso"] = "Avaliação removida com sucesso!";
+            return RedirectToAction("Details", new { id = id });
         }
     }
 }

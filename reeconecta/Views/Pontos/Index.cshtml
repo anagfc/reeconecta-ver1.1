@@ -71,9 +71,50 @@
                                         <h6 class="fw-semibold mb-0">@item.NomePonto</h6>
                                         <span class="badge bg-info">@item.Tipo</span>
                                     </div>
+
+                                    <!-- Avaliação Média -->
+                                    @{
+                                        var notaMedia = item.Avaliacoes?.Any() == true ? item.Avaliacoes.Average(a => a.Nota) : 0m;
+                                        var totalAvaliacoes = item.Avaliacoes?.Count ?? 0;
+                                    }
+                                    @if (totalAvaliacoes > 0)
+                                    {
+                                        <div class="mb-2">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="fw-semibold text-warning">@notaMedia.ToString("0.0")</span>
+                                                <div class="d-flex" style="gap: 2px;">
+                                                    @for (int i = 0; i < 5; i++)
+                                                    {
+                                                        @if (i < (int)notaMedia)
+                                                        {
+                                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.9rem;"></i>
+                                                        }
+                                                        else if (i < Math.Ceiling(notaMedia) && notaMedia % 1 != 0)
+                                                        {
+                                                            <i class="bi bi-star-half text-warning" style="font-size: 0.9rem;"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="bi bi-star text-muted" style="font-size: 0.9rem;"></i>
+                                                        }
+                                                    }
+                                                </div>
+                                                <small class="text-muted">(@totalAvaliacoes)</small>
+                                            </div>
+                                        </div>
+                                    }
+
                                     <p class="text-muted small mb-2">@item.DescricaoPonto</p>
                                     <div class="mb-3">
                                         <p class="mb-1"><i class="bi bi-geo-alt"></i> @item.CepPonto</p>
+                                        @{
+                                            var cidade = item.ExtrairCidade();
+                                            var estado = item.ExtrairEstado();
+                                        }
+                                        @if (!string.IsNullOrEmpty(cidade) || !string.IsNullOrEmpty(estado))
+                                        {
+                                            <p class="mb-1"><i class="bi bi-map"></i> @cidade@((!string.IsNullOrEmpty(cidade) && !string.IsNullOrEmpty(estado)) ? " / " : "")@estado</p>
+                                        }
                                         <p class="mb-1"><i class="bi bi-telephone"></i> @item.TelefoneP01</p>
                                         @if (!string.IsNullOrEmpty(item.TelefoneP02))
                                         {

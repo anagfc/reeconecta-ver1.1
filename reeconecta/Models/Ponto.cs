@@ -59,11 +59,54 @@ namespace reeconecta.Models
         [DataType(DataType.DateTime)]
         [Display(Name = "Data de Criação")]
         public DateTime DataCriacao { get; set; } = DateTime.Now;
+
+        public virtual ICollection<Avaliacao> Avaliacoes { get; set; } = new List<Avaliacao>();
     }
 
     public enum TipoPonto
     {
         Compra,
         Descarte
+    }
+
+    public static class PontoExtensions
+    {
+        /// <summary>
+        /// Extrai a cidade do endereço formatado (padrão: "Rua X, nº Y - Cidade / UF")
+        /// </summary>
+        public static string ExtrairCidade(this Ponto ponto)
+        {
+            if (string.IsNullOrEmpty(ponto.EnderecoPonto))
+                return "";
+
+            // Procura pelo padrão " - Cidade / UF" ou " - Cidade"
+            var partes = ponto.EnderecoPonto.Split(" - ");
+            if (partes.Length > 1)
+            {
+                var cidadeUf = partes[partes.Length - 1];
+                var cidadePartes = cidadeUf.Split(" / ");
+                return cidadePartes[0]?.Trim() ?? "";
+            }
+
+            return "";
+        }
+
+        /// <summary>
+        /// Extrai o estado (UF) do endereço formatado (padrão: "Rua X, nº Y - Cidade / UF")
+        /// </summary>
+        public static string ExtrairEstado(this Ponto ponto)
+        {
+            if (string.IsNullOrEmpty(ponto.EnderecoPonto))
+                return "";
+
+            // Procura pelo padrão " / UF" no final
+            var partes = ponto.EnderecoPonto.Split(" / ");
+            if (partes.Length > 1)
+            {
+                return partes[partes.Length - 1]?.Trim() ?? "";
+            }
+
+            return "";
+        }
     }
 }

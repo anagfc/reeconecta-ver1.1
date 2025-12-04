@@ -23,6 +23,8 @@ namespace reeconecta.Models
 
         public DbSet<Contato> Contatos { get; set; }
 
+        public DbSet<Avaliacao> Avaliacoes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +47,18 @@ namespace reeconecta.Models
                 .WithMany(p => p.ReservasProduto)
                 .HasForeignKey(r => r.ProdutoId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Avaliacao>()
+                .HasOne(a => a.Ponto)
+                .WithMany(p => p.Avaliacoes)
+                .HasForeignKey(a => a.PontoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Avaliacao>()
+                .HasOne(a => a.Usuario)
+                .WithMany()
+                .HasForeignKey(a => a.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
         public DbSet<reeconecta.Models.Contato> Contato { get; set; } = default!;
 
