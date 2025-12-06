@@ -32,6 +32,14 @@
     }
 }
 
+@if (Model.ContaAtiva == false)
+{
+    <div class="alert alert-danger">
+        Esta conta está inativa.
+    </div>
+}
+
+
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-8 mx-auto">
