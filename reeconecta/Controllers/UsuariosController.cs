@@ -659,7 +659,7 @@ namespace reeconecta.Controllers
             }
 
             var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null || !usuario.ContaAtiva)
+            if (usuario == null)
             {
                 return NotFound();
             }
